@@ -103,7 +103,7 @@ equation
           extent={{-40,126},{-160,76}},
           lineColor={0,0,0},
           textString=DynamicSelect("", String(y, format=".2f")))}),
-Documentation(info="<html>
+Documentation(info= "<html>
 <p>
 This model implements the filter that is used to approximate the travel
 time of the actuator.
@@ -117,47 +117,43 @@ of the actuator.
 </p>
 <p>
 See
-<a href=\"modelica://IBPSA.Fluid.Actuators.UsersGuide\">
-IBPSA.Fluid.Actuators.UsersGuide</a>
+<a href=\"modelica://ProsNet.Fluid.Valves.UsersGuide\">
+ProsNet.Fluid.Valves.UsersGuide</a>
 for a description of the filter.
 </p>
-</html>", revisions="<html>
+</html>", revisions= "<html>
 <ul>
 <li>
 April 6, 2020, by Antoine Gautier:<br/>
 Add the boolean parameter <code>casePreInd</code>.<br/>
-This is needed for the computation of the damper opening in
-<a href=\"modelica://IBPSA.Fluid.Actuators.Dampers.PressureIndependent\">
-IBPSA.Fluid.Actuators.Dampers.PressureIndependent</a>.
+This is needed for the computation of the damper opening in 
+IBPSA.Fluid.Actuators.Dampers.PressureIndependent.
 </li>
 <li>
 February 21, 2020, by Michael Wetter:<br/>
 Changed icon to display its operating state.<br/>
 This is for
-<a href=\"https://github.com/ibpsa/modelica-ibpsa/issues/1294\">#1294</a>.
+ issue #1294.
 </li>
 <li>
 November 14, 2019, by Michael Wetter:<br/>
 Set <code>start</code> attribute for <code>filter.x</code>.<br/>
 This is for
-<a href=\"https://github.com/ibpsa/modelica-ibpsa/issues/1252\">#1252</a>.
+issue #1252.
 </li>
 <li>
 October 25, 2019, by Jianjun Hu:<br/>
-Improved icon graphics annotation. This is for
-<a href=\"https://github.com/ibpsa/modelica-ibpsa/issues/1225\">#1225</a>.
+Improved icon graphics annotation. This is for issue #1225.
 </li>
 <li>
 February 16, 2018, by Filip Jorissen:<br/>
 Propagated parameter <code>order</code>.<br/>
-This is for
-<a href=\"https://github.com/ibpsa/modelica-ibpsa/issues/891\">#891</a>.
+This is for issue #891.
 </li>
 <li>
 March 24, 2017, by Michael Wetter:<br/>
 Renamed <code>filteredInput</code> to <code>use_inputFilter</code>.<br/>
-This is for
-<a href=\"https://github.com/ibpsa/modelica-ibpsa/issues/665\">#665</a>.
+This is for issue #665.
 </li>
 <li>
 February 14, 2012 by Michael Wetter:<br/>

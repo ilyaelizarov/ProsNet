@@ -2,7 +2,6 @@ within ProsNet.Fluid.Pipes;
 package Validation
     extends Modelica.Icons.ExamplesPackage;
 
-annotation (Documentation(info="<html>
-<p><b>Validation models for pipes.</b></p>
-</html>"));
+annotation (Documentation(info= "<html><head></head><body><p>Validation models for pipes.</p>
+</body></html>"));
 end Validation;

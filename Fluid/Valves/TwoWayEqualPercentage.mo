@@ -28,10 +28,9 @@ initial equation
                 + "  Must have l < 1/R = " + String(1/R));
   annotation (
     defaultComponentName="val",
-    Documentation(info="<html>
-<p><b>Two way valve with an equal percentage valve opening characteristic. </b></p>
-<p>This model is based on the partial valve model <a href=\"modelica://ProsNet.Fluid.Valves.BaseClasses.PartialTwoWayValve\">ProsNet.Fluid.Valves.BaseClasses.PartialTwoWayValve</a>. Check this model for more information, such as the regularization near the origin. </p>
-</html>", revisions="<html>
+    Documentation(info= "<html><head></head><body><p><b>Two way valve with an equal percentage valve opening characteristic. </b></p>
+<p>This model is based on the partial valve model <a href=\"modelica://ProsNet.Fluid.Valves.BaseClasses.PartialTwoWayValve\">ProsNet.Fluid.Valves.BaseClasses.PartialTwoWayValve</a>. Check this model for more information, such as the regularization near the origin. </p><p><i>This component was copied from the <a href=\"https://github.com/ibpsa/modelica-ibpsa\">IBPSA library</a>.</i></p>
+</body></html>", revisions="<html>
 <ul>
 <li>
 February 21, 2020, by Michael Wetter:<br/>

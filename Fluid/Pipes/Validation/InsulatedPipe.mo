@@ -37,7 +37,6 @@ equation
     annotation (Line(points={{42,-48},{42,-68}}, color={0,127,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false)),
-    Documentation(info="<html>
-<p><b>This validation model tests the thermal and minor hydraulic losses feature of the main model.</b></p>
-</html>"));
+    Documentation(info= "<html><head></head><body><p>This validation model tests the thermal and minor hydraulic losses feature of the main model.</p>
+</body></html>"));
 end InsulatedPipe;

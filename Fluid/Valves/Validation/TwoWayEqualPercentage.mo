@@ -35,7 +35,7 @@ model TwoWayEqualPercentage
 
 equation
   connect(y.y, valEqu.y) annotation (Line(
-      points={{-39,100},{-12,100},{-12,20},{10,20},{10,12}},
+      points={{-39,100},{-16, 100},{-16, 20},{10,20},{10,12}},
       color={0,0,127}));
   connect(valEqu.port_a, sou.ports[1]) annotation (Line(
       points={{0,0},{-26,0},{-26,0},{-50,0}},
@@ -46,8 +46,7 @@ equation
     annotation (experiment(Tolerance=1e-6, StopTime=1.0),
 __Dymola_Commands(file="modelica://IBPSA/Resources/Scripts/Dymola/Fluid/Actuators/Valves/Examples/TwoWayValves.mos"
         "Simulate and plot"),
-    Documentation(info="<html>
-<p>
+    Documentation(info= "<html><head></head><body><p>
 Test model for two way valves. Note that the
 leakage flow rate has been set to a large value
 and the rangeability to a small value
@@ -58,8 +57,8 @@ To use common values, use the default values.
 The parameter <code>filterOpening</code> is set to <code>false</code>,
 as this model is used to plot the flow at different opening signals
 without taking into account the travel time of the actuator.
-</p>
-</html>", revisions="<html>
+</p><p><i>This component was copied from the <a href=\"https://github.com/ibpsa/modelica-ibpsa\">IBPSA library</a>&nbsp;with changes.</i></p>
+</body></html>", revisions="<html>
 <ul>
 <li>
 January 29, 2015, by Filip Jorissen:<br/>

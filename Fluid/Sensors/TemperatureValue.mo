@@ -2,14 +2,14 @@ within ProsNet.Fluid.Sensors;
 block TemperatureValue
   "Shows temperature value in Celsius from a sensor"
 
-  Modelica.SIunits.Conversions.NonSIunits.Temperature_degC temperature;
+  Modelica.Units.NonSI.Temperature_degC temperature;
 
   parameter Boolean use_numberPort = true "= true, if numberPort enabled"
     annotation(Evaluate=true, HideResult=true, choices(checkBox=true));
 
-  input Modelica.SIunits.Temperature number = 0.0
+  input Modelica.Units.SI.Temperature number=0.0
     "Number to visualize if use_numberPort=false (time varying)"
-    annotation(Dialog(enable=not use_numberPort), HideResult=true);
+    annotation (Dialog(enable=not use_numberPort), HideResult=true);
   parameter Integer significantDigits(min=1) = 2
     "Number of significant digits to be shown";
 
@@ -26,7 +26,7 @@ equation
 
 algorithm
 
-  temperature := Modelica.SIunits.Conversions.to_degC(showNumber);
+  temperature :=Modelica.Units.Conversions.to_degC(showNumber);
 
   annotation (Icon(
       coordinateSystem(preserveAspectRatio=false,

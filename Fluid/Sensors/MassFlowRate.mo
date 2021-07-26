@@ -3,7 +3,7 @@ model MassFlowRate "Ideal sensor for mass flow rate"
   extends ProsNet.Fluid.Sensors.BaseClasses.PartialFlowSensor(
     redeclare replaceable package Medium = ProsNet.Media.Water,
     final m_flow_nominal=0, final m_flow_small=0);
-extends Modelica.Icons.RotationalSensor;
+extends Modelica.Icons.RoundSensor;
 Modelica.Blocks.Interfaces.RealOutput m_flow(quantity="MassFlowRate",
                                              final unit="kg/s")
   "Mass flow rate from port_a to port_b" annotation (Placement(

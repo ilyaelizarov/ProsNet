@@ -12,7 +12,7 @@ block Linearizer
     annotation (Placement(transformation(extent={{-140,-20},{-100,20}})));
   Modelica.Blocks.Interfaces.RealOutput op "Opening of a valve"
     annotation (Placement(transformation(extent={{100,-10},{120,10}})));
-  Modelica.Blocks.Tables.CombiTable1D chaInvValve(final table=cha.inv)
+  Modelica.Blocks.Tables.CombiTable1Dv chaInvValve(final table=cha.inv)
     "Table with inverse of inherent valve characteristic"
     annotation (Placement(transformation(extent={{-10,-10},{10,10}})));
 

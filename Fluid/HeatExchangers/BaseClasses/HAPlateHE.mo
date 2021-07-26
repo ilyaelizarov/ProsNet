@@ -3,13 +3,16 @@ model HAPlateHE
   "Calculates hA_1 and hA_2 values for a heat exchanger"
   extends Modelica.Blocks.Icons.Block;
 
-  parameter Modelica.SIunits.MassFlowRate m_flow_nominal_primary "Water mass flow rate on primary side" annotation (
-    Dialog(tab = "General", group = "Nominal condition"));
-  parameter Modelica.SIunits.MassFlowRate m_flow_nominal_secondary "Water mass flow rate on secondary side" annotation (
-    Dialog(tab = "General", group = "Nominal condition"));
+  parameter Modelica.Units.SI.MassFlowRate m_flow_nominal_primary
+    "Water mass flow rate on primary side"
+    annotation (Dialog(tab="General", group="Nominal condition"));
+  parameter Modelica.Units.SI.MassFlowRate m_flow_nominal_secondary
+    "Water mass flow rate on secondary side"
+    annotation (Dialog(tab="General", group="Nominal condition"));
 
-      parameter Modelica.SIunits.ThermalConductance UA_nominal(min = 0) "Nominal thermal conductance" annotation (
-    Dialog(tab = "General", group = "Nominal condition"));
+  parameter Modelica.Units.SI.ThermalConductance UA_nominal(min=0)
+    "Nominal thermal conductance"
+    annotation (Dialog(tab="General", group="Nominal condition"));
 
 /*     parameter Real r_nominal(min = 0) = 1 "Ratio between primary-side and secondary-side convective heat transfer coefficient: r=(m_nom1/m_nom2)^n" annotation (
 Dialog(tab = "General", group = "Nominal condition"));*/
@@ -23,8 +26,10 @@ Dialog(tab = "General", group = "Nominal condition"));*/
      parameter Real widthSmoothing =  0.05 "Width of transition interval between alpha_min and alpha" annotation (
     Dialog(tab = "Advanced", group = "Parameters"));
 
-  parameter Modelica.SIunits.MassFlowRate m_flow_small = abs(m_flow_nominal_primary) * 1e-4 "Small mass flow rate for regularization of zero flow" annotation (
-    Dialog(tab = "Advanced"));
+  parameter Modelica.Units.SI.MassFlowRate m_flow_small=abs(
+      m_flow_nominal_primary)*1e-4
+    "Small mass flow rate for regularization of zero flow"
+    annotation (Dialog(tab="Advanced"));
 
   Modelica.Blocks.Interfaces.RealOutput alphaA_1(unit = "W/K") "hA value" annotation (
     Placement(visible = true, transformation(extent = {{100, 66}, {120, 86}}, rotation = 0), iconTransformation(extent = {{100, 62}, {120, 82}}, rotation = 0)));
@@ -38,13 +43,21 @@ Dialog(tab = "General", group = "Nominal condition"));*/
     Placement(visible = true, transformation(extent = {{-120, -72}, {-100, -52}}, rotation = 0), iconTransformation(extent = {{-120, -80}, {-100, -60}}, rotation = 0)));
 
   // Variables
-  Modelica.SIunits.MassFlowRate m_flow1 = Modelica.Fluid.Utilities.regStep(m_flow_primary, m_flow_primary, -m_flow_primary, m_flow_small);
+  Modelica.Units.SI.MassFlowRate m_flow1=Modelica.Fluid.Utilities.regStep(
+      m_flow_primary,
+      m_flow_primary,
+      -m_flow_primary,
+      m_flow_small);
 
-  Modelica.SIunits.MassFlowRate m_flow2 = Modelica.Fluid.Utilities.regStep(m_flow_secondary, m_flow_secondary, -m_flow_secondary, m_flow_small);
+  Modelica.Units.SI.MassFlowRate m_flow2=Modelica.Fluid.Utilities.regStep(
+      m_flow_secondary,
+      m_flow_secondary,
+      -m_flow_secondary,
+      m_flow_small);
 
-  Modelica.SIunits.ThermalConductance alphaA_1_nominal;
+  Modelica.Units.SI.ThermalConductance alphaA_1_nominal;
 
-  Modelica.SIunits.ThermalConductance alphaA_2_nominal;
+  Modelica.Units.SI.ThermalConductance alphaA_2_nominal;
 
   Modelica.Blocks.Sources.RealExpression alpha1A(y = alphaA_1_nominal * (m_flow1 / m_flow_nominal_primary) ^ n)  annotation (
     Placement(visible = true, transformation(origin = {-50, 44}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));

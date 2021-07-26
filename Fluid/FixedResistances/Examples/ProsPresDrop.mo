@@ -4,7 +4,7 @@ model ProsPresDrop
 
   replaceable package Medium = ProsNet.Media.Water;
 
-  parameter Modelica.SIunits.Length diameter=0.022;
+  parameter Modelica.Units.SI.Length diameter=0.022;
 
   Modelica.Fluid.Fittings.SimpleGenericOrifice resLoc(
     redeclare package Medium = Medium,

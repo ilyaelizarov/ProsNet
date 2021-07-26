@@ -23,10 +23,9 @@ protected
     "Prescribed heat flow"
     annotation (Placement(transformation(extent={{-50,38},{-30,58}})));
 
-  Modelica.SIunits.SpecificEnthalpy hSet
-    "Set point for enthalpy";
+  Modelica.Units.SI.SpecificEnthalpy hSet "Set point for enthalpy";
 
-  Modelica.SIunits.HeatFlowRate Q_flow;
+  Modelica.Units.SI.HeatFlowRate Q_flow;
 
 equation
 

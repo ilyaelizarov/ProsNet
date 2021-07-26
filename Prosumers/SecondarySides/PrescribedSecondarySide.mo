@@ -5,10 +5,12 @@ model PrescribedSecondarySide
     final m_flow_nominal = m_flow_nominal_cv);
 
   // Nominal conditions
-  parameter Modelica.SIunits.MassFlowRate m_flow_nominal_cv  "Nominal flow rate"
-   annotation(Dialog(group="Secondary side control volume nominal conditions"));
-  parameter Modelica.SIunits.PressureDifference dp_nominal_cv=0 "Nominal pressure difference"
-   annotation(Dialog(group="Secondary side control volume nominal conditions"));
+  parameter Modelica.Units.SI.MassFlowRate m_flow_nominal_cv
+    "Nominal flow rate" annotation (Dialog(group=
+          "Secondary side control volume nominal conditions"));
+  parameter Modelica.Units.SI.PressureDifference dp_nominal_cv=0
+    "Nominal pressure difference" annotation (Dialog(group=
+          "Secondary side control volume nominal conditions"));
 
   // Dynamic parameters for CV in PrescribedSecondarySide
   extends ProsNet.Prosumers.SecondarySides.BaseClasses.ControlVolumeDynParam;

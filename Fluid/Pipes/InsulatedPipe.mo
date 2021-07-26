@@ -4,27 +4,28 @@ model InsulatedPipe
   extends ProsNet.Fluid.Interfaces.PartialTwoPort(
     redeclare package Medium = ProsNet.Media.Water);
 
-  parameter Modelica.SIunits.Temperature T_amb(displayUnit="degC")=285.15 "Ambient temperature";
+  parameter Modelica.Units.SI.Temperature T_amb(displayUnit="degC") = 285.15
+    "Ambient temperature";
 
   parameter Real R_ins(min=0,unit="(K.m)/W")=3.78 "Thermal resistance per meter";
 
-  parameter Modelica.SIunits.Length length=10 "Length of the pipe";
+  parameter Modelica.Units.SI.Length length=10 "Length of the pipe";
 
-  parameter Modelica.SIunits.Length diameter=0.022 "Diameter of the pipe";
+  parameter Modelica.Units.SI.Length diameter=0.022 "Diameter of the pipe";
 
   parameter Real zeta(min=0)=3.5 "Local resistance coefficient";
 
   parameter Modelica.Fluid.Types.Dynamics energyDynamics = Modelica.Fluid.Types.Dynamics.SteadyState
     "Energy dynamics" annotation(Dialog(tab="Dynamics"));
 
-  parameter Modelica.SIunits.MassFlowRate m_flow_start=0 "Start value for mass flow rate"
-    annotation(Dialog(tab="Dynamics"));
+  parameter Modelica.Units.SI.MassFlowRate m_flow_start=0
+    "Start value for mass flow rate" annotation (Dialog(tab="Dynamics"));
 
-  parameter Modelica.SIunits.Pressure p_start=101325 "Start value for pressure"
-    annotation(Dialog(tab="Dynamics"));
+  parameter Modelica.Units.SI.Pressure p_start=101325
+    "Start value for pressure" annotation (Dialog(tab="Dynamics"));
 
-  parameter Modelica.SIunits.Temperature T_start=293.15 "Start value for temperature"
-    annotation(Dialog(tab="Dynamics"));
+  parameter Modelica.Units.SI.Temperature T_start=293.15
+    "Start value for temperature" annotation (Dialog(tab="Dynamics"));
 
   Modelica.Fluid.Pipes.DynamicPipe pipe(mediums(each preferredMediumStates = false),
    redeclare replaceable package Medium =

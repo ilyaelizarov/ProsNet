@@ -3,7 +3,7 @@ model MoverParameter
   "Example model of movers using a parameter for setting the stage"
   extends Modelica.Icons.Example;
 
-  parameter Modelica.SIunits.MassFlowRate m_flow_nominal=2
+  parameter Modelica.Units.SI.MassFlowRate m_flow_nominal=2
     "Nominal mass flow rate";
 
   ProsNet.Fluid.Pumps.FlowControlled_m_flow pump_m_flow(
@@ -27,7 +27,7 @@ model MoverParameter
     energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
     "Pump with normalised speed input"
     annotation (Placement(transformation(extent={{-8,-50},{12,-30}})));
-  parameter Modelica.SIunits.PressureDifference dp_nominal=10000
+  parameter Modelica.Units.SI.PressureDifference dp_nominal=10000
     "Nominal pressure raise";
 equation
   connect(sou.ports[1], pump_m_flow.port_a) annotation (Line(

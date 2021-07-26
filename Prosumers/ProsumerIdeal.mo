@@ -3,7 +3,7 @@ model ProsumerIdeal
 
   extends ProsNet.Prosumers.BaseClasses.PrimarySidePartial;
 
-  Modelica.SIunits.MassFlowRate m1_flow_small;
+  Modelica.Units.SI.MassFlowRate m1_flow_small;
 
   /* Parameters */
   // Activates conditional inputs
@@ -13,18 +13,21 @@ model ProsumerIdeal
     annotation(Dialog(group="Conditional control inputs"));
 
   // Parameters for inputs substitution
-  parameter Modelica.SIunits.Temperature T_sec=323.15 "Temperature set point for the secondary side"
-   annotation(Dialog(group="Fixed control inputs"));
-  parameter Modelica.SIunits.MassFlowRate m_flow_sec=0.358 "Mass flow set point for the secondary side"
-   annotation(Dialog(group="Fixed control inputs"));
+  parameter Modelica.Units.SI.Temperature T_sec=323.15
+    "Temperature set point for the secondary side"
+    annotation (Dialog(group="Fixed control inputs"));
+  parameter Modelica.Units.SI.MassFlowRate m_flow_sec=0.358
+    "Mass flow set point for the secondary side"
+    annotation (Dialog(group="Fixed control inputs"));
 
   // Dynamic parameters for CV in PrescribedSecondarySide
   extends ProsNet.Prosumers.SecondarySides.BaseClasses.ControlVolumeDynParam;
   // PumpsPairPartial dynamic parameters
   extends ProsNet.Prosumers.SecondarySides.BaseClasses.PumpsPairDynParam;
 
-  parameter Modelica.SIunits.Time tau_temSen=1 "Time constant for the temperature sensors"
-  annotation(Dialog(tab="Advanced", group="Temperature sensors dynamics"));
+  parameter Modelica.Units.SI.Time tau_temSen=1
+    "Time constant for the temperature sensors"
+    annotation (Dialog(tab="Advanced", group="Temperature sensors dynamics"));
   parameter Modelica.Blocks.Types.Init init_temSen=Modelica.Blocks.Types.Init.SteadyState "Type of initialization"
   annotation(Dialog(tab="Advanced", group="Temperature sensors dynamics"));
 
@@ -62,21 +65,27 @@ model ProsumerIdeal
 
   // Simulation results as internal variables
 public
-    Modelica.SIunits.Temperature T_prim_hot(displayUnit="degC") "Temperature in the hot port on the primary side";
+  Modelica.Units.SI.Temperature T_prim_hot(displayUnit="degC")
+    "Temperature in the hot port on the primary side";
 
-    Modelica.SIunits.Temperature T_prim_cold(displayUnit="degC") "Temperature in the cold port on the primary side";
+  Modelica.Units.SI.Temperature T_prim_cold(displayUnit="degC")
+    "Temperature in the cold port on the primary side";
 
-    Modelica.SIunits.Temperature T_sec_hot(displayUnit="degC") "Temperature in the hot port on the secondary side";
+  Modelica.Units.SI.Temperature T_sec_hot(displayUnit="degC")
+    "Temperature in the hot port on the secondary side";
 
-    Modelica.SIunits.Temperature T_sec_cold(displayUnit="degC") "Temperature in the cold port on the secondary side";
+  Modelica.Units.SI.Temperature T_sec_cold(displayUnit="degC")
+    "Temperature in the cold port on the secondary side";
 
-    Modelica.SIunits.HeatFlowRate Q_transf "Heat flow rate in the nextwork direction";
+  Modelica.Units.SI.HeatFlowRate Q_transf
+    "Heat flow rate in the nextwork direction";
 
     Real dotV_prim(final unit = "l/min") "Volume flow rate on the primary side";
 
     Real dotV_sec(final unit = "l/min") "Volume flow rate on the secondary side";
 
-  Modelica.SIunits.Pressure Delta_p_prim(displayUnit="Pa") "Pressure drop between cold and hot ports";
+  Modelica.Units.SI.Pressure Delta_p_prim(displayUnit="Pa")
+    "Pressure drop between cold and hot ports";
 
   // Internal input connectors
 protected

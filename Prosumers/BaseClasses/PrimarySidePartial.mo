@@ -32,8 +32,9 @@ partial model PrimarySidePartial
   // General primary side parameters
   extends ProsNet.Prosumers.BaseClasses.PrimarySideParameters;
 
-  parameter Modelica.SIunits.Time tau_temSen=1 "Time constant for the temperature sensors"
-  annotation(Dialog(tab="Advanced", group="Temperature sensors dynamics"));
+  parameter Modelica.Units.SI.Time tau_temSen=1
+    "Time constant for the temperature sensors"
+    annotation (Dialog(tab="Advanced", group="Temperature sensors dynamics"));
   parameter Modelica.Blocks.Types.Init init_temSen=Modelica.Blocks.Types.Init.SteadyState "Type of initialization"
   annotation(Dialog(tab="Advanced", group="Temperature sensors dynamics"));
 

@@ -10,10 +10,11 @@ package BaseClasses
     extends ProsNet.Prosumers.SecondarySides.BaseClasses.PumpsPairDynParam;
 
     // Parameters
-    parameter Modelica.SIunits.MassFlowRate m_flow_nominal  "Nominal flow rate"
-     annotation(Dialog(group="Secondary side pumps nominal conditions"));
-    parameter Modelica.SIunits.PressureDifference dp_nominal "Nominal pressure difference"
-      annotation(Dialog(group="Secondary side pumps nominal conditions"));
+    parameter Modelica.Units.SI.MassFlowRate m_flow_nominal "Nominal flow rate"
+      annotation (Dialog(group="Secondary side pumps nominal conditions"));
+    parameter Modelica.Units.SI.PressureDifference dp_nominal
+      "Nominal pressure difference"
+      annotation (Dialog(group="Secondary side pumps nominal conditions"));
 
     ProsNet.Fluid.Pumps.FlowControlled_m_flow pump_prod(final energyDynamics=energyDynamics_pumpsSec,
         final tau=tau_pumpsSec,
@@ -89,14 +90,16 @@ package BaseClasses
 
     parameter Modelica.Fluid.Types.Dynamics energyDynamics_pumpsSec = Modelica.Fluid.Types.Dynamics.SteadyState
       "Energy dynamics" annotation(Dialog(tab="Dynamics", group="Secondary side pumps dynamics"));
-    parameter Modelica.SIunits.Time tau_pumpsSec(min=0) = 10 "Time constant of fluid volume in pumps"
-     annotation(Dialog(tab="Dynamics", group="Secondary side pumps dynamics"));
+    parameter Modelica.Units.SI.Time tau_pumpsSec(min=0) = 10
+      "Time constant of fluid volume in pumps" annotation (Dialog(tab=
+            "Dynamics", group="Secondary side pumps dynamics"));
     parameter Boolean use_inputFilter_pumpsSec = false "Start-up and shut-down dynamics of pumps"
      annotation(Dialog(tab="Dynamics", group="Secondary side pumps dynamics"));
-    parameter Modelica.SIunits.Time riseTime_pumpsSec(min=0) = 5 "Rise time"
-      annotation(Dialog(tab="Dynamics", group="Secondary side pumps dynamics"));
-    parameter Modelica.SIunits.MassFlowRate m_flow_start_pumpsSec=0 "Initial value of mass flow rate"
-      annotation(Dialog(tab="Dynamics", group="Secondary side pumps dynamics"));
+    parameter Modelica.Units.SI.Time riseTime_pumpsSec(min=0) = 5 "Rise time"
+      annotation (Dialog(tab="Dynamics", group="Secondary side pumps dynamics"));
+    parameter Modelica.Units.SI.MassFlowRate m_flow_start_pumpsSec=0
+      "Initial value of mass flow rate" annotation (Dialog(tab="Dynamics",
+          group="Secondary side pumps dynamics"));
     parameter Real y_start_pumpsSec = 1 "Initial value of speed"
       annotation(Dialog(tab="Dynamics", group="Secondary side pumps dynamics"));
 
@@ -106,10 +109,12 @@ package BaseClasses
 
     parameter Modelica.Fluid.Types.Dynamics energyDynamics_cv = Modelica.Fluid.Types.Dynamics.SteadyState
       "Energy dynamics" annotation(Dialog(tab="Dynamics", group="Secondary side control volume dynamics"));
-    parameter Modelica.SIunits.Time tau_cv(min=0) = 10 "Time constant for control volume"
-     annotation(Dialog(tab="Dynamics", group="Secondary side control volume dynamics"));
-    parameter Modelica.SIunits.Temperature T_start_cv=293.15 "Initial temperature inside volume"
-       annotation(Dialog(tab="Dynamics", group="Secondary side control volume dynamics"));
+    parameter Modelica.Units.SI.Time tau_cv(min=0) = 10
+      "Time constant for control volume" annotation (Dialog(tab="Dynamics",
+          group="Secondary side control volume dynamics"));
+    parameter Modelica.Units.SI.Temperature T_start_cv=293.15
+      "Initial temperature inside volume" annotation (Dialog(tab="Dynamics",
+          group="Secondary side control volume dynamics"));
 
   end ControlVolumeDynParam;
 end BaseClasses;

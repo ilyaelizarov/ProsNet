@@ -64,30 +64,75 @@ model ProsumerIdeal
         origin={-20,120})));
 
   // Simulation results as internal variables
-public
-  Modelica.Units.SI.Temperature T_prim_hot(displayUnit="degC")
+  /*Modelica.Units.SI.Temperature T_prim_hot(displayUnit="degC") 
     "Temperature in the hot port on the primary side";
 
-  Modelica.Units.SI.Temperature T_prim_cold(displayUnit="degC")
+  Modelica.Units.SI.Temperature T_prim_cold(displayUnit="degC") 
     "Temperature in the cold port on the primary side";
 
-  Modelica.Units.SI.Temperature T_sec_hot(displayUnit="degC")
+  Modelica.Units.SI.Temperature T_sec_hot(displayUnit="degC") 
     "Temperature in the hot port on the secondary side";
 
-  Modelica.Units.SI.Temperature T_sec_cold(displayUnit="degC")
+  Modelica.Units.SI.Temperature T_sec_cold(displayUnit="degC") 
     "Temperature in the cold port on the secondary side";
 
-  Modelica.Units.SI.HeatFlowRate Q_transf
+  Modelica.Units.SI.HeatFlowRate Q_transf 
     "Heat flow rate in the nextwork direction";
 
     Real dotV_prim(final unit = "l/min") "Volume flow rate on the primary side";
 
     Real dotV_sec(final unit = "l/min") "Volume flow rate on the secondary side";
 
-  Modelica.Units.SI.Pressure Delta_p_prim(displayUnit="Pa")
-    "Pressure drop between cold and hot ports";
+  Modelica.Units.SI.Pressure Delta_p_prim(displayUnit="Pa") 
+  "Pressure drop between cold and hot ports"; */
 
   // Internal input connectors
+public
+  Modelica.Blocks.Interfaces.RealOutput T_prim_hot(final unit = "K",
+  displayUnit="degC")
+  "Temperature in the hot port on the primary side"
+    annotation (Placement(transformation(extent={{100,50},{120,70}})));
+  Modelica.Blocks.Interfaces.RealOutput T_sec_hot(final unit = "K",
+  displayUnit="degC")
+  "Temperature in the hot port on the secondary side"
+    annotation (Placement(transformation(extent={{100,-70},{120,-50}})));
+  Modelica.Blocks.Interfaces.RealOutput dotV_prim(final unit = "l/min",
+  displayUnit="l/min")
+  "Volume flow rate on the primary side. Positive for flow from cold to hot level."
+    annotation (Placement(transformation(extent={{100,30},{120,50}})));
+  Modelica.Blocks.Interfaces.RealOutput dotV_sec(final unit = "l/min",
+  displayUnit="l/min")
+  "Volume flow rate on the secondary side. Positive for flow from cold to hot level."
+    annotation (Placement(transformation(extent={{100,-50},{120,-30}})));
+  Modelica.Blocks.Interfaces.RealOutput T_sec_cold(final unit = "K",
+  displayUnit="degC")
+  "Temperature in the cold port on the secondary side"
+   annotation (Placement(transformation(
+        extent={{-10,-10},{10,10}},
+        rotation=180,
+        origin={-110,-60})));
+  Modelica.Blocks.Interfaces.RealOutput T_prim_cold(final unit = "K",
+  displayUnit="degC")
+  "Temperature in the cold port on the primary side"
+   annotation (Placement(transformation(
+        extent={{-10,-10},{10,10}},
+        rotation=180,
+        origin={-110,60})));
+  Modelica.Blocks.Interfaces.RealOutput Delta_p_prim(final unit = "Pa",
+  displayUnit="Pa")
+  "Pressure drop on the primary side between cold and hot ports"
+   annotation (Placement(transformation(
+        extent={{-10,-10},{10,10}},
+        rotation=0,
+        origin={110,-80})));
+  Modelica.Blocks.Interfaces.RealOutput Q_transf(final unit = "W",
+  displayUnit="kW")
+  "Heat flow rate from secondary to primary side, negative for consumption"
+   annotation (Placement(transformation(
+        extent={{-10,-10},{10,10}},
+        rotation=270,
+        origin={0,-110})));
+  Modelica.Blocks.Math.Add add_TL(k2=-1);
 protected
   Modelica.Blocks.Interfaces.RealInput m_flow_sec_set_internal annotation (
       Placement(visible=false,transformation(
@@ -133,14 +178,20 @@ protected
 
 equation
 
-  T_prim_hot = temPriHot.T;
+  /*T_prim_hot = temPriHot.T;
   T_prim_cold = temPriCold.T;
   T_sec_hot = temSecHot.T;
   T_sec_cold = temSecCold.T;
-
   Q_transf = priSide.HEX.Q1_flow;
-
-  Delta_p_prim = port_a.p - port_b.p;
+  Delta_p_prim = port_a.p - port_b.p;*/
+  add_TL.u1 = port_a.p;
+  add_TL.u2 = port_b.p;
+  connect(temPriHot.T, T_prim_hot);
+  connect(temPriCold.T, T_prim_cold);
+  connect(temSecHot.T, T_sec_hot);
+  connect(temSecCold.T, T_sec_cold);
+  Q_transf = priSide.HEX.Q1_flow;
+  connect(add_TL.y, Delta_p_prim);
 
   // Average density in between hot and cold ports on the primary side
   rho_a_inflow = Medium1.density(Medium.setState_phX(port_a.p,

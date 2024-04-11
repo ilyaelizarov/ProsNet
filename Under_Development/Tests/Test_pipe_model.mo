@@ -6,8 +6,8 @@ model Test_pipe_model
   Modelica.Fluid.Sensors.RelativePressure relativePressure(redeclare package
       Medium = ProsNet.Media.Water)
     annotation (Placement(transformation(extent={{20,64},{40,84}})));
-  Modelica.Fluid.Sensors.RelativeTemperature relativeTemperature(redeclare package
-              Medium = ProsNet.Media.Water)
+  Modelica.Fluid.Sensors.RelativeTemperature relativeTemperature(redeclare
+      package Medium = ProsNet.Media.Water)
     annotation (Placement(transformation(extent={{20,4},{40,-16}})));
   Modelica.Fluid.Sources.MassFlowSource_T mass_source(
     redeclare package Medium = ProsNet.Media.Water,
@@ -56,8 +56,8 @@ model Test_pipe_model
   Modelica.Fluid.Sensors.RelativePressure relativePressure1(redeclare package
       Medium = ProsNet.Media.Water)
     annotation (Placement(transformation(extent={{22,-48},{42,-28}})));
-  Modelica.Fluid.Sensors.RelativeTemperature relativeTemperature1(redeclare package
-              Medium = ProsNet.Media.Water)
+  Modelica.Fluid.Sensors.RelativeTemperature relativeTemperature1(redeclare
+      package Medium = ProsNet.Media.Water)
     annotation (Placement(transformation(extent={{22,-108},{42,-128}})));
   Modelica.Fluid.Sources.Boundary_pT bou1(redeclare package Medium =
         ProsNet.Media.Water, nPorts=1)

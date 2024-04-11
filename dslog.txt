@@ -1,0 +1,9 @@
+ 
+ 
+GCC compiler not found: "C:/MinGW/bin/gcc.exe" 
+ 
+Please correct the GCC path. 
+For instructions on how to install a supported GCC compiler, please visit http://www.dymola.com/compiler 
+ 
+Error generating dymosim.exe. 
+ 

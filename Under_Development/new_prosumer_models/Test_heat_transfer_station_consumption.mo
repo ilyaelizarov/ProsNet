@@ -40,7 +40,7 @@ model Test_heat_transfer_station_consumption
     annotation (Placement(transformation(extent={{62,62},{82,82}})));
   Fluid.Sources.Boundary_pT bou(          redeclare final package Medium =
         Media.Water, nPorts=1)
-    annotation (Placement(transformation(extent={{90,12},{70,32}})));
+    annotation (Placement(transformation(extent={{106,4},{86,24}})));
   Fluid.Pumps.SpeedControlled_y pump_prim_prod(
     redeclare final package Medium = Media.Water,
     final energyDynamics=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
@@ -65,15 +65,18 @@ equation
   connect(kappa.y, heat_transfer_station1.kappa_set) annotation (Line(points={{-71,
           8},{-58,8},{-58,50},{-8,50}}, color={0,0,127}));
   connect(heat_transfer_station1.hot_prim, volume.ports[1])
-    annotation (Line(points={{6,39.8},{6,-30},{10,-30}}, color={0,127,255}));
-  connect(volume.ports[2], pump_prim_prod.port_a) annotation (Line(points={{14,-30},
+    annotation (Line(points={{-3.5,39.8},{-3.5,-30},{11,-30}},
+                                                         color={0,127,255}));
+  connect(volume.ports[2], pump_prim_prod.port_a) annotation (Line(points={{13,-30},
           {22,-30},{22,-16},{40,-16},{40,-8}}, color={0,127,255}));
   connect(heat_transfer_station1.cold_prim, pump_prim_prod.port_b) annotation (
-      Line(points={{16,39.8},{16,18},{40,18},{40,12}}, color={0,127,255}));
+      Line(points={{17.5,40},{17.5,18},{40,18},{40,12}},
+                                                       color={0,127,255}));
   connect(ramp.y, pump_prim_prod.y) annotation (Line(points={{-71,-22},{10,-22},
           {10,2},{28,2}}, color={0,0,127}));
   connect(bou.ports[1], pump_prim_prod.port_b)
-    annotation (Line(points={{70,22},{40,22},{40,12}}, color={0,127,255}));
+    annotation (Line(points={{86,14},{54,14},{54,12},{40,12}},
+                                                       color={0,127,255}));
   connect(flow_house.y, heat_transfer_station1.V_dot_sec_set) annotation (
       Line(points={{-71,72},{-16,72},{-16,68},{-8,68}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={

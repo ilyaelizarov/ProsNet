@@ -309,15 +309,14 @@ annotation (Line(points={{60,-50},{60,-60},{62,-60}},
 annotation (Line(points={{100,-50},{100,-60}},
                                              color={0,127,255}));
   connect(
-      conversion.T_sec_in, ideal_house.T_set) annotation (Line(points={{-66.4,
-      66},{-70,66},{-70,158},{40,158},{40,152}}, color={0,0,127}));
-  connect(
-      conversion.pump_contr, pump_prim_prod.y) annotation (Line(points={{-52,20.7059},{
-          -38,20.7059},{-38,20},{-24,20},{-24,-24},{82,-24},{82,-70},{88,-70}},
+      conversion.pump_contr, pump_prim_prod.y) annotation (Line(points={{-52,
+          20.7059},{-38,20.7059},{-38,20},{-24,20},{-24,-24},{82,-24},{82,-70},
+          {88,-70}},
                 color={0,0,127}));
   connect(
-      conversion.valve_contr, valve_prim_cons.y) annotation (Line(points={{-52,12.4706},
-          {-42,12.4706},{-42,12},{-32,12},{-32,-40},{48,-40}},     color={0,
+      conversion.valve_contr, valve_prim_cons.y) annotation (Line(points={{-52,
+          12.4706},{-42,12.4706},{-42,12},{-32,12},{-32,-40},{48,-40}},
+                                                                   color={0,
       0,127}));
   connect(
       conversion.m_dot_cons, pump_sec_cons.m_flow_in) annotation (Line(
@@ -325,8 +324,8 @@ annotation (Line(points={{100,-50},{100,-60}},
                                                       color={0,0,127}));
   connect(
       conversion.m_dot_prod, pump_sec_prod.m_flow_in) annotation (Line(
-    points={{-52,45.4118},{-12,45.4118},{-12,46},{28,46},{28,24},{82,24},{82,42},{88,42}},
-                       color={0,0,127}));
+    points={{-52,45.4118},{-12,45.4118},{-12,46},{28,46},{28,24},{82,24},{82,42},
+          {88,42}},    color={0,0,127}));
 
 
   connect(

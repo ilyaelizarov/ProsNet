@@ -52,7 +52,7 @@ model Test_heat_transfer_station_production
         origin={36,-4})));
   Fluid.Sources.Boundary_pT bou(nPorts=1, redeclare final package Medium =
         Media.Water)
-    annotation (Placement(transformation(extent={{90,12},{70,32}})));
+    annotation (Placement(transformation(extent={{106,2},{86,22}})));
 equation
   connect(T_house.y, heat_transfer_station1.T_sec_in_set) annotation (Line(
         points={{-71,84},{-14,84},{-14,72},{-8,72}}, color={0,0,127}));
@@ -67,17 +67,17 @@ equation
   connect(kappa.y, heat_transfer_station1.kappa_set) annotation (Line(points={{-71,
           8},{-58,8},{-58,50},{-8,50}}, color={0,0,127}));
   connect(heat_transfer_station1.hot_prim, volume.ports[1])
-    annotation (Line(points={{-3.5,39.8},{-3.5,-24},{10,-24}},
+    annotation (Line(points={{-3.5,39.8},{-3.5,-24},{11,-24}},
                                                          color={0,127,255}));
   connect(valve_for_test.port_b, heat_transfer_station1.cold_prim) annotation (
       Line(points={{36,6},{36,34},{17.5,34},{17.5,40}},
                                                       color={0,127,255}));
   connect(valve_for_test.port_a, volume.ports[2])
-    annotation (Line(points={{36,-14},{36,-24},{14,-24}}, color={0,127,255}));
+    annotation (Line(points={{36,-14},{36,-24},{13,-24}}, color={0,127,255}));
   connect(ramp.y, valve_for_test.y) annotation (Line(points={{-71,-22},{0,-22},{
           0,-4},{24,-4}}, color={0,0,127}));
   connect(bou.ports[1], valve_for_test.port_b)
-    annotation (Line(points={{70,22},{36,22},{36,6}}, color={0,127,255}));
+    annotation (Line(points={{86,12},{36,12},{36,6}}, color={0,127,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Ellipse(lineColor = {75,138,73},
                 fillColor={255,255,255},

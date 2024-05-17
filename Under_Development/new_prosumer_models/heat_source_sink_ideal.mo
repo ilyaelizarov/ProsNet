@@ -56,10 +56,10 @@ equation
                                                    color={0,127,255}));
   connect(massFlowRate.m_flow, m_dot_sec_is) annotation (Line(points={{-47,-16},
           {-34,-16},{-34,-84},{0,-84},{0,-98}}, color={0,0,127}));
-  connect(sF1_1.port_a1, massFlowRate.port_b) annotation (Line(points={{5.8,
-          34.2},{5.8,36},{-58,36},{-58,-6}}, color={0,127,255}));
-  connect(sF1_1.port_b1, T_sens_cold.port_a) annotation (Line(points={{13.6,
-          34.6},{13.6,36},{60,36},{60,-40}}, color={0,127,255}));
+  connect(sF1_1.port_a1, massFlowRate.port_b) annotation (Line(points={{12,32.8},
+          {12,36},{-58,36},{-58,-6}},        color={0,127,255}));
+  connect(sF1_1.port_b1, T_sens_cold.port_a) annotation (Line(points={{7,33},{7,
+          36},{60,36},{60,-40}},             color={0,127,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Rectangle(
           extent={{-100,40},{100,-100}},

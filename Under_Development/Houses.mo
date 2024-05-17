@@ -187,6 +187,32 @@ package Houses
       annotation (Placement(transformation(extent={{-60,-56},{16,20}})));
     Fluid.Pumps.Test_Pump_controler test_Pump_controler
       annotation (Placement(transformation(extent={{-42,-264},{-22,-244}})));
+    Modelica.Blocks.Math.Gain gaiHea(k=1E6) "Gain for heating"
+      annotation (Placement(visible=true,transformation(origin={446,12},
+                                                                       extent={{-6,-6},{6,6}},rotation=0)));
+    Buildings.Controls.Continuous.LimPID conHeaPID(
+      Ti=300,
+      k=0.1,
+      reverseActing=true,
+      strict=true) "Controller for heating"
+      annotation (Placement(visible=true, transformation(origin={424,12},extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Sources.Constant TSetHea(k=273.15 + 20)
+      "Set-point for heating"
+      annotation (Placement(visible=true, transformation(origin={400,12},extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Sources.Constant TSetCoo(k=273.15 + 27)
+      "Set-point for cooling"
+      annotation (Placement(visible=true, transformation(origin={400,-14},
+                                                                         extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Math.Gain gaiCoo(k=-1E6) "Gain for cooling"
+      annotation (Placement(visible=true,transformation(origin={446,-14},
+                                                                       extent={{-6,-6},{6,6}},rotation=0)));
+    Buildings.Controls.Continuous.LimPID conCooPID(
+      Ti=300,
+      k=0.1,
+      reverseActing=false,
+      strict=true) "Controller for cooling"
+      annotation (Placement(visible=true, transformation(origin={424,-14},
+                                                                         extent={{-6,-6},{6,6}},rotation=0)));
   equation
     connect(bat.SOC,con. SOC) annotation (Line(
         points={{-176.5,-463.2},{-220,-463.2},{-220,-434},{-213.25,-434}},
@@ -318,6 +344,29 @@ package Houses
           points={{-40.2,-243},{-40.2,-218},{10.4,-218}}, color={0,0,127}));
     connect(test_Pump_controler.term_p, gri.terminal) annotation (Line(points={
             {-26.4,-267.4},{-26.4,-410},{82,-410}}, color={0,120,120}));
+    connect(conHeaPID.y,gaiHea. u)
+      annotation (Line(points={{430.6,12},{438.8,12}},
+                                                    color={0,0,127}));
+    connect(TSetHea.y,conHeaPID. u_s)
+      annotation (Line(points={{406.6,12},{416.8,12}}, color={0,0,127}));
+    connect(conCooPID.u_s,TSetCoo. y)
+      annotation (Line(points={{416.8,-14},{406.6,-14}},
+                                                       color={0,0,127}));
+    connect(conCooPID.y,gaiCoo. u)
+      annotation (Line(points={{430.6,-14},{438.8,-14}},
+                                                    color={0,0,127}));
+    connect(conHeaPID.y,gaiHea. u)
+      annotation (Line(points={{430.6,12},{438.8,12}},
+                                                    color={0,0,127}));
+    connect(gaiCoo.u,conCooPID. y)
+      annotation (Line(points={{438.8,-14},{430.6,-14}},
+                                                    color={0,0,127}));
+    connect(sinZonFlo.TRooAir, conHeaPID.u_m) annotation (Line(points={{218.5,
+            -54.9},{218.5,-118},{410,-118},{410,-30},{386,-30},{386,4.8},{424,
+            4.8}}, color={0,0,127}));
+    connect(conCooPID.u_m, sinZonFlo.TRooAir) annotation (Line(points={{424,
+            -21.2},{424,-60},{412,-60},{412,-120},{218.5,-120},{218.5,-54.9}},
+          color={0,0,127}));
     annotation (
       Icon(
         coordinateSystem(
@@ -568,6 +617,31 @@ First implementation.
       redeclare package MediumHea = Buildings.Media.Water,
       dat=datWatHea)
       annotation (Placement(transformation(extent={{132,-302},{202,-236}})));
+    Modelica.Blocks.Math.Gain gaiHea(k=1E6) "Gain for heating"
+      annotation (Placement(visible=true,transformation(origin={510,8},extent={{-6,-6},{6,6}},rotation=0)));
+    Buildings.Controls.Continuous.LimPID conHeaPID(
+      Ti=300,
+      k=0.1,
+      reverseActing=true,
+      strict=true) "Controller for heating"
+      annotation (Placement(visible=true, transformation(origin={488,8}, extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Sources.Constant TSetHea(k=273.15 + 20)
+      "Set-point for heating"
+      annotation (Placement(visible=true, transformation(origin={464,8}, extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Sources.Constant TSetCoo(k=273.15 + 27)
+      "Set-point for cooling"
+      annotation (Placement(visible=true, transformation(origin={464,-18},
+                                                                         extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Math.Gain gaiCoo(k=-1E6) "Gain for cooling"
+      annotation (Placement(visible=true,transformation(origin={510,-18},
+                                                                       extent={{-6,-6},{6,6}},rotation=0)));
+    Buildings.Controls.Continuous.LimPID conCooPID(
+      Ti=300,
+      k=0.1,
+      reverseActing=false,
+      strict=true) "Controller for cooling"
+      annotation (Placement(visible=true, transformation(origin={488,-18},
+                                                                         extent={{-6,-6},{6,6}},rotation=0)));
   equation
     connect(bat.SOC,con. SOC) annotation (Line(
         points={{-176.5,-463.2},{-220,-463.2},{-220,-434},{-213.25,-434}},
@@ -728,6 +802,27 @@ First implementation.
             -259},{114.7,-269},{128.5,-269}}, color={0,0,127}));
     connect(domHotWatTan.PEle, acLoad1.Pow) annotation (Line(points={{205.5,
             -269},{250,-269},{250,-326}}, color={0,0,127}));
+    connect(conHeaPID.y,gaiHea. u)
+      annotation (Line(points={{494.6,8},{502.8,8}},color={0,0,127}));
+    connect(TSetHea.y,conHeaPID. u_s)
+      annotation (Line(points={{470.6,8},{480.8,8}},   color={0,0,127}));
+    connect(conCooPID.u_s,TSetCoo. y)
+      annotation (Line(points={{480.8,-18},{470.6,-18}},
+                                                       color={0,0,127}));
+    connect(conCooPID.y,gaiCoo. u)
+      annotation (Line(points={{494.6,-18},{502.8,-18}},
+                                                    color={0,0,127}));
+    connect(conHeaPID.y,gaiHea. u)
+      annotation (Line(points={{494.6,8},{502.8,8}},color={0,0,127}));
+    connect(gaiCoo.u,conCooPID. y)
+      annotation (Line(points={{502.8,-18},{494.6,-18}},
+                                                    color={0,0,127}));
+    connect(sinZonFlo.TRooAir, conHeaPID.u_m) annotation (Line(points={{272.2,
+            -37.88},{272.2,-92},{460,-92},{460,-34},{450,-34},{450,0.8},{488,
+            0.8}}, color={0,0,127}));
+    connect(conCooPID.u_m, sinZonFlo.TRooAir) annotation (Line(points={{488,
+            -25.2},{488,-40},{460,-40},{460,-92},{272.2,-92},{272.2,-37.88}},
+          color={0,0,127}));
     annotation (
       Icon(
         coordinateSystem(
@@ -925,6 +1020,32 @@ First implementation.
       redeclare package MediumHea = Buildings.Media.Water,
       dat=datWatHea)
       annotation (Placement(transformation(extent={{148,-288},{218,-222}})));
+    Modelica.Blocks.Math.Gain gaiHea(k=1E6) "Gain for heating"
+      annotation (Placement(visible=true,transformation(origin={452,14},
+                                                                       extent={{-6,-6},{6,6}},rotation=0)));
+    Buildings.Controls.Continuous.LimPID conHeaPID(
+      Ti=300,
+      k=0.1,
+      reverseActing=true,
+      strict=true) "Controller for heating"
+      annotation (Placement(visible=true, transformation(origin={430,14},extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Sources.Constant TSetHea(k=273.15 + 20)
+      "Set-point for heating"
+      annotation (Placement(visible=true, transformation(origin={406,14},extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Sources.Constant TSetCoo(k=273.15 + 27)
+      "Set-point for cooling"
+      annotation (Placement(visible=true, transformation(origin={406,-12},
+                                                                         extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Math.Gain gaiCoo(k=-1E6) "Gain for cooling"
+      annotation (Placement(visible=true,transformation(origin={452,-12},
+                                                                       extent={{-6,-6},{6,6}},rotation=0)));
+    Buildings.Controls.Continuous.LimPID conCooPID(
+      Ti=300,
+      k=0.1,
+      reverseActing=false,
+      strict=true) "Controller for cooling"
+      annotation (Placement(visible=true, transformation(origin={430,-12},
+                                                                         extent={{-6,-6},{6,6}},rotation=0)));
   equation
     connect(bat.SOC,con. SOC) annotation (Line(
         points={{-176.5,-463.2},{-220,-463.2},{-220,-434},{-213.25,-434}},
@@ -1040,6 +1161,27 @@ First implementation.
     connect(domHotWatTan.port_bHea, tan.fluPorVol[3]) annotation (Line(points={
             {148,-274.8},{-28,-274.8},{-28,-48},{-23,-48},{-23,0.2}}, color={0,
             127,255}));
+    connect(conHeaPID.y,gaiHea. u)
+      annotation (Line(points={{436.6,14},{444.8,14}},
+                                                    color={0,0,127}));
+    connect(TSetHea.y,conHeaPID. u_s)
+      annotation (Line(points={{412.6,14},{422.8,14}}, color={0,0,127}));
+    connect(conCooPID.u_s,TSetCoo. y)
+      annotation (Line(points={{422.8,-12},{412.6,-12}},
+                                                       color={0,0,127}));
+    connect(conCooPID.y,gaiCoo. u)
+      annotation (Line(points={{436.6,-12},{444.8,-12}},
+                                                    color={0,0,127}));
+    connect(conHeaPID.y,gaiHea. u)
+      annotation (Line(points={{436.6,14},{444.8,14}},
+                                                    color={0,0,127}));
+    connect(gaiCoo.u,conCooPID. y)
+      annotation (Line(points={{444.8,-12},{436.6,-12}},
+                                                    color={0,0,127}));
+    connect(sinZonFlo.TRooAir, conHeaPID.u_m) annotation (Line(points={{230.5,
+            1.1},{230.5,6.8},{430,6.8}}, color={0,0,127}));
+    connect(conCooPID.u_m, sinZonFlo.TRooAir) annotation (Line(points={{430,
+            -19.2},{430,-24},{280,-24},{280,1.1},{230.5,1.1}}, color={0,0,127}));
     annotation (
       Icon(
         coordinateSystem(
@@ -1217,6 +1359,34 @@ First implementation.
       redeclare package MediumHea = Buildings.Media.Water,
       dat=datWatHea)
       annotation (Placement(transformation(extent={{142,-294},{212,-228}})));
+    Modelica.Blocks.Math.Gain gaiHea(k=1E6) "Gain for heating"
+      annotation (Placement(visible=true,transformation(origin={468,-20},
+                                                                       extent={{-6,-6},{6,6}},rotation=0)));
+    Buildings.Controls.Continuous.LimPID conHeaPID(
+      Ti=300,
+      k=0.1,
+      reverseActing=true,
+      strict=true) "Controller for heating"
+      annotation (Placement(visible=true, transformation(origin={446,-20},
+                                                                         extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Sources.Constant TSetHea(k=273.15 + 20)
+      "Set-point for heating"
+      annotation (Placement(visible=true, transformation(origin={422,-20},
+                                                                         extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Sources.Constant TSetCoo(k=273.15 + 27)
+      "Set-point for cooling"
+      annotation (Placement(visible=true, transformation(origin={422,-46},
+                                                                         extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Math.Gain gaiCoo(k=-1E6) "Gain for cooling"
+      annotation (Placement(visible=true,transformation(origin={468,-46},
+                                                                       extent={{-6,-6},{6,6}},rotation=0)));
+    Buildings.Controls.Continuous.LimPID conCooPID(
+      Ti=300,
+      k=0.1,
+      reverseActing=false,
+      strict=true) "Controller for cooling"
+      annotation (Placement(visible=true, transformation(origin={446,-46},
+                                                                         extent={{-6,-6},{6,6}},rotation=0)));
   equation
     connect(bat.SOC,con. SOC) annotation (Line(
         points={{-176.5,-463.2},{-220,-463.2},{-220,-434},{-213.25,-434}},
@@ -1319,6 +1489,29 @@ First implementation.
             -261},{250,-261},{250,-326}}, color={0,0,127}));
     connect(conTSetHot.y, domHotWatTan.TDomSet) annotation (Line(points={{102.7,
             -267},{102.7,-261},{138.5,-261}}, color={0,0,127}));
+    connect(conHeaPID.y,gaiHea. u)
+      annotation (Line(points={{452.6,-20},{460.8,-20}},
+                                                    color={0,0,127}));
+    connect(TSetHea.y,conHeaPID. u_s)
+      annotation (Line(points={{428.6,-20},{438.8,-20}},
+                                                       color={0,0,127}));
+    connect(conCooPID.u_s,TSetCoo. y)
+      annotation (Line(points={{438.8,-46},{428.6,-46}},
+                                                       color={0,0,127}));
+    connect(conCooPID.y,gaiCoo. u)
+      annotation (Line(points={{452.6,-46},{460.8,-46}},
+                                                    color={0,0,127}));
+    connect(conHeaPID.y,gaiHea. u)
+      annotation (Line(points={{452.6,-20},{460.8,-20}},
+                                                    color={0,0,127}));
+    connect(gaiCoo.u,conCooPID. y)
+      annotation (Line(points={{460.8,-46},{452.6,-46}},
+                                                    color={0,0,127}));
+    connect(sinZonFlo.TRooAir, conHeaPID.u_m) annotation (Line(points={{254.35,
+            -45.39},{404,-45.39},{404,-8},{446,-8},{446,-27.2}}, color={0,0,127}));
+    connect(conCooPID.u_m, sinZonFlo.TRooAir) annotation (Line(points={{446,
+            -53.2},{446,-56},{384,-56},{384,-45.39},{254.35,-45.39}}, color={0,
+            0,127}));
     annotation (
       Icon(
         coordinateSystem(
@@ -1499,6 +1692,32 @@ First implementation.
       redeclare package MediumHea = Buildings.Media.Water,
       dat=datWatHea)
       annotation (Placement(transformation(extent={{138,-282},{208,-216}})));
+    Modelica.Blocks.Math.Gain gaiHea(k=1E6) "Gain for heating"
+      annotation (Placement(visible=true,transformation(origin={358,12},
+                                                                       extent={{-6,-6},{6,6}},rotation=0)));
+    Buildings.Controls.Continuous.LimPID conHeaPID(
+      Ti=300,
+      k=0.1,
+      reverseActing=true,
+      strict=true) "Controller for heating"
+      annotation (Placement(visible=true, transformation(origin={336,12},extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Sources.Constant TSetHea(k=273.15 + 20)
+      "Set-point for heating"
+      annotation (Placement(visible=true, transformation(origin={312,12},extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Sources.Constant TSetCoo(k=273.15 + 27)
+      "Set-point for cooling"
+      annotation (Placement(visible=true, transformation(origin={312,-14},
+                                                                         extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Math.Gain gaiCoo(k=-1E6) "Gain for cooling"
+      annotation (Placement(visible=true,transformation(origin={358,-14},
+                                                                       extent={{-6,-6},{6,6}},rotation=0)));
+    Buildings.Controls.Continuous.LimPID conCooPID(
+      Ti=300,
+      k=0.1,
+      reverseActing=false,
+      strict=true) "Controller for cooling"
+      annotation (Placement(visible=true, transformation(origin={336,-14},
+                                                                         extent={{-6,-6},{6,6}},rotation=0)));
   equation
     connect(bat.SOC,con. SOC) annotation (Line(
         points={{-176.5,-463.2},{-220,-463.2},{-220,-434},{-213.25,-434}},
@@ -1599,21 +1818,43 @@ First implementation.
     connect(buiHea.ports_bHeaWat[2], tan.fluPorVol[4]) annotation (Line(points=
             {{244,-30},{256,-30},{256,-84},{-68,-84},{-68,-2},{-26,-2},{-26,
             1.72},{-25,1.72}}, color={0,127,255}));
-    connect(domHotWatTan.port_aDom, souCol.ports[2]) annotation (Line(points={{
-            138,-229.2},{126,-229.2},{126,-183}}, color={0,127,255}));
+    connect(domHotWatTan.port_aDom, souCol.ports[2]) annotation (Line(points={{138,
+            -229.2},{126,-229.2},{126,-181.3}},   color={0,127,255}));
     connect(domHotWatTan.port_bDom, theMixVal.port_hot) annotation (Line(points
           ={{208,-229.2},{212,-229.2},{212,-204.6},{248,-204.6}}, color={0,127,
             255}));
     connect(conTSetHot.y, domHotWatTan.TDomSet) annotation (Line(points={{114.7,
             -259},{134.5,-259},{134.5,-249}}, color={0,0,127}));
-    connect(domHotWatTan.port_bHea, tan.fluPorVol[3]) annotation (Line(points={
-            {138,-268.8},{124,-268.8},{124,-308},{56,-308},{56,-312},{-60,-312},
-            {-60,12},{-25,12},{-25,4}}, color={0,127,255}));
-    connect(domHotWatTan.port_aHea, tan.fluPorVol[6]) annotation (Line(points={
-            {208,-268.8},{220,-268.8},{220,-296},{124,-296},{124,-308},{56,-308},
-            {56,-312},{-60,-312},{-60,12},{-25,12},{-25,4}}, color={0,127,255}));
+    connect(domHotWatTan.port_bHea, tan.fluPorVol[3]) annotation (Line(points={{138,
+            -268.8},{124,-268.8},{124,-308},{56,-308},{56,-312},{-60,-312},{-60,
+            12},{-25,12},{-25,0.2}},    color={0,127,255}));
+    connect(domHotWatTan.port_aHea, tan.fluPorVol[6]) annotation (Line(points={{208,
+            -268.8},{220,-268.8},{220,-296},{124,-296},{124,-308},{56,-308},{56,
+            -312},{-60,-312},{-60,12},{-25,12},{-25,4.76}},  color={0,127,255}));
     connect(domHotWatTan.PEle, acLoad1.Pow) annotation (Line(points={{211.5,
             -249},{250,-249},{250,-326}}, color={0,0,127}));
+    connect(conHeaPID.y,gaiHea. u)
+      annotation (Line(points={{342.6,12},{350.8,12}},
+                                                    color={0,0,127}));
+    connect(TSetHea.y,conHeaPID. u_s)
+      annotation (Line(points={{318.6,12},{328.8,12}}, color={0,0,127}));
+    connect(conCooPID.u_s,TSetCoo. y)
+      annotation (Line(points={{328.8,-14},{318.6,-14}},
+                                                       color={0,0,127}));
+    connect(conCooPID.y,gaiCoo. u)
+      annotation (Line(points={{342.6,-14},{350.8,-14}},
+                                                    color={0,0,127}));
+    connect(conHeaPID.y,gaiHea. u)
+      annotation (Line(points={{342.6,12},{350.8,12}},
+                                                    color={0,0,127}));
+    connect(gaiCoo.u,conCooPID. y)
+      annotation (Line(points={{350.8,-14},{342.6,-14}},
+                                                    color={0,0,127}));
+    connect(sinZonFlo.TRooAir, conHeaPID.u_m) annotation (Line(points={{216.2,
+            -15.88},{216.2,32},{336,32},{336,4.8}}, color={0,0,127}));
+    connect(sinZonFlo.TRooAir, conCooPID.u_m) annotation (Line(points={{216.2,
+            -15.88},{216.2,32},{300,32},{300,-21.2},{336,-21.2}}, color={0,0,
+            127}));
     annotation (
       Icon(
         coordinateSystem(

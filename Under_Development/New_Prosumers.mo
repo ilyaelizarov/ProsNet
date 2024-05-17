@@ -187,14 +187,35 @@ package New_Prosumers
       annotation (Placement(transformation(extent={{-60,-56},{16,20}})));
     Fluid.Pumps.Test_Pump_controler test_Pump_controler
       annotation (Placement(transformation(extent={{-42,-264},{-22,-244}})));
+    Modelica.Blocks.Math.Gain gaiHea(k=1E6) "Gain for heating"
+      annotation (Placement(visible=true,transformation(origin={340,26},
+                                                                       extent={{-6,-6},{6,6}},rotation=0)));
+    Buildings.Controls.Continuous.LimPID conHeaPID(
+      Ti=300,
+      k=0.1,
+      reverseActing=true,
+      strict=true) "Controller for heating"
+      annotation (Placement(visible=true, transformation(origin={318,26},extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Sources.Constant TSetHea(k=273.15 + 20)
+      "Set-point for heating"
+      annotation (Placement(visible=true, transformation(origin={294,26},extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Sources.Constant TSetCoo(k=273.15 + 27)
+      "Set-point for cooling"
+      annotation (Placement(visible=true, transformation(origin={294,0}, extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Math.Gain gaiCoo(k=-1E6) "Gain for cooling"
+      annotation (Placement(visible=true,transformation(origin={340,0},extent={{-6,-6},{6,6}},rotation=0)));
+    Buildings.Controls.Continuous.LimPID conCooPID(
+      Ti=300,
+      k=0.1,
+      reverseActing=false,
+      strict=true) "Controller for cooling"
+      annotation (Placement(visible=true, transformation(origin={318,0}, extent={{-6,-6},{6,6}},rotation=0)));
     Modelica.Fluid.Interfaces.FluidPort_a port_a1
       "Fluid connector a (positive design flow direction is from port_a to port_b)"
-      annotation (Placement(transformation(extent={{-86,116},{-40,162}}),
-          iconTransformation(extent={{-86,116},{-40,162}})));
+      annotation (Placement(transformation(extent={{-10,138},{10,158}})));
     Modelica.Fluid.Interfaces.FluidPort_b port_b1
       "Fluid connector b (positive design flow direction is from port_a to port_b)"
-      annotation (Placement(transformation(extent={{34,120},{84,162}}),
-          iconTransformation(extent={{34,120},{84,162}})));
+      annotation (Placement(transformation(extent={{-60,140},{-40,160}})));
   equation
     connect(bat.SOC,con. SOC) annotation (Line(
         points={{-176.5,-463.2},{-220,-463.2},{-220,-434},{-213.25,-434}},
@@ -326,10 +347,29 @@ package New_Prosumers
           points={{-40.2,-243},{-40.2,-218},{10.4,-218}}, color={0,0,127}));
     connect(test_Pump_controler.term_p, gri.terminal) annotation (Line(points={
             {-26.4,-267.4},{-26.4,-410},{82,-410}}, color={0,120,120}));
-    connect(tan.port_a, port_a1) annotation (Line(points={{-22,20},{-36,20},{
-            -36,139},{-63,139}}, color={0,127,255}));
-    connect(tan.port_b, port_b1) annotation (Line(points={{-22,-56},{-22,141},{
-            59,141}}, color={0,127,255}));
+    connect(conHeaPID.y,gaiHea. u)
+      annotation (Line(points={{324.6,26},{332.8,26}},
+                                                    color={0,0,127}));
+    connect(TSetHea.y,conHeaPID. u_s)
+      annotation (Line(points={{300.6,26},{310.8,26}}, color={0,0,127}));
+    connect(conCooPID.u_s,TSetCoo. y)
+      annotation (Line(points={{310.8,0},{300.6,0}},   color={0,0,127}));
+    connect(conCooPID.y,gaiCoo. u)
+      annotation (Line(points={{324.6,0},{332.8,0}},color={0,0,127}));
+    connect(conHeaPID.y,gaiHea. u)
+      annotation (Line(points={{324.6,26},{332.8,26}},
+                                                    color={0,0,127}));
+    connect(gaiCoo.u,conCooPID. y)
+      annotation (Line(points={{332.8,0},{324.6,0}},color={0,0,127}));
+    connect(sinZonFlo.TRooAir, conHeaPID.u_m) annotation (Line(points={{218.5,
+            -54.9},{218.5,-104},{304,-104},{304,-16},{280,-16},{280,18.8},{318,
+            18.8}}, color={0,0,127}));
+    connect(sinZonFlo.TRooAir, conCooPID.u_m) annotation (Line(points={{218.5,
+            -54.9},{269.25,-54.9},{269.25,-7.2},{318,-7.2}}, color={0,0,127}));
+    connect(tan.port_a, port_a1) annotation (Line(points={{-22,20},{-12,20},{
+            -12,148},{0,148}}, color={0,127,255}));
+    connect(tan.port_b, port_b1) annotation (Line(points={{-22,-56},{-36,-56},{
+            -36,150},{-50,150}}, color={0,127,255}));
     annotation (
       Icon(
         coordinateSystem(

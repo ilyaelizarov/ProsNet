@@ -57,8 +57,8 @@ protected
     final m_flow_nominal=m_flow_nominal,
     final allowFlowReversal=allowFlowReversal,
     final m_flow_small=m_flow_small,
-    final prescribedHeatFlowRate=prescribedHeatFlowRate) if
-         useSteadyStateTwoPort
+    final prescribedHeatFlowRate=prescribedHeatFlowRate)
+      if useSteadyStateTwoPort
     "Model for steady-state balance if nPorts=2"
     annotation (Placement(transformation(extent={{20,0},{40,20}})));
   ProsNet.Fluid.Interfaces.ConservationEquation dynBal(
@@ -75,8 +75,8 @@ protected
     final initialize_p=initialize_p,
     m(start=V*rho_start),
     nPorts=nPorts,
-    final mSenFac=mSenFac) if
-         not useSteadyStateTwoPort "Model for dynamic energy balance"
+    final mSenFac=mSenFac)
+      if not useSteadyStateTwoPort "Model for dynamic energy balance"
     annotation (Placement(transformation(extent={{60,0},{80,20}})));
 
   // Density at start values, used to compute initial values and start guesses

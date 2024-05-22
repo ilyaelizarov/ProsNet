@@ -44,7 +44,7 @@ partial model PartialTwoPortTransport
         p=port_b.p,
         h=inStream(port_b.h_outflow),
         X=inStream(port_b.Xi_outflow))),
-      m_flow_small) if             show_V_flow
+      m_flow_small)             if show_V_flow
     "Volume flow rate at inflowing port (positive when flow from port_a to port_b)";
 
   Medium.Temperature port_a_T=

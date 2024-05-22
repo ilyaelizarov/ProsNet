@@ -74,7 +74,8 @@ partial model PrimarySidePartial
     initType=init_temSen) "Hot port temperature sensor"
     annotation (Placement(transformation(extent={{74,-10},{90,10}})));
 
-            Fluid.Sensors.TemperatureTwoPort temPriCold(redeclare final package Medium = Medium1,
+            Fluid.Sensors.TemperatureTwoPort temPriCold(redeclare final package
+                                                                                Medium = Medium1,
     m_flow_nominal=m_flow_nominal_1,
     tau=tau_temSen,
     initType=init_temSen) "Cold port temperature sensor"

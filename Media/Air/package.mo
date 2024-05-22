@@ -50,7 +50,7 @@ package Air "Package with moist air model that decouples pressure and temperatur
     T(stateSelect=if preferredMediumStates then StateSelect.prefer else StateSelect.default),
     final standardOrderComponents=true) "Base properties"
 
-protected
+  protected
   constant Modelica.Units.SI.MolarMass[2] MMX={steam.MM,dryair.MM}
     "Molar masses of components";
 
@@ -301,7 +301,7 @@ end saturationPressure;
 redeclare function extends specificEntropy
     "Return the specific entropy, only valid for phi<1"
 
-protected
+  protected
   Modelica.Units.SI.MoleFraction[2] Y "Molar fraction";
 algorithm
     Y := massToMoleFractions(
@@ -530,7 +530,7 @@ end setState_pTX;
 
 redeclare function extends setState_psX
     "Return the thermodynamic state as function of p, s and composition X or Xi"
-protected
+  protected
   Modelica.Units.SI.MassFraction[2] X_int "Mass fraction";
   Modelica.Units.SI.MoleFraction[2] Y "Molar fraction";
   Modelica.Units.SI.Temperature T "Temperature";
@@ -750,7 +750,7 @@ end thermalConductivity;
 // Therefore, they are made protected. This also allows to redeclare the
 // medium model with another medium model that does not provide an
 // implementation of these classes.
-protected 
+protected
   record GasProperties
     "Coefficient data record for properties of perfect gases"
     extends Modelica.Icons.Record;

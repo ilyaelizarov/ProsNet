@@ -49,13 +49,13 @@ model ProsumerIdeal
   // Temperature sensors
 
   // Conditional input connectors
-  Modelica.Blocks.Interfaces.RealInput m_flow_sec_set(unit="kg/s", displayUnit="kg/s") if
-      use_m_flow_set_in "Mass flow rate on the secondary side" annotation (Placement(transformation(
+  Modelica.Blocks.Interfaces.RealInput m_flow_sec_set(unit="kg/s", displayUnit="kg/s")
+   if use_m_flow_set_in "Mass flow rate on the secondary side" annotation (Placement(transformation(
         extent={{-20,-20},{20,20}},
         rotation=-90,
         origin={20,120})));
-  Modelica.Blocks.Interfaces.RealInput T_sec_set(unit="K", displayUnit="degC") if
-      use_T_set_in "Temperature on the secondary side" annotation (Placement(transformation(
+  Modelica.Blocks.Interfaces.RealInput T_sec_set(unit="K", displayUnit="degC")
+   if use_T_set_in "Temperature on the secondary side" annotation (Placement(transformation(
         extent={{-20,-20},{20,20}},
         rotation=-90,
         origin={-20,120})));

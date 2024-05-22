@@ -24,8 +24,8 @@ model heat_source_sink_ideal
         extent={{-10,-10},{10,10}},
         rotation=-90,
         origin={80,-100})));
-  Modelica.Fluid.Sensors.TemperatureTwoPort T_sens_hot(redeclare package Medium
-      = Media.Water) annotation (Placement(transformation(
+  Modelica.Fluid.Sensors.TemperatureTwoPort T_sens_hot(redeclare package Medium =
+        Media.Water) annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
         rotation=90,
         origin={-60,-50})));

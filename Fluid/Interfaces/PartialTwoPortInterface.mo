@@ -25,14 +25,14 @@ partial model PartialTwoPortInterface
   Medium.ThermodynamicState sta_a=
       Medium.setState_phX(port_a.p,
                           noEvent(actualStream(port_a.h_outflow)),
-                          noEvent(actualStream(port_a.Xi_outflow))) if
-         show_T "Medium properties in port_a";
+                          noEvent(actualStream(port_a.Xi_outflow)))
+      if show_T "Medium properties in port_a";
 
   Medium.ThermodynamicState sta_b=
       Medium.setState_phX(port_b.p,
                           noEvent(actualStream(port_b.h_outflow)),
-                          noEvent(actualStream(port_b.Xi_outflow))) if
-          show_T "Medium properties in port_b";
+                          noEvent(actualStream(port_b.Xi_outflow)))
+       if show_T "Medium properties in port_b";
 
 protected
   final parameter Modelica.Units.SI.MassFlowRate _m_flow_start=0

@@ -24,6 +24,10 @@ package Storage
       annotation (Placement(transformation(extent={{78,-10},{98,10}})));
     Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor temperatureSensor2
       annotation (Placement(transformation(extent={{62,82},{82,102}})));
+    Modelica.Fluid.Interfaces.FluidPorts_a fluPorVol1[size(fluPorVol, 1)]
+      "Fluid port that connects to the control volumes of the tank" annotation
+      (Placement(transformation(extent={{26,-38},{46,42}}), iconTransformation(
+            extent={{26,-38},{46,42}})));
   equation
     connect(port_a, vol[1].ports[1]) annotation (Line(points={{0,100},{-80,100},{
             -80,-20},{16,-20},{16,-16}}, color={0,127,255}));
@@ -53,6 +57,8 @@ package Storage
     connect(temperatureSensor2.T, TempTop)
       annotation (Line(points={{83,92},{96,92},{96,50},{80,50}},
                                                   color={0,0,127}));
+    connect(fluPorVol, fluPorVol1) annotation (Line(points={{-100,0},{10,0},{10,
+            2},{36,2}}, color={0,127,255}));
     annotation (
   defaultComponentName="tan",
   Documentation(info="<html>

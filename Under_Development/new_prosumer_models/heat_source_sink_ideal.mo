@@ -24,8 +24,8 @@ model heat_source_sink_ideal
         extent={{-10,-10},{10,10}},
         rotation=-90,
         origin={80,-100})));
-  Modelica.Fluid.Sensors.TemperatureTwoPort T_sens_hot(redeclare package Medium =
-        Media.Water) annotation (Placement(transformation(
+  Modelica.Fluid.Sensors.TemperatureTwoPort T_sens_hot(redeclare package Medium
+      = Media.Water) annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
         rotation=90,
         origin={-60,-50})));
@@ -40,8 +40,8 @@ model heat_source_sink_ideal
         extent={{-10,10},{10,-10}},
         rotation=90,
         origin={-58,-16})));
-  New_Prosumers.SF1_exp sF1_exp
-    annotation (Placement(transformation(extent={{-28,-48},{56,14}})));
+  New_Prosumers.SF1_expp sF1_expp
+    annotation (Placement(transformation(extent={{-30,-32},{54,30}})));
 equation
   connect(T_sens_hot.port_a, port_hot)
     annotation (Line(points={{-60,-60},{-60,-100}}, color={0,127,255}));
@@ -56,10 +56,10 @@ equation
                                                    color={0,127,255}));
   connect(massFlowRate.m_flow, m_dot_sec_is) annotation (Line(points={{-47,-16},
           {-34,-16},{-34,-84},{0,-84},{0,-98}}, color={0,0,127}));
-  connect(sF1_exp.port_b1, T_sens_cold.port_a) annotation (Line(points={{13,20},
-          {13,22},{60,22},{60,-40}}, color={0,127,255}));
-  connect(sF1_exp.port_a1, massFlowRate.port_b) annotation (Line(points={{21.6,
-          20.2},{21.6,22},{-58,22},{-58,-6}}, color={0,127,255}));
+  connect(sF1_expp.port_a1, massFlowRate.port_b) annotation (Line(points={{17.8,
+          32.4},{17.8,34},{-58,34},{-58,-6}}, color={0,127,255}));
+  connect(sF1_expp.port_b1, T_sens_cold.port_a) annotation (Line(points={{7.6,
+          32.6},{7.6,34},{60,34},{60,-40}}, color={0,127,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
         Rectangle(
           extent={{-100,40},{100,-100}},

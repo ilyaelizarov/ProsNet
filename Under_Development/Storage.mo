@@ -25,8 +25,8 @@ package Storage
     Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor temperatureSensor2
       annotation (Placement(transformation(extent={{62,82},{82,102}})));
     Modelica.Fluid.Interfaces.FluidPorts_a fluPorVol1[size(fluPorVol, 1)]
-      "Fluid port that connects to the control volumes of the tank" annotation
-      (Placement(transformation(extent={{26,-38},{46,42}}), iconTransformation(
+      "Fluid port that connects to the control volumes of the tank" annotation (
+       Placement(transformation(extent={{26,-38},{46,42}}), iconTransformation(
             extent={{26,-38},{46,42}})));
   equation
     connect(port_a, vol[1].ports[1]) annotation (Line(points={{0,100},{-80,100},{

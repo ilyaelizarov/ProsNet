@@ -884,7 +884,7 @@ First implementation. This is for issue
           coordinateSystem(preserveAspectRatio=false)));
   end SingleZoneFloor;
 
-  model StorageTankWithExternalHeatExchanger
+  model StorageTankWithExternalHeatExchanger1
     "A model of a storage tank with external heat exchanger to produce hot water"
     extends Buildings.DHC.Loads.HotWater.BaseClasses.PartialFourPortDHW(
       final allowFlowReversalHea=false);
@@ -915,17 +915,6 @@ First implementation. This is for issue
           rotation=270,
           origin={-40,0})));
 
-    Buildings.Fluid.Storage.Stratified tan(
-      redeclare package Medium = MediumHea,
-      kIns=dat.kIns,
-      final T_start=TTan_start,
-      hTan=dat.hTan,
-      dIns=dat.dIns,
-      VTan=dat.VTan,
-      nSeg=dat.nSeg,
-      m_flow_nominal=dat.mHex_flow_nominal)
-      "Heating water tank"
-      annotation (Placement(transformation(extent={{30,-18},{0,12}})));
     Modelica.Blocks.Interfaces.RealOutput PEle(unit="W")
       "Electric power required for pumping equipment"
       annotation (Placement(transformation(extent={{100,-10},{120,10}}),
@@ -973,30 +962,24 @@ First implementation. This is for issue
     Buildings.DHC.Loads.HotWater.BaseClasses.TankChargingController conCha "Controller for tank charge signal"
       annotation (Placement(transformation(extent={{72,-90},{92,-70}})));
 
-    Buildings.Fluid.Actuators.Valves.ThreeWayLinear divVal(
-      redeclare package Medium = MediumHea,
-      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
-      use_inputFilter=false,
-      m_flow_nominal=dat.mHex_flow_nominal,
-      dpValve_nominal=1000) "Diversion valve to reduce mixing in tank"
-      annotation (Placement(transformation(extent={{30,-40},{10,-60}})));
-    Buildings.Fluid.Sensors.TemperatureTwoPort senTemRet(
-      redeclare package Medium = MediumHea,
-      final allowFlowReversal=allowFlowReversalDom,
-      m_flow_nominal=dat.mHex_flow_nominal)
-      "Temperature sensor for return heating water from heat exchanger"
-      annotation (Placement(transformation(extent={{-20,-60},{0,-40}})));
-    Buildings.DHC.Loads.HotWater.BaseClasses.TankValveController conVal "Diversion valve controller"
-      annotation (Placement(transformation(extent={{-20,-90},{0,-70}})));
-
     Buildings.Controls.OBC.CDL.Interfaces.BooleanOutput charge
       "Output true if tank needs to be charged, false if it is sufficiently charged"
       annotation (Placement(transformation(extent={{100,-100},{140,-60}}),
           iconTransformation(extent={{100,-110},{140,-70}})));
     Modelica.Blocks.Sources.RealExpression realExpression2(y=343)
       annotation (Placement(transformation(extent={{-796,-12},{-776,8}})));
-    Modelica.Blocks.Sources.RealExpression realExpression1(y=343)
+    Modelica.Blocks.Sources.RealExpression realExpression1(y=333)
       annotation (Placement(transformation(extent={{32,-82},{52,-62}})));
+    ProsNet.Under_Development.Storage.StratifiedHeatStorage
+                                  tan(
+      redeclare package Medium = Buildings.Media.Water,
+      m_flow_nominal=2.5,
+      VTan(displayUnit="l") = 0.155,
+      hTan=3,
+      dIns=0.3,
+      nSeg=10,
+      T_start=323.15)
+      annotation (Placement(transformation(extent={{-4,-22},{24,6}})));
   protected
     parameter Modelica.Units.SI.SpecificHeatCapacity cpHea_default =
       MediumHea.specificHeatCapacityCp(MediumHea.setState_pTX(
@@ -1017,9 +1000,6 @@ First implementation. This is for issue
     assert(eps < 1, "In " + getInstanceName() + ": Heat exchanger effectivness must be below 1, received eps = " + String(eps) + ". Check sizing.");
 
   equation
-    connect(tan.port_a, junTop.port_3)
-      annotation (Line(points={{15,12},{15,14},{20,14},{20,20}},
-                                              color={0,127,255}));
     connect(pumHex.P, PEle) annotation (Line(points={{-49,-11},{-50,-11},{-50,-32},
             {86,-32},{86,0},{110,0}},     color={0,0,127}));
     connect(junTop.port_2, port_aHea) annotation (Line(points={{30,30},{84,30},{84,
@@ -1028,9 +1008,6 @@ First implementation. This is for issue
       annotation (Line(points={{-40,60},{-20,60}}, color={0,127,255}));
     connect(senMasFlo.port_b, senTemHot.port_a)
       annotation (Line(points={{0,60},{20,60}},    color={0,127,255}));
-    connect(TTanTop.port, tan.heaPorVol[1])
-      annotation (Line(points={{40,10},{40,12},{32,12},{32,-20},{22,-20},{22,-3},
-            {15,-3}},                             color={191,0,0}));
     connect(senMasFlo.m_flow, conPum.mDom_flow) annotation (Line(points={{-10,71},
             {-10,74},{-86,74},{-86,6},{-82,6}}, color={0,0,127}));
     connect(senTemHot.T, conPum.TDom) annotation (Line(points={{30,71},{30,80},{-88,
@@ -1052,28 +1029,20 @@ First implementation. This is for issue
             {-30,48},{-40,48}}, color={0,127,255}));
     connect(hex.port_b2, pumHex.port_a) annotation (Line(points={{-60,48},{-72,48},
             {-72,20},{-40,20},{-40,10}}, color={0,127,255}));
-    connect(senTemRet.port_b, divVal.port_2)
-      annotation (Line(points={{0,-50},{10,-50}}, color={0,127,255}));
-    connect(divVal.port_1, tan.fluPorVol[integer(dat.nSeg/2)]) annotation (Line(
-          points={{30,-50},{32,-50},{32,-3},{22.5,-3}},
-                                                      color={0,127,255}));
-    connect(senTemRet.T, conVal.TRet) annotation (Line(points={{-10,-39},{-10,-36},
-            {-26,-36},{-26,-80},{-21,-80}}, color={0,0,127}));
-    connect(conVal.y, divVal.y)
-      annotation (Line(points={{2,-80},{20,-80},{20,-62}}, color={0,0,127}));
-    connect(TTanBot.port, tan.heaPorVol[dat.nSeg]) annotation (Line(points={{40,-20},
-            {22,-20},{22,-3},{15,-3}}, color={191,0,0}));
-    connect(divVal.port_3, tan.fluPorVol[dat.nSeg]) annotation (Line(points={{20,-40},
-            {20,-34},{32,-34},{32,-3},{22.5,-3}},
-                                                color={0,127,255}));
-    connect(tan.port_b, port_bHea) annotation (Line(points={{15,-18},{15,-34},{
-            -100,-34},{-100,-60}},      color={0,127,255}));
-    connect(pumHex.port_b, senTemRet.port_a) annotation (Line(points={{-40,-10},{-40,
-            -50},{-20,-50}}, color={0,127,255}));
     connect(TTanBot.T, conCha.TTanBot) annotation (Line(points={{61,-20},{62,-20},
             {62,-88},{70,-88}}, color={0,0,127}));
     connect(realExpression1.y, conCha.TTanTopSet)
       annotation (Line(points={{53,-72},{71,-72}}, color={0,0,127}));
+    connect(tan.port_a, junTop.port_3) annotation (Line(points={{10,6},{10,14},
+            {20,14},{20,20}}, color={0,127,255}));
+    connect(tan.port_b, port_bHea) annotation (Line(points={{10,-22},{10,-60},{
+            -100,-60}}, color={0,127,255}));
+    connect(tan.fluPorVol1[8], pumHex.port_b) annotation (Line(points={{15.04,
+            -6.32},{26,-6.32},{26,-24},{-40,-24},{-40,-10}}, color={0,127,255}));
+    connect(tan.heaPorTop, TTanTop.port) annotation (Line(points={{12.8,2.36},{
+            12.8,10},{40,10}}, color={191,0,0}));
+    connect(tan.heaPorBot, TTanBot.port) annotation (Line(points={{12.8,-18.36},
+            {12.8,-28},{34,-28},{34,-20},{40,-20}}, color={191,0,0}));
     annotation (
     defaultComponentName="domHotWatTan",
     Documentation(info="<html>
@@ -1326,7 +1295,7 @@ First implementation.
             rotation=270)}),
           Diagram(
           coordinateSystem(preserveAspectRatio=false)));
-  end StorageTankWithExternalHeatExchanger;
+  end StorageTankWithExternalHeatExchanger1;
 
   model DHW
     "A model of a storage tank with external heat exchanger to produce hot water"

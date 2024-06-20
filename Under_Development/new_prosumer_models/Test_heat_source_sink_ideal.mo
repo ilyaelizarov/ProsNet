@@ -1,6 +1,6 @@
 within ProsNet.Under_Development.new_prosumer_models;
 model Test_heat_source_sink_ideal
-  heat_source_sink_ideal heat_source_sink_ideal1
+  heat_source_sink heat_source_sink_ideal1
     annotation (Placement(transformation(extent={{-24,2},{32,48}})));
   Modelica.Fluid.Sources.MassFlowSource_T boundary(
     use_m_flow_in=true,

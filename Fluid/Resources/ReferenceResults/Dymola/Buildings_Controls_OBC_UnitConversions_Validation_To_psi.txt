@@ -1,0 +1,10 @@
+last-generated=2022-01-28
+statistics-simulation=
+{
+  "linear": " ",
+  "nonlinear": " ",
+  "numerical Jacobians": "0"
+}
+time=[0e+00, 1e+01]
+sub.y=[-4.336808689942018e-19, -4.336808689942018e-19]
+sub1.y=[-1.110223024625157e-16, -1.110223024625157e-16]

@@ -1,0 +1,1277 @@
+!-Generator IDFEditor 1.44
+!-Option SortedOrder
+!-NOTE: All comments with '!-' are ignored by the IDFEditor and are generated automatically.
+!-      Use '!' comments if they need to be retained when using the IDFEditor.
+!-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
+! Approximation of the HVAC systems for the testing rooms:
+!   * Single fan single duct constant air volume system.
+!   * Variable chilled water flow rate with a lower limit to approximate the minimum cold air flow.
+!   * Maximum supply air is higher than that of a single fan air volume in real case to better match measured cooling load.
+!   * Fan efficiency and pressure rise are tuned to better match measured cooling load.
+!   * Fan motor is assumed to be out of the supply air stream in order not to conteminate the cooling load with inaccurate fan motor heat gain.
+!   * Added a chilled bypass to account for additional amount of chilled water designed to cool three rooms.
+! Approximation of lighting:
+!   * Visible absorptances of surfaces are tuned such that the workplane illuminance in the middle of room matches the measured illuminance.
+! Infiltration:
+!   * Infiltration air flow rate is guessed as a small value.
+
+  Version,9.6;
+
+!-   ===========  ALL OBJECTS IN CLASS: SIMULATIONCONTROL ===========
+
+  SimulationControl,
+    No,                      !- Do Zone Sizing Calculation
+    No,                      !- Do System Sizing Calculation
+    No,                      !- Do Plant Sizing Calculation
+    No,                      !- Run Simulation for Sizing Periods
+    Yes,                     !- Run Simulation for Weather File Run Periods
+    No,                      !- Do HVAC Sizing Simulation for Sizing Periods
+    1;                       !- Maximum Number of HVAC Sizing Simulation Passes
+
+!-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
+
+  Building,
+    Building 71T Rm 102,     !- Name
+    0,                       !- North Axis {deg}
+    Suburbs,                 !- Terrain
+    0.04,                    !- Loads Convergence Tolerance Value {W}
+    0.4,                     !- Temperature Convergence Tolerance Value {deltaC}
+    FullInteriorAndExterior, !- Solar Distribution
+    25,                      !- Maximum Number of Warmup Days
+    6;                       !- Minimum Number of Warmup Days
+
+!-   ===========  ALL OBJECTS IN CLASS: SHADOWCALCULATION ===========
+
+  ShadowCalculation,
+    PolygonClipping,         !- Shading Calculation Method
+    Periodic,                !- Shading Calculation Update Frequency Method
+    20,                      !- Shading Calculation Update Frequency
+    50000;                   !- Maximum Figures in Shadow Overlap Calculations
+
+!-   ===========  ALL OBJECTS IN CLASS: SURFACECONVECTIONALGORITHM:INSIDE ===========
+
+  SurfaceConvectionAlgorithm:Inside,TARP;
+
+!-   ===========  ALL OBJECTS IN CLASS: SURFACECONVECTIONALGORITHM:OUTSIDE ===========
+
+  SurfaceConvectionAlgorithm:Outside,TARP;
+
+!-   ===========  ALL OBJECTS IN CLASS: HEATBALANCEALGORITHM ===========
+
+  HeatBalanceAlgorithm,ConductionTransferFunction;
+
+!-   ===========  ALL OBJECTS IN CLASS: ZONECAPACITANCEMULTIPLIER:RESEARCHSPECIAL ===========
+
+  ZoneCapacitanceMultiplier:ResearchSpecial,
+    Multiplier,              !- Name
+    ,                        !- Zone or ZoneList Name
+    1,                       !- Temperature Capacity Multiplier
+    1,                       !- Humidity Capacity Multiplier
+    1,                       !- Carbon Dioxide Capacity Multiplier
+    1.0;                     !- Generic Contaminant Capacity Multiplier
+
+!-   ===========  ALL OBJECTS IN CLASS: TIMESTEP ===========
+
+  Timestep,4;
+
+!-   ===========  ALL OBJECTS IN CLASS: SITE:LOCATION ===========
+
+  Site:Location,
+    San Francisco,           !- Name
+    37.62,                   !- Latitude {deg}
+    -122.4,                  !- Longitude {deg}
+    -8.0,                    !- Time Zone {hr}
+    2;                       !- Elevation {m}
+
+!-   ===========  ALL OBJECTS IN CLASS: RUNPERIOD ===========
+! MWetter: Run test with specified ground reflectance. The default is 0.2.
+!Site:GroundReflectance,
+!0.05, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2;
+! End MWetter
+! SAN_FRANCISCO_CA_USA Annual Heating 99.6%, MaxDB=3.2degC
+!SizingPeriod:DesignDay,
+!    SAN_FRANCISCO Ann Htg 99.6% Condns DB,  !- Name
+!    3.2,                     !- Maximum Dry-Bulb Temperature {C}
+!    0.0,                     !- Daily Temperature Range {deltaC}
+!    3.2,                     !- Humidity Indicating Conditions at Maximum Dry-Bulb
+!    101265.,                 !- Barometric Pressure {Pa}
+!    2.4,                     !- Wind Speed {m/s}
+!    140,                     !- Wind Direction {deg}
+!    0.00,                    !- Sky Clearness
+!    0,                       !- Rain Indicator
+!    0,                       !- Snow Indicator
+!    21,                      !- Day of Month
+!    1,                       !- Month
+!    WinterDesignDay,         !- Day Type
+!    0,                       !- Daylight Saving Time Indicator
+!    WetBulb;                 !- Humidity Indicating Type
+! SAN_FRANCISCO Annual Cooling Design Conditions Wind Speed=5.8m/s Wind Dir=310
+! Hottest Month=SEP
+! SAN_FRANCISCO_CA_USA Annual Cooling (DB=>MWB) .4%, MaxDB=28.3degC MWB=17.2degC
+!SizingPeriod:DesignDay,
+!    SAN_FRANCISCO Ann Clg .4% Condns DB=>MWB,  !- Name
+!    28.3,                    !- Maximum Dry-Bulb Temperature {C}
+!    9,                       !- Daily Temperature Range {deltaC}
+!    17.2,                    !- Humidity Indicating Conditions at Maximum Dry-Bulb
+!    101265.,                 !- Barometric Pressure {Pa}
+!    5.8,                     !- Wind Speed {m/s}
+!    310,                     !- Wind Direction {deg}
+!    1.00,                    !- Sky Clearness
+!    0,                       !- Rain Indicator
+!    0,                       !- Snow Indicator
+!    21,                      !- Day of Month
+!    9,                       !- Month
+!    SummerDesignDay,         !- Day Type
+!    0,                       !- Daylight Saving Time Indicator
+!    WetBulb;                 !- Humidity Indicating Type
+
+  RunPeriod,
+    annual,                  !- Name
+    1,                       !- Begin Month
+    1,                       !- Begin Day of Month
+    ,                        !- Begin Year
+    1,                       !- End Month
+    7,                       !- End Day of Month
+    ,                        !- End Year
+    Monday,                  !- Day of Week for Start Day
+    No,                      !- Use Weather File Holidays and Special Days
+    No,                      !- Use Weather File Daylight Saving Period
+    Yes,                     !- Apply Weekend Holiday Rule
+    Yes,                     !- Use Weather File Rain Indicators
+    Yes,                     !- Use Weather File Snow Indicators
+    ;                        !- Treat Weather as Actual
+
+!-   ===========  ALL OBJECTS IN CLASS: SCHEDULETYPELIMITS ===========
+
+  ScheduleTypeLimits,
+    AnyNumber,               !- Name
+    ,                        !- Lower Limit Value
+    ,                        !- Upper Limit Value
+    Continuous;              !- Numeric Type
+
+  ScheduleTypeLimits,
+    Thermostat Control Type, !- Name
+    0,                       !- Lower Limit Value
+    4,                       !- Upper Limit Value
+    Discrete;                !- Numeric Type
+
+  ScheduleTypeLimits,
+    On/Off,                  !- Name
+    0,                       !- Lower Limit Value
+    1,                       !- Upper Limit Value
+    Discrete;                !- Numeric Type
+
+  ScheduleTypeLimits,
+    Fraction,                !- Name
+    0,                       !- Lower Limit Value
+    1,                       !- Upper Limit Value
+    Continuous;              !- Numeric Type
+
+  ScheduleTypeLimits,
+    Temperature,             !- Name
+    -60,                     !- Lower Limit Value
+    200,                     !- Upper Limit Value
+    Continuous;              !- Numeric Type
+
+!-   ===========  ALL OBJECTS IN CLASS: SCHEDULE:COMPACT ===========
+
+  Schedule:Compact,
+    Room 102 Lighting Schedule,  !- Name
+    AnyNumber,               !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: Weekdays SummerDesignDay, !- Field 2
+    Until:  7:00,0,          !- Field 3
+    Until: 19:00,0,          !- Field 5
+    Until: 24:00,0,          !- Field 7
+    For: CustomDay1 CustomDay2, !- Field 9
+    Until:  7:00,0,          !- Field 10
+    Until: 19:00,0,          !- Field 12
+    Until: 24:00,0,          !- Field 14
+    For: Weekends Holidays WinterDesignDay, !- Field 16
+    Until: 24:00,0;          !- Field 17
+
+  Schedule:Compact,
+    Room 102 Infiltration Schedule,  !- Name
+    AnyNumber,               !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: Weekdays SummerDesignDay, !- Field 2
+    Until:  6:00,1.0,        !- Field 3
+    Until: 19:00,1.0,        !- Field 5
+    Until: 24:00,1.0,        !- Field 7
+    For: CustomDay1 CustomDay2, !- Field 9
+    Until:  6:00,1.0,        !- Field 10
+    Until: 19:00,1.0,        !- Field 12
+    Until: 24:00,1.0,        !- Field 14
+    For: Weekends Holidays WinterDesignDay, !- Field 16
+    Until:  6:00,1.0,        !- Field 17
+    Until: 19:00,1.0,        !- Field 19
+    Until: 24:00,1.0;        !- Field 21
+
+  Schedule:Compact,
+    Room 102 Thermostat Type Schedule,  !- Name
+    Thermostat Control Type, !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,3;          !- Field 3
+
+  Schedule:Compact,
+    Room 102 Temperature Setpoint Schedule,  !- Name
+    Temperature,             !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,23.5;       !- Field 3
+
+  Schedule:Compact,
+    Room 102 Fan Schedule,   !- Name
+    Fraction,                !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,1.00;       !- Field 3
+
+  Schedule:Compact,
+    Room 102 Coil Schedule,  !- Name
+    Fraction,                !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,1.00;       !- Field 3
+
+  Schedule:Compact,
+    Water Loop Schedule,     !- Name
+    Fraction,                !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,1.00;       !- Field 3
+
+  Schedule:Compact,
+    Water Loop Temperature Setpoint Schedule,  !- Name
+    Temperature,             !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,4.50;       !- Field 3
+
+  Schedule:Compact,
+    Room 102 Electric Equipment Schedule,  !- Name
+    Fraction,                !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,1.00;       !- Field 3
+
+  Schedule:Compact,
+    Window Panel Transmittance Schedule,  !- Name
+    Fraction,                !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 24:00,0.5;        !- Field 3
+
+  Schedule:Compact,
+    Room 102 Compensating Cooling Load Schedule,  !- Name
+    Fraction,                !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 5:00,0.00,        !- Field 3
+    Until:5:30,0.10,         !- Field 5
+    Until: 6:00,0.20,        !- Field 7
+    Until: 6:30,0.30,        !- Field 9
+    Until: 7:00,0.40,        !- Field 11
+    Until: 7:30,0.50,        !- Field 13
+    Until: 8:00,0.60,        !- Field 15
+    Until: 8:30,0.70,        !- Field 17
+    Until: 9:00,0.80,        !- Field 19
+    Until: 9:30,0.90,        !- Field 21
+    Until: 10:00,1.00,       !- Field 23
+    Until: 13:30,0.90,       !- Field 25
+    Until: 14:00,0.80,       !- Field 27
+    Until: 14:30,0.70,       !- Field 29
+    Until:15:00,0.60,        !- Field 31
+    Until:15:30,0.50,        !- Field 33
+    Until: 16:00,0.40,       !- Field 35
+    Until: 16:30,0.30,       !- Field 37
+    Until: 17:00,0.20,       !- Field 39
+    Until: 17:30,0.10,       !- Field 41
+    Until: 24:00,0.00;       !- Field 43
+
+  Schedule:Compact,
+    Room 102 Lighting Schedule_CHRIS,  !- Name
+    AnyNumber,               !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: Weekdays SummerDesignDay, !- Field 2
+    Until:  7:00,0,          !- Field 3
+    Until: 19:00,1,          !- Field 5
+    Until: 24:00,0,          !- Field 7
+    For: CustomDay1 CustomDay2, !- Field 9
+    Until:  7:00,0,          !- Field 10
+    Until: 19:00,1,          !- Field 12
+    Until: 24:00,0,          !- Field 14
+    For: Weekends Holidays WinterDesignDay, !- Field 16
+    Until: 24:00,0;          !- Field 17
+
+!-   ===========  ALL OBJECTS IN CLASS: MATERIAL ===========
+
+  Material,
+    MediumFurniture,         !- Name
+    MediumSmooth,            !- Roughness
+    0.57,                    !- Thickness {m}
+    0.115,                   !- Conductivity {W/m-K}
+    513,                     !- Density {kg/m3}
+    1381,                    !- Specific Heat {J/kg-K}
+    0.90,                    !- Thermal Absorptance
+    0.75,                    !- Solar Absorptance
+    0.75;                    !- Visible Absorptance
+
+  Material,
+    2x6 Wood Stud R19,       !- Name
+    Rough,                   !- Roughness
+    0.133,                   !- Thickness {m}
+    0.047,                   !- Conductivity {W/m-K}
+    93.84,                   !- Density {kg/m3}
+    1006,                    !- Specific Heat {J/kg-K}
+    0.9,                     !- Thermal Absorptance
+    0.7,                     !- Solar Absorptance
+    0.7;                     !- Visible Absorptance
+
+  Material,
+    Gypsum board - 5/8 in,   !- Name
+    Smooth,                  !- Roughness
+    0.015875,                !- Thickness {m}
+    0.17,                    !- Conductivity {W/m-K}
+    800,                     !- Density {kg/m3}
+    1090,                    !- Specific Heat {J/kg-K}
+    0.9,                     !- Thermal Absorptance
+    0.7,                     !- Solar Absorptance
+    0.3;                     !- Visible Absorptance
+
+  Material,
+    Plywood - 3/8 in,        !- Name
+    Smooth,                  !- Roughness
+    0.009525,                !- Thickness {m}
+    0.12,                    !- Conductivity {W/m-K}
+    540,                     !- Density {kg/m3}
+    1210;                    !- Specific Heat {J/kg-K}
+
+  Material,
+    Plywood - 3/4 in,        !- Name
+    Smooth,                  !- Roughness
+    0.01905,                 !- Thickness {m}
+    0.12,                    !- Conductivity {W/m-K}
+    540,                     !- Density {kg/m3}
+    1210;                    !- Specific Heat {J/kg-K}
+
+  Material,
+    Plywood - 1/2 in,        !- Name
+    Smooth,                  !- Roughness
+    0.0127,                  !- Thickness {m}
+    0.12,                    !- Conductivity {W/m-K}
+    540,                     !- Density {kg/m3}
+    1210;                    !- Specific Heat {J/kg-K}
+
+  Material,
+    Metal Siding,            !- Name
+    MediumSmooth,            !- Roughness
+    0.000701,                !- Thickness {m}
+    45.345,                  !- Conductivity {W/m-K}
+    7833.028,                !- Density {kg/m3}
+    502.416;                 !- Specific Heat {J/kg-K}
+
+  Material,
+    T&G - 3/4 in,            !- Name
+    MediumSmooth,            !- Roughness
+    0.01905,                 !- Thickness {m}
+    0.15,                    !- Conductivity {W/m-K}
+    608,                     !- Density {kg/m3}
+    1630;                    !- Specific Heat {J/kg-K}
+
+  Material,
+    Insulation: Expanded polystyrene - molded beads - 16kg/m3 density,  !- Name
+    VeryRough,               !- Roughness
+    1.90500386169072E-02,    !- Thickness {m}
+    0.037,                   !- Conductivity {W/m-K}
+    16,                      !- Density {kg/m3}
+    1210;                    !- Specific Heat {J/kg-K}
+
+  Material,
+    F08 Metal surface,       !- Name
+    Smooth,                  !- Roughness
+    3.1750064361512E-03,     !- Thickness {m}
+    45.28,                   !- Conductivity {W/m-K}
+    7824,                    !- Density {kg/m3}
+    500;                     !- Specific Heat {J/kg-K}
+
+  Material,
+    Hardboard Medium density,!- Name
+    Smooth,                  !- Roughness
+    3.1750064361512E-03,     !- Thickness {m}
+    0.105,                   !- Conductivity {W/m-K}
+    800,                     !- Density {kg/m3}
+    1300;                    !- Specific Heat {J/kg-K}
+
+  Material,
+    F13 Built-up roofing,    !- Name
+    Rough,                   !- Roughness
+    0.0095,                  !- Thickness {m}
+    0.16,                    !- Conductivity {W/m-K}
+    1120,                    !- Density {kg/m3}
+    1460,                    !- Specific Heat {J/kg-K}
+    0.9,                     !- Thermal Absorptance
+    0.7;                     !- Solar Absorptance
+
+!-   ===========  ALL OBJECTS IN CLASS: MATERIAL:NOMASS ===========
+
+  Material:NoMass,
+    Carpet w/rubber pad,     !- Name
+    Rough,                   !- Roughness
+    0.22,                    !- Thermal Resistance {m2-K/W}
+    0.9,                     !- Thermal Absorptance
+    0.7,                     !- Solar Absorptance
+    0.85;                    !- Visible Absorptance
+
+  Material:NoMass,
+    R-30 Fiberglass Insulation,  !- Name
+    Rough,                   !- Roughness
+    5.28,                    !- Thermal Resistance {m2-K/W}
+    0.9,                     !- Thermal Absorptance
+    0.7,                     !- Solar Absorptance
+    0.7;                     !- Visible Absorptance
+
+  Material:NoMass,
+    Nonres_Roof_Insulation,  !- Name
+    MediumSmooth,            !- Roughness
+    0.0299387330245182,      !- Thermal Resistance {m2-K/W}
+    0.9,                     !- Thermal Absorptance
+    0.7,                     !- Solar Absorptance
+    0.7;                     !- Visible Absorptance
+
+!-   ===========  ALL OBJECTS IN CLASS: MATERIAL:AIRGAP ===========
+
+  Material:AirGap,
+    F04 Wall air space resistance,  !- Name
+    0.15;                    !- Thermal Resistance {m2-K/W}
+
+!-   ===========  ALL OBJECTS IN CLASS: WINDOWMATERIAL:GLAZING ===========
+
+  WindowMaterial:Glazing,
+    ELECTRO GLASS LIGHT STATE,  !- Name
+    SpectralAverage,         !- Optical Data Type
+    ,                        !- Window Glass Spectral Data Set Name
+    0.006,                   !- Thickness {m}
+    0.814,                   !- Solar Transmittance at Normal Incidence
+    0.086,                   !- Front Side Solar Reflectance at Normal Incidence
+    0.086,                   !- Back Side Solar Reflectance at Normal Incidence
+    0.847,                   !- Visible Transmittance at Normal Incidence
+    0.099,                   !- Front Side Visible Reflectance at Normal Incidence
+    0.099,                   !- Back Side Visible Reflectance at Normal Incidence
+    0.0,                     !- Infrared Transmittance at Normal Incidence
+    0.84,                    !- Front Side Infrared Hemispherical Emissivity
+    0.84,                    !- Back Side Infrared Hemispherical Emissivity
+    0.9;                     !- Conductivity {W/m-K}
+
+  WindowMaterial:Glazing,
+    ELECTRO GLASS DARK STATE,!- Name
+    SpectralAverage,         !- Optical Data Type
+    ,                        !- Window Glass Spectral Data Set Name
+    0.006,                   !- Thickness {m}
+    0.111,                   !- Solar Transmittance at Normal Incidence
+    0.179,                   !- Front Side Solar Reflectance at Normal Incidence
+    0.179,                   !- Back Side Solar Reflectance at Normal Incidence
+    0.128,                   !- Visible Transmittance at Normal Incidence
+    0.081,                   !- Front Side Visible Reflectance at Normal Incidence
+    0.081,                   !- Back Side Visible Reflectance at Normal Incidence
+    0.0,                     !- Infrared Transmittance at Normal Incidence
+    0.84,                    !- Front Side Infrared Hemispherical Emissivity
+    0.84,                    !- Back Side Infrared Hemispherical Emissivity
+    0.9;                     !- Conductivity {W/m-K}
+
+  WindowMaterial:Glazing,
+    GLASS - CLEAR PLATE 1 / 4 IN,  !- Name
+    SpectralAverage,         !- Optical Data Type
+    ,                        !- Window Glass Spectral Data Set Name
+    6.0000001E-03,           !- Thickness {m}
+    0.7750000,               !- Solar Transmittance at Normal Incidence
+    7.1000002E-02,           !- Front Side Solar Reflectance at Normal Incidence
+    7.1000002E-02,           !- Back Side Solar Reflectance at Normal Incidence
+    0.8810000,               !- Visible Transmittance at Normal Incidence
+    7.9999998E-02,           !- Front Side Visible Reflectance at Normal Incidence
+    7.9999998E-02,           !- Back Side Visible Reflectance at Normal Incidence
+    0,                       !- Infrared Transmittance at Normal Incidence
+    0.8400000,               !- Front Side Infrared Hemispherical Emissivity
+    0.8400000,               !- Back Side Infrared Hemispherical Emissivity
+    0.9000000;               !- Conductivity {W/m-K}
+
+!-   ===========  ALL OBJECTS IN CLASS: WINDOWMATERIAL:GAS ===========
+!       Window Gap Layers
+
+  WindowMaterial:Gas,
+    wingap1_B71T_Glazing,    !- Name
+    Air,                     !- Gas Type
+    0.0127;                  !- Thickness {m}
+
+!-   ===========  ALL OBJECTS IN CLASS: WINDOWMATERIAL:GASMIXTURE ===========
+
+  WindowMaterial:GasMixture,
+    Gap_6_W_0_0100,          !- Name
+    0.0100,                  !- Thickness {m}
+    2,                       !- Number of Gases in Mixture
+    Air,                     !- Gas 1 Type
+    0.05,                    !- Gas 1 Fraction
+    Argon,                   !- Gas 2 Type
+    0.95;                    !- Gas 2 Fraction
+
+!-   ===========  ALL OBJECTS IN CLASS: MATERIALPROPERTY:GLAZINGSPECTRALDATA ===========
+
+  MaterialProperty:GlazingSpectralData,
+    Glass_5289F_Layer_SpecDat,  !- Name
+    0.300000,0.000000,0.250000,0.050600,
+    0.305000,0.000000,0.257000,0.050400,
+    0.310000,0.000000,0.270000,0.050300,
+    0.315000,0.000000,0.282900,0.050000,
+    0.320000,0.000000,0.292900,0.049900,
+    0.325000,0.000000,0.301400,0.049400,
+    0.330000,0.000100,0.306100,0.049600,
+    0.335000,0.000900,0.303700,0.049400,
+    0.340000,0.004800,0.295500,0.049200,
+    0.345000,0.015500,0.283400,0.049700,
+    0.350000,0.036400,0.267700,0.051800,
+    0.355000,0.067100,0.249100,0.056400,
+    0.360000,0.104600,0.228100,0.062800,
+    0.365000,0.144900,0.205700,0.069800,
+    0.370000,0.179100,0.182800,0.073400,
+    0.375000,0.197600,0.160000,0.072000,
+    0.380000,0.219700,0.137500,0.071300,
+    0.385000,0.267300,0.117000,0.075600,
+    0.390000,0.319600,0.099200,0.079500,
+    0.395000,0.360300,0.083400,0.080700,
+    0.400000,0.387800,0.069300,0.079200,
+    0.410000,0.411000,0.046000,0.071700,
+    0.420000,0.415900,0.030100,0.064700,
+    0.430000,0.414000,0.019900,0.059400,
+    0.440000,0.405600,0.014000,0.055500,
+    0.450000,0.404200,0.011700,0.053200,
+    0.460000,0.402700,0.011900,0.051300,
+    0.470000,0.396000,0.013600,0.050300,
+    0.480000,0.386700,0.016100,0.049600,
+    0.490000,0.379700,0.019400,0.049300,
+    0.500000,0.377500,0.022800,0.049200,
+    0.510000,0.373600,0.026000,0.049500,
+    0.520000,0.373000,0.028700,0.049800,
+    0.530000,0.378400,0.030800,0.050100,
+    0.540000,0.400800,0.032100,0.050600,
+    0.550000,0.432000,0.033000,0.051300,
+    0.560000,0.446300,0.031600,0.051200,
+    0.570000,0.430200,0.028200,0.050000,
+    0.580000,0.395300,0.023600,0.048400,
+    0.590000,0.370500,0.019300,0.047100,
+    0.600000,0.375800,0.016500,0.046400,
+    0.610000,0.382200,0.015000,0.045700,
+    0.620000,0.382000,0.015300,0.045400,
+    0.630000,0.372600,0.017500,0.045300,
+    0.640000,0.359300,0.022900,0.045900,
+    0.650000,0.352000,0.032300,0.047200,
+    0.660000,0.354900,0.046100,0.049600,
+    0.670000,0.367200,0.064600,0.053600,
+    0.680000,0.384200,0.088000,0.060300,
+    0.690000,0.395800,0.115300,0.069900,
+    0.700000,0.392400,0.145700,0.080400,
+    0.710000,0.375300,0.178800,0.090600,
+    0.720000,0.350900,0.214500,0.099700,
+    0.730000,0.323500,0.251000,0.108200,
+    0.740000,0.295600,0.289500,0.115200,
+    0.750000,0.268200,0.327300,0.120800,
+    0.760000,0.243100,0.365900,0.125900,
+    0.770000,0.219100,0.402800,0.129500,
+    0.780000,0.197700,0.438400,0.132800,
+    0.790000,0.177900,0.473800,0.134600,
+    0.800000,0.159800,0.507300,0.136000,
+    0.810000,0.144500,0.538300,0.137200,
+    0.820000,0.130400,0.567000,0.137600,
+    0.830000,0.118400,0.593400,0.137500,
+    0.840000,0.106800,0.619100,0.136500,
+    0.850000,0.096900,0.640000,0.136800,
+    0.860000,0.087800,0.666000,0.137100,
+    0.870000,0.079400,0.685700,0.134800,
+    0.880000,0.073200,0.701400,0.134200,
+    0.890000,0.066500,0.718400,0.132200,
+    0.900000,0.061200,0.733900,0.130900,
+    0.910000,0.056400,0.748200,0.130200,
+    0.920000,0.052100,0.761300,0.129300,
+    0.930000,0.048100,0.772800,0.128500,
+    0.940000,0.044700,0.784300,0.127600,
+    0.950000,0.041700,0.794600,0.127000,
+    0.960000,0.038400,0.804300,0.126200,
+    0.970000,0.035300,0.813200,0.124800,
+    0.980000,0.033000,0.821600,0.123400,
+    0.990000,0.030900,0.829000,0.122700,
+    1.000000,0.029100,0.836300,0.122100,
+    1.050000,0.021600,0.865300,0.120600,
+    1.100000,0.016700,0.886500,0.120000,
+    1.150000,0.013100,0.901900,0.120500,
+    1.200000,0.011000,0.915300,0.122300,
+    1.250000,0.009100,0.924500,0.128600,
+    1.300000,0.008100,0.931200,0.140000,
+    1.350000,0.007000,0.937200,0.156700,
+    1.400000,0.006500,0.942600,0.175700,
+    1.450000,0.006100,0.947300,0.198700,
+    1.500000,0.005900,0.949400,0.225800,
+    1.550000,0.005900,0.952200,0.254600,
+    1.600000,0.005600,0.953700,0.280800,
+    1.650000,0.005500,0.956600,0.299400,
+    1.700000,0.005900,0.956600,0.307400,
+    1.750000,0.005000,0.957600,0.311000,
+    1.800000,0.004700,0.959500,0.313000,
+    1.850000,0.004300,0.960700,0.315800,
+    1.900000,0.004300,0.960300,0.318600,
+    1.950000,0.004500,0.962700,0.331100,
+    2.000000,0.002100,0.963800,0.336200,
+    2.050000,0.002800,0.964000,0.345300,
+    2.100000,0.002700,0.966400,0.357900,
+    2.150000,0.003800,0.966500,0.369300,
+    2.200000,0.003600,0.966000,0.365200,
+    2.250000,0.003400,0.963400,0.374600,
+    2.300000,0.003700,0.973400,0.390800,
+    2.350000,0.007100,0.963900,0.407000,
+    2.400000,0.000400,0.973500,0.410600,
+    2.450000,0.003400,0.952900,0.392400,
+    2.500000,0.013200,0.964800,0.394300;
+
+!-   ===========  ALL OBJECTS IN CLASS: CONSTRUCTION ===========
+
+  Construction,
+    Medium Furniture,        !- Name
+    MediumFurniture;         !- Outside Layer
+
+  Construction,
+    Room Ceiling,            !- Name
+    Plywood - 3/8 in,        !- Outside Layer
+    2x6 Wood Stud R19,       !- Layer 2
+    Gypsum board - 5/8 in;   !- Layer 3
+
+  Construction,
+    Room Wall - East West,   !- Name
+    2x6 Wood Stud R19,       !- Outside Layer
+    Gypsum board - 5/8 in;   !- Layer 2
+
+  Construction,
+    Room Wall - North,       !- Name
+    Gypsum board - 5/8 in,   !- Outside Layer
+    Plywood - 3/8 in,        !- Layer 2
+    2x6 Wood Stud R19,       !- Layer 3
+    Gypsum board - 5/8 in;   !- Layer 4
+
+  Construction,
+    Room Wall - South,       !- Name
+    Metal Siding,            !- Outside Layer
+    Plywood - 1/2 in,        !- Layer 2
+    2x6 Wood Stud R19;       !- Layer 3
+
+  Construction,
+    Room Floor,              !- Name
+    R-30 Fiberglass Insulation,  !- Outside Layer
+    T&G - 3/4 in,            !- Layer 2
+    Plywood - 3/4 in,        !- Layer 3
+    Carpet w/rubber pad;     !- Layer 4
+
+  Construction,
+    panelMaterial,           !- Name
+    F08 Metal surface,       !- Outside Layer
+    Insulation: Expanded polystyrene - molded beads - 16kg/m3 density,  !- Layer 2
+    Hardboard Medium density,!- Layer 3
+    F04 Wall air space resistance,  !- Layer 4
+    F08 Metal surface;       !- Layer 5
+
+  Construction,
+    HousingFloor,            !- Name
+    Gypsum board - 5/8 in,   !- Outside Layer
+    2x6 Wood Stud R19,       !- Layer 2
+    Plywood - 3/8 in;        !- Layer 3
+
+  Construction,
+    HousingRoof,             !- Name
+    F13 Built-up roofing,    !- Outside Layer
+    Nonres_Roof_Insulation,  !- Layer 2
+    F08 Metal surface;       !- Layer 3
+
+  Construction,
+    HousingIntWall,          !- Name
+    Gypsum board - 5/8 in,   !- Outside Layer
+    2x6 Wood Stud R19;       !- Layer 2
+
+  Construction,
+    HousingNorIntWall,       !- Name
+    Gypsum board - 5/8 in,   !- Outside Layer
+    2x6 Wood Stud R19,       !- Layer 2
+    Plywood - 3/8 in,        !- Layer 3
+    Gypsum board - 5/8 in;   !- Layer 4
+
+  Construction,
+    ELECTRO-CON-LIGHT,       !- Name
+    ELECTRO GLASS LIGHT STATE,  !- Outside Layer
+    wingap1_B71T_Glazing,    !- Layer 2
+    GLASS - CLEAR PLATE 1 / 4 IN;  !- Layer 3
+
+  Construction,
+    ELECTRO-CON-DARK,        !- Name
+    ELECTRO GLASS DARK STATE,!- Outside Layer
+    wingap1_B71T_Glazing,    !- Layer 2
+    GLASS - CLEAR PLATE 1 / 4 IN;  !- Layer 3
+
+!-   ===========  ALL OBJECTS IN CLASS: GLOBALGEOMETRYRULES ===========
+
+  GlobalGeometryRules,
+    UpperLeftCorner,         !- Starting Vertex Position
+    Counterclockwise,        !- Vertex Entry Direction
+    Relative,                !- Coordinate System
+    Relative;                !- Daylighting Reference Point Coordinate System
+
+!-   ===========  ALL OBJECTS IN CLASS: ZONE ===========
+
+  Zone,
+    Room 102,                !- Name
+    180,                     !- Direction of Relative North {deg}
+    0,                       !- X Origin {m}
+    0,                       !- Y Origin {m}
+    0,                       !- Z Origin {m}
+    1,                       !- Type
+    1,                       !- Multiplier
+    3.35,                    !- Ceiling Height {m}
+    46.699;                  !- Volume {m3}
+
+!-   ===========  ALL OBJECTS IN CLASS: BUILDINGSURFACE:DETAILED ===========
+
+  BuildingSurface:Detailed,
+    woodSash2,               !- Name
+    Wall,                    !- Surface Type
+    Room Wall - South,       !- Construction Name
+    Room 102,                !- Zone Name
+    ,                        !- Space Name
+    Outdoors,                !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    SunExposed,              !- Sun Exposure
+    WindExposed,             !- Wind Exposure
+    0.5,                     !- View Factor to Ground
+    4,                       !- Number of Vertices
+    -0.609600000000,0.000000000000,0.127000000000,  !- X,Y,Z ==> Vertex 1 {m}
+    -0.609600000000,0.000000000000,0.000000000000,  !- X,Y,Z ==> Vertex 2 {m}
+    -3.657600000000,0.000000000000,0.000000000000,  !- X,Y,Z ==> Vertex 3 {m}
+    -3.657600000000,0.000000000000,0.127000000000;  !- X,Y,Z ==> Vertex 4 {m}
+
+  BuildingSurface:Detailed,
+    Room102 Floor,           !- Name
+    FLOOR,                   !- Surface Type
+    Room Floor,              !- Construction Name
+    Room 102,                !- Zone Name
+    ,                        !- Space Name
+    Adiabatic,               !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    1,                       !- View Factor to Ground
+    4,                       !- Number of Vertices
+    -3.657600000000,-4.572000000000,0.000000000000,  !- X,Y,Z ==> Vertex 1 {m}
+    -3.657600000000,0.000000000000,0.000000000000,  !- X,Y,Z ==> Vertex 2 {m}
+    -0.609600000000,0.000000000000,0.000000000000,  !- X,Y,Z ==> Vertex 3 {m}
+    -0.609600000000,-4.572000000000,0.000000000000;  !- X,Y,Z ==> Vertex 4 {m}
+
+  BuildingSurface:Detailed,
+    Room102 West Wall,       !- Name
+    WALL,                    !- Surface Type
+    Room Wall - East West,   !- Construction Name
+    Room 102,                !- Zone Name
+    ,                        !- Space Name
+    Adiabatic,               !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    0,                       !- View Factor to Ground
+    4,                       !- Number of Vertices
+    -0.609600000000,-4.572000000000,3.352800000000,  !- X,Y,Z ==> Vertex 1 {m}
+    -0.609600000000,-4.572000000000,0.000000000000,  !- X,Y,Z ==> Vertex 2 {m}
+    -0.609600000000,0.000000000000,0.000000000000,  !- X,Y,Z ==> Vertex 3 {m}
+    -0.609600000000,0.000000000000,3.352800000000;  !- X,Y,Z ==> Vertex 4 {m}
+
+  BuildingSurface:Detailed,
+    Room102 North Wall,      !- Name
+    WALL,                    !- Surface Type
+    Room Wall - North,       !- Construction Name
+    Room 102,                !- Zone Name
+    ,                        !- Space Name
+    Adiabatic,               !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    0,                       !- View Factor to Ground
+    4,                       !- Number of Vertices
+    -3.657600000000,-4.572000000000,3.352800000000,  !- X,Y,Z ==> Vertex 1 {m}
+    -3.657600000000,-4.572000000000,0.000000000000,  !- X,Y,Z ==> Vertex 2 {m}
+    -0.609600000000,-4.572000000000,0.000000000000,  !- X,Y,Z ==> Vertex 3 {m}
+    -0.609600000000,-4.572000000000,3.352800000000;  !- X,Y,Z ==> Vertex 4 {m}
+
+  BuildingSurface:Detailed,
+    Room102 East Wall,       !- Name
+    WALL,                    !- Surface Type
+    Room Wall - East West,   !- Construction Name
+    Room 102,                !- Zone Name
+    ,                        !- Space Name
+    Adiabatic,               !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    0,                       !- View Factor to Ground
+    4,                       !- Number of Vertices
+    -3.657600000000,0.000000000000,3.352800000000,  !- X,Y,Z ==> Vertex 1 {m}
+    -3.657600000000,0.000000000000,0.000000000000,  !- X,Y,Z ==> Vertex 2 {m}
+    -3.657600000000,-4.572000000000,0.000000000000,  !- X,Y,Z ==> Vertex 3 {m}
+    -3.657600000000,-4.572000000000,3.352800000000;  !- X,Y,Z ==> Vertex 4 {m}
+
+  BuildingSurface:Detailed,
+    Room102 Ceiling,         !- Name
+    Ceiling,                 !- Surface Type
+    Room Ceiling,            !- Construction Name
+    Room 102,                !- Zone Name
+    ,                        !- Space Name
+    Adiabatic,               !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    NoSun,                   !- Sun Exposure
+    NoWind,                  !- Wind Exposure
+    0.0,                     !- View Factor to Ground
+    4,                       !- Number of Vertices
+    -0.609600000000,-4.572000000000,3.352800000000,  !- X,Y,Z ==> Vertex 1 {m}
+    -0.609600000000,0.000000000000,3.352800000000,  !- X,Y,Z ==> Vertex 2 {m}
+    -3.657600000000,0.000000000000,3.352800000000,  !- X,Y,Z ==> Vertex 3 {m}
+    -3.657600000000,-4.572000000000,3.352800000000;  !- X,Y,Z ==> Vertex 4 {m}
+
+  BuildingSurface:Detailed,
+    woodSash1,               !- Name
+    Wall,                    !- Surface Type
+    Room Wall - South,       !- Construction Name
+    Room 102,                !- Zone Name
+    ,                        !- Space Name
+    Outdoors,                !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    SunExposed,              !- Sun Exposure
+    WindExposed,             !- Wind Exposure
+    0.5,                     !- View Factor to Ground
+    4,                       !- Number of Vertices
+    -0.609600000000,0.000000000000,3.352800000000,  !- X,Y,Z ==> Vertex 1 {m}
+    -0.609600000000,0.000000000000,0.127000000000,  !- X,Y,Z ==> Vertex 2 {m}
+    -0.685800000000,0.000000000000,0.127000000000,  !- X,Y,Z ==> Vertex 3 {m}
+    -0.685800000000,0.000000000000,3.352800000000;  !- X,Y,Z ==> Vertex 4 {m}
+
+  BuildingSurface:Detailed,
+    panelFrame,              !- Name
+    WALL,                    !- Surface Type
+    Room Wall - South,       !- Construction Name
+    Room 102,                !- Zone Name
+    ,                        !- Space Name
+    Outdoors,                !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    SunExposed,              !- Sun Exposure
+    WindExposed,             !- Wind Exposure
+    0.5,                     !- View Factor to Ground
+    4,                       !- Number of Vertices
+    -0.685800000000,0.000000000000,3.352800000000,  !- X,Y,Z ==> Vertex 1 {m}
+    -0.685800000000,0.000000000000,0.127000000000,  !- X,Y,Z ==> Vertex 2 {m}
+    -3.551237500000,0.000000000000,0.127000000000,  !- X,Y,Z ==> Vertex 3 {m}
+    -3.551237500000,0.000000000000,3.352800000000;  !- X,Y,Z ==> Vertex 4 {m}
+
+  BuildingSurface:Detailed,
+    woodSash3,               !- Name
+    Wall,                    !- Surface Type
+    Room Wall - South,       !- Construction Name
+    Room 102,                !- Zone Name
+    ,                        !- Space Name
+    Outdoors,                !- Outside Boundary Condition
+    ,                        !- Outside Boundary Condition Object
+    SunExposed,              !- Sun Exposure
+    WindExposed,             !- Wind Exposure
+    0.5,                     !- View Factor to Ground
+    4,                       !- Number of Vertices
+    -3.551237500000,0.000000000000,3.352800000000,  !- X,Y,Z ==> Vertex 1 {m}
+    -3.551237500000,0.000000000000,0.127000000000,  !- X,Y,Z ==> Vertex 2 {m}
+    -3.657600000000,0.000000000000,0.127000000000,  !- X,Y,Z ==> Vertex 3 {m}
+    -3.657600000000,0.000000000000,3.352800000000;  !- X,Y,Z ==> Vertex 4 {m}
+
+!-   ===========  ALL OBJECTS IN CLASS: FENESTRATIONSURFACE:DETAILED ===========
+
+  FenestrationSurface:Detailed,
+    glass,                   !- Name
+    Window,                  !- Surface Type
+    ELECTRO-CON-LIGHT,       !- Construction Name
+    panelFrame,              !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    0.5,                     !- View Factor to Ground
+    ,                        !- Frame and Divider Name
+    ,                        !- Multiplier
+    ,                        !- Number of Vertices
+    -0.739774999999999,1.03977864658391e-015,3.312287,  !- X,Y,Z ==> Vertex 1 {m}
+    -0.739774999999999,-2.00370669926137e-031,0.180975,  !- X,Y,Z ==> Vertex 2 {m}
+    -3.521789375,-1.04192748361591e-030,0.180975,  !- X,Y,Z ==> Vertex 3 {m}
+    -3.521789375,1.03977864658391e-015,3.312287;  !- X,Y,Z ==> Vertex 4 {m}
+
+!-   ===========  ALL OBJECTS IN CLASS: WINDOWPROPERTY:SHADINGCONTROL ===========
+
+  WindowShadingControl,
+    WIN-CONTROL-Room 102,    !- Name
+    Room 102,                !- Zone Name
+    1,                       !- Shading Control Sequence Number
+    SwitchableGlazing,       !- Shading Type
+    ELECTRO-CON-DARK,        !- Construction with Shading Name
+    OnIfHighSolarOnWindow,   !- Shading Control Type
+    ,                        !- Schedule Name
+    0,                       !- Setpoint {W/m2, W or deg C}
+    NO,                      !- Shading Control Is Scheduled
+    No,                      !- Glare Control Is Active
+    ,                        !- Shading Device Material Name
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    ,                        !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    glass;                   !- Fenestration Surface 1 Name
+
+!-   ===========  ALL OBJECTS IN CLASS: LIGHTS ===========
+
+  Lights,
+    Lights 1 Room 102,       !- Name
+    Room 102,                !- Zone or ZoneList or Space or SpaceList Name
+    Room 102 Lighting Schedule,  !- Schedule Name
+    LightingLevel,           !- Design Level Calculation Method
+    0,                       !- Lighting Level {W}
+    ,                        !- Watts per Zone Floor Area {W/m2}
+    ,                        !- Watts per Person {W/person}
+    0,                       !- Return Air Fraction
+    0.42,                    !- Fraction Radiant
+    0.18,                    !- Fraction Visible
+    1,                       !- Fraction Replaceable
+    GeneralLights;           !- End-Use Subcategory
+
+! MWetter. Set lights to 0
+!    100,                     !- Lighting Level {W}
+
+  Lights,
+    Lights 1 Room 102_CHRIS, !- Name
+    Room 102,                !- Zone or ZoneList or Space or SpaceList Name
+    Room 102 Lighting Schedule_CHRIS,  !- Schedule Name
+    LightingLevel,           !- Design Level Calculation Method
+    0,                       !- Lighting Level {W}
+    0,                       !- Watts per Zone Floor Area {W/m2}
+    ,                        !- Watts per Person {W/person}
+    0,                       !- Return Air Fraction
+    0.42,                    !- Fraction Radiant
+    0.18,                    !- Fraction Visible
+    1,                       !- Fraction Replaceable
+    GeneralLights;           !- End-Use Subcategory
+
+!-   ===========  ALL OBJECTS IN CLASS: ELECTRICEQUIPMENT ===========
+! MWetter: Set this to zero for the validation.
+!    80.1,                    !- Design Level {W}
+
+  ElectricEquipment,
+    ElecEq 1 Room 102,       !- Name
+    Room 102,                !- Zone or ZoneList or Space or SpaceList Name
+    Room 102 Electric Equipment Schedule,  !- Schedule Name
+    EquipmentLevel,          !- Design Level Calculation Method
+    0,                       !- Design Level {W}
+    ,                        !- Watts per Zone Floor Area {W/m2}
+    ,                        !- Watts per Person {W/person}
+    0,                       !- Fraction Latent
+    0.1,                     !- Fraction Radiant
+    0,                       !- Fraction Lost
+    0;                       !- End-Use Subcategory
+
+!-   ===========  ALL OBJECTS IN CLASS: OTHEREQUIPMENT ===========
+! MWetter: Set this to zero for the validation.
+!    400,                     !- Design Level {W}
+
+  OtherEquipment,
+    Compensating Cooling Load Room 102,  !- Name
+    None,                    !- Fuel Type
+    Room 102,                !- Zone or ZoneList or Space or SpaceList Name
+    Room 102 Compensating Cooling Load Schedule,  !- Schedule Name
+    EquipmentLevel,          !- Design Level Calculation Method
+    0,                       !- Design Level {W}
+    ,                        !- Power per Zone Floor Area {W/m2}
+    ,                        !- Power per Person {W/person}
+    0,                       !- Fraction Latent
+    0,                       !- Fraction Radiant
+    0;                       !- Fraction Lost
+
+!-   ===========  ALL OBJECTS IN CLASS: HVACTEMPLATE:THERMOSTAT ===========
+
+  HVACTemplate:Thermostat,
+    Room,                    !- Name
+    ,                        !- Heating Setpoint Schedule Name
+    24,                      !- Constant Heating Setpoint {C}
+    ,                        !- Cooling Setpoint Schedule Name
+    24;                      !- Constant Cooling Setpoint {C}
+
+!-   ===========  ALL OBJECTS IN CLASS: HVACTEMPLATE:ZONE:IDEALLOADSAIRSYSTEM ===========
+
+  HVACTemplate:Zone:IdealLoadsAirSystem,
+    Room 102,                !- Zone Name
+    Room,                    !- Template Thermostat Name
+    ,                        !- System Availability Schedule Name
+    50,                      !- Maximum Heating Supply Air Temperature {C}
+    13,                      !- Minimum Cooling Supply Air Temperature {C}
+    0.0156,                  !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.0077,                  !- Minimum Cooling Supply Air Humidity Ratio {kgWater/kgDryAir}
+    NoLimit,                 !- Heating Limit
+    ,                        !- Maximum Heating Air Flow Rate {m3/s}
+    ,                        !- Maximum Sensible Heating Capacity {W}
+    NoLimit,                 !- Cooling Limit
+    ,                        !- Maximum Cooling Air Flow Rate {m3/s}
+    ,                        !- Maximum Total Cooling Capacity {W}
+    ,                        !- Heating Availability Schedule Name
+    ,                        !- Cooling Availability Schedule Name
+    ConstantSensibleHeatRatio,  !- Dehumidification Control Type
+    0.7,                     !- Cooling Sensible Heat Ratio {dimensionless}
+    60.0,                    !- Dehumidification Setpoint {percent}
+    None,                    !- Humidification Control Type
+    30.0,                    !- Humidification Setpoint {percent}
+    None,                    !- Outdoor Air Method
+    0.00944,                 !- Outdoor Air Flow Rate per Person {m3/s}
+    0.0,                     !- Outdoor Air Flow Rate per Zone Floor Area {m3/s-m2}
+    0.0,                     !- Outdoor Air Flow Rate per Zone {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    None;                    !- Demand Controlled Ventilation Type
+
+!-   ===========  ALL OBJECTS IN CLASS: OUTPUT:VARIABLEDICTIONARY ===========
+
+  Output:VariableDictionary,regular;
+
+!-   ===========  ALL OBJECTS IN CLASS: OUTPUT:TABLE:SUMMARYREPORTS ===========
+
+  Output:Table:SummaryReports,
+    AnnualBuildingUtilityPerformanceSummary;  !- Report 1 Name
+
+!-   ===========  ALL OBJECTS IN CLASS: OUTPUT:TABLE:MONTHLY ===========
+
+  Output:Table:Monthly,
+    Building Loads - Heating,!- Name
+    2,                       !- Digits After Decimal
+    Zone Air System Sensible Heating Energy,  !- Variable or Meter 1 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 1
+    Zone Air System Sensible Heating Rate,  !- Variable or Meter 2 Name
+    Maximum,                 !- Aggregation Type for Variable or Meter 2
+    Site Outdoor Air Drybulb Temperature,  !- Variable or Meter 3 Name
+    ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 3
+
+  Output:Table:Monthly,
+    Zone Electric Summary,   !- Name
+    2,                       !- Digits After Decimal
+    Zone Lights Electric Energy,  !- Variable or Meter 1 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 1
+    Zone Lights Electric Energy,  !- Variable or Meter 2 Name
+    Maximum,                 !- Aggregation Type for Variable or Meter 2
+    Zone Electric Equipment Electric Energy,  !- Variable or Meter 3 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 3
+    Zone Electric Equipment Electric Energy,  !- Variable or Meter 4 Name
+    Maximum;                 !- Aggregation Type for Variable or Meter 4
+
+  Output:Table:Monthly,
+    Peak Zone Electric Summary,  !- Name
+    2,                       !- Digits After Decimal
+    Electricity:Zone:ROOM 102,  !- Variable or Meter 1 Name
+    Maximum;                 !- Aggregation Type for Variable or Meter 1
+
+!Zone People Total Heat Gain,  !- Variable or Meter 1 Name
+!SumOrAverage,            !- Aggregation Type for Variable or Meter 1
+
+  Output:Table:Monthly,
+    Space Gains,             !- Name
+    2,                       !- Digits After Decimal
+    Zone Lights Total Heating Energy,  !- Variable or Meter 1 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 1
+    Zone Electric Equipment Total Heating Energy,  !- Variable or Meter 2 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 2
+    Zone Infiltration Sensible Heat Gain Energy,  !- Variable or Meter 3 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 3
+    Zone Infiltration Sensible Heat Loss Energy,  !- Variable or Meter 4 Name
+    SumOrAverage;            !- Aggregation Type for Variable or Meter 4
+
+!Output:Table:Monthly,
+!    Occupant Comfort Data Summary,  !- Name
+!    5,                       !- Digits After Decimal
+!    FANGERPMV,               !- Variable or Meter 1 Name
+!    SumOrAverage;            !- Aggregation Type for Variable or Meter 1
+
+  Output:Table:Monthly,
+    Energy Consumption - Electricity & Natural Gas,  !- Name
+    2,                       !- Digits After Decimal
+    Electricity:Building,    !- Variable or Meter 1 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 1
+    Electricity:Building,    !- Variable or Meter 2 Name
+    Maximum;                 !- Aggregation Type for Variable or Meter 2
+
+  Output:Table:Monthly,
+    Building Energy Performance - Electricity,  !- Name
+    2,                       !- Digits After Decimal
+    InteriorLights:Electricity,  !- Variable or Meter 1 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 1
+    InteriorEquipment:Electricity,  !- Variable or Meter 2 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 2
+    Fans:Electricity,        !- Variable or Meter 3 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 3
+    Heating:Electricity,     !- Variable or Meter 4 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 4
+    Cooling:Electricity,     !- Variable or Meter 5 Name
+    SumOrAverage;            !- Aggregation Type for Variable or Meter 5
+
+  Output:Table:Monthly,
+    Peak Energy End-Use - Electricity Part 1,  !- Name
+    2,                       !- Digits After Decimal
+    InteriorLights:Electricity,  !- Variable or Meter 1 Name
+    Maximum,                 !- Aggregation Type for Variable or Meter 1
+    InteriorEquipment:Electricity,  !- Variable or Meter 2 Name
+    Maximum,                 !- Aggregation Type for Variable or Meter 2
+    Fans:Electricity,        !- Variable or Meter 3 Name
+    Maximum,                 !- Aggregation Type for Variable or Meter 3
+    Heating:Electricity,     !- Variable or Meter 4 Name
+    Maximum;                 !- Aggregation Type for Variable or Meter 4
+
+  Output:Table:Monthly,
+    Peak Energy End-Use - Electricity Part 2,  !- Name
+    ,                        !- Digits After Decimal
+    Cooling:Electricity,     !- Variable or Meter 1 Name
+    Maximum;                 !- Aggregation Type for Variable or Meter 1
+
+  Output:Table:Monthly,
+    Electric Components of Peak Demand,  !- Name
+    ,                        !- Digits After Decimal
+    Electricity:Facility,    !- Variable or Meter 1 Name
+    Maximum,                 !- Aggregation Type for Variable or Meter 1
+    InteriorLights:Electricity,  !- Variable or Meter 2 Name
+    ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 2
+    InteriorEquipment:Electricity,  !- Variable or Meter 3 Name
+    ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 3
+    Fans:Electricity,        !- Variable or Meter 4 Name
+    ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 4
+    Heating:Electricity,     !- Variable or Meter 5 Name
+    ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 5
+    Cooling:Electricity,     !- Variable or Meter 6 Name
+    ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 6
+
+  Output:Table:Monthly,
+    Daylighting & Glare,     !- Name
+    2,                       !- Digits After Decimal
+    Daylighting Reference Point 1 Illuminance,  !- Variable or Meter 1 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 1
+    Daylighting Reference Point 1 Glare Index,  !- Variable or Meter 2 Name
+    SumOrAverage;            !- Aggregation Type for Variable or Meter 2
+
+  Output:Table:Monthly,
+    Air Loop System Energy Use,  !- Name
+    ,                        !- Digits After Decimal
+    Air System Electric Energy,  !- Variable or Meter 1 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 1
+    Air System Electric Energy,  !- Variable or Meter 2 Name
+    Maximum,                 !- Aggregation Type for Variable or Meter 2
+    Air System Gas Energy,   !- Variable or Meter 3 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 3
+    Air System Heating Coil Gas Energy,  !- Variable or Meter 4 Name
+    SumOrAverage;            !- Aggregation Type for Variable or Meter 4
+
+  Output:Table:Monthly,
+    Peak Air Loop System Energy Use,  !- Name
+    ,                        !- Digits After Decimal
+    Air System Electric Energy,  !- Variable or Meter 1 Name
+    Maximum;                 !- Aggregation Type for Variable or Meter 1
+
+  Output:Table:Monthly,
+    Air Loop System Component Loads,  !- Name
+    ,                        !- Digits After Decimal
+    Air System Fan Air Heating Energy,  !- Variable or Meter 1 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 1
+    Air System Cooling Coil Total Cooling Energy,  !- Variable or Meter 2 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 2
+    Air System Heating Coil Total Heating Energy,  !- Variable or Meter 3 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 3
+    Air System Total Heating Energy,  !- Variable or Meter 4 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 4
+    Air System Heating Coil Total Heating Energy,  !- Variable or Meter 5 Name
+    SumOrAverage;            !- Aggregation Type for Variable or Meter 5
+
+  Output:Table:Monthly,
+    Air Loop System Component Energy Use,  !- Name
+    ,                        !- Digits After Decimal
+    Air System Fan Electric Energy,  !- Variable or Meter 1 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 1
+    Air System Fan Electric Energy,  !- Variable or Meter 2 Name
+    Maximum,                 !- Aggregation Type for Variable or Meter 2
+    Air System Cooling Coil Chilled Water Energy,  !- Variable or Meter 3 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 3
+    Air System Cooling Coil Chilled Water Energy,  !- Variable or Meter 4 Name
+    Maximum,                 !- Aggregation Type for Variable or Meter 4
+    Air System Heating Coil Electric Energy,  !- Variable or Meter 5 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 5
+    Air System Heating Coil Electric Energy,  !- Variable or Meter 6 Name
+    Maximum,                 !- Aggregation Type for Variable or Meter 6
+    Air System Heating Coil Electric Energy,  !- Variable or Meter 7 Name
+    SumOrAverage;            !- Aggregation Type for Variable or Meter 7
+
+  Output:Table:Monthly,
+    Other System Energy Use, !- Name
+    ,                        !- Digits After Decimal
+    Heating Coil Electric Energy,  !- Variable or Meter 1 Name
+    SumOrAverage,            !- Aggregation Type for Variable or Meter 1
+    Heating Coil Electric Power,  !- Variable or Meter 2 Name
+    SumOrAverage;            !- Aggregation Type for Variable or Meter 2
+
+!-   ===========  ALL OBJECTS IN CLASS: OUTPUTCONTROL:TABLE:STYLE ===========
+
+  OutputControl:Table:Style,
+    HTML;                    !- Column Separator
+
+!-   ===========  ALL OBJECTS IN CLASS: OUTPUT:VARIABLE ===========
+
+  Output:Variable,*,Site Outdoor Air Drybulb Temperature,Timestep;
+
+  Output:Variable,*,Site Diffuse Solar Radiation Rate per Area,Timestep;
+
+  Output:Variable,*,Site Direct Solar Radiation Rate per Area,Timestep;
+
+  Output:Variable,*,Facility Total Electric Demand Power,Timestep;
+
+  Output:Variable,*,Zone Ideal Loads Zone Total Heating Rate,Timestep;
+
+  Output:Variable,*,Zone Ideal Loads Zone Total Cooling Rate,Timestep;
+
+  Output:Variable,*,Electric Equipment Electric Power,Timestep;
+
+  Output:Variable,*,Lights Electric Power,Timestep;
+
+  Output:Variable,*,Zone Mean Air Temperature,Timestep;
+
+  Output:Variable,*,Zone Infiltration Mass Flow Rate,Timestep;
+
+  Output:Variable,*,Zone Infiltration Current Density Volume Flow Rate,Timestep;
+
+  Output:Variable,*,Zone Infiltration Standard Density Volume Flow Rate,Timestep;
+
+  Output:Variable,*,Site Outdoor Air Density,Timestep;
+
+  Output:Variable,*,Zone Outdoor Air Wind Speed,Timestep;
+
+! Outputs for internal heat gains
+
+  Output:Variable,*,Lights Radiant Heating Rate,Timestep;
+
+  Output:Variable,*,Lights Convective Heating Rate,Timestep;
+
+  Output:Variable,*,Electric Equipment Radiant Heating Rate,Timestep;
+
+  Output:Variable,*,Electric Equipment Convective Heating Rate,Timestep;
+
+  Output:Variable,*,Zone Other Equipment Radiant Heating Rate,Timestep;
+
+  Output:Variable,*,Zone Other Equipment Convective Heating Rate,Timestep;
+
+  Output:Variable,*,Surface Window Total Absorbed Shortwave Radiation Rate Layer 1,Timestep;
+
+  Output:Variable,*,Surface Window Total Absorbed Shortwave Radiation Rate Layer 2,Timestep;
+
+  Output:Variable,*,Surface Window Total Absorbed Shortwave Radiation Rate Layer 3,Timestep;
+
+  Output:Variable,*,Surface Outside Face Incident Solar Radiation Rate per Area,Timestep;
+
+  Output:Variable,*,Surface Outside Face Incident Beam Solar Radiation Rate per Area,Timestep;
+
+  Output:Variable,*,Zone Infiltration Mass Flow Rate,Timestep;
+

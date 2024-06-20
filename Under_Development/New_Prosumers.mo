@@ -1,95 +1,26 @@
 within ProsNet.Under_Development;
 package New_Prosumers
 
-  model SF1_expp "Example model of a building with loads provided as time series and
+  model SF1_indep_Newcontrol "Example model of a building with loads provided as time series and
   connected to an ETS for cooling"
     extends Modelica.Icons.Example;
-    package Medium=Buildings.Media.Water
+    package Medium=ProsNet.Fluid.Building_Fluid.Utili.Media.Water
       "Medium model";
-    Buildings.Electrical.DC.Sources.PVSimpleOriented
-                                           pv(
-      A=200e3/800/0.12,
-      til=0.34906585039887,
-      azi=-0.78539816339745,
-      V_nominal=480) "PV array"
-      annotation (Placement(transformation(extent={{414,-432},{346,-362}})));
-    Buildings.Electrical.DC.Storage.Battery bat(EMax=500e3*4*3600, V_nominal=
-          480)       "Battery"
-      annotation (Placement(transformation(extent={{-124,-500},{-174,-454}})));
-    Buildings.Electrical.AC.OnePhase.Conversion.ACDCConverter conv(
-        conversionFactor=480/480, eta=0.9)
-               "AC/DC converter"
-      annotation (Placement(transformation(extent={{12,-474},{-30,-428}})));
-    Buildings.Electrical.AC.OnePhase.Sources.Grid gri(
-      f=60,
-      V=480,
-      phiSou=0) annotation (Placement(transformation(extent={{62,-410},{102,
-              -370}})));
-    Buildings.Examples.ChillerPlant.BaseClasses.Controls.BatteryControl
-                                        con "Battery controller"
-      annotation (Placement(transformation(extent={{-212,-444},{-192,-424}})));
-    Buildings.Electrical.AC.OnePhase.Loads.Inductive acLoad(mode=Buildings.Electrical.Types.Load.VariableZ_P_input,
-        V_nominal=480)
-      annotation (Placement(transformation(extent={{22,-20},{-22,20}},
-          rotation=270,
-          origin={300,-350})));
-    Buildings.BoundaryConditions.WeatherData.ReaderTMY3 weaDat(filNam=
-          ModelicaServices.ExternalReferences.loadResource(
-          "modelica://Buildings/Resources/weatherdata/USA_CA_San.Francisco.Intl.AP.724940_TMY3.mos"))
-      annotation (Placement(transformation(extent={{210,110},{230,130}})));
     Modelica.Blocks.Sources.RealExpression realExpression(y=1)
-      annotation (Placement(transformation(extent={{-490,48},{-470,68}})));
+      annotation (Placement(transformation(extent={{-580,38},{-560,58}})));
     Modelica.Blocks.Sources.RealExpression realExpression1(y=1)
-      annotation (Placement(transformation(extent={{-558,-120},{-538,-100}})));
-    Buildings.Fluid.Actuators.Valves.ThreeWayLinear valLin(
-      redeclare package Medium = Buildings.Media.Water,
-      l={0.05,0.05},
-      m_flow_nominal=2,
-      use_inputFilter=false,
-      dpValve_nominal=1,
-      energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial)
-      "Valve model, linear opening characteristics"
-      annotation (Placement(transformation(extent={{-172,-150},{-152,-130}})));
-    Buildings.Fluid.Actuators.Valves.ThreeWayLinear valLin1(
-      redeclare package Medium = Buildings.Media.Water,
-      l={0.05,0.05},
-      m_flow_nominal=2,
-      use_inputFilter=false,
-      dpValve_nominal=1,
-      energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial)
-      "Valve model, linear opening characteristics"
-      annotation (Placement(transformation(extent={{-244,-26},{-224,-6}})));
+      annotation (Placement(transformation(extent={{-550,-154},{-530,-134}})));
     Modelica.Blocks.Sources.Ramp y(
       height=1,
       duration=1,
       offset=0) "Control signal"
       annotation (Placement(transformation(extent={{-290,56},{-270,76}})));
-    Buildings.Fluid.SolarCollectors.ASHRAE93 solCol(
-      redeclare package Medium = Buildings.Media.Water,
-      shaCoe=0,
-      rho=0.2,
-      nColType=Buildings.Fluid.SolarCollectors.Types.NumberSelection.Area,
-      totalArea=1.312,
-      sysConfig=Buildings.Fluid.SolarCollectors.Types.SystemConfiguration.Series,
-      per=Buildings.Fluid.SolarCollectors.Data.GlazedFlatPlate.FP_GuangdongFSPTY95(),
-      nPanels=1,
-      nSeg=9,
-      azi=0.010646508437165,
-      til=0.054803338512622,
-      energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
-      "Flat plate solar collector model"
-      annotation (Placement(transformation(extent={{-334,-316},{-274,-262}})));
 
-    parameter Buildings.DHC.Loads.HotWater.Data.GenericDomesticHotWaterWithHeatExchanger
-      datWatHea(VTan=0.1892706, mDom_flow_nominal=6.52944E-06*1000)
-      "Data for heat pump water heater with tank"
-      annotation (Placement(transformation(extent={{438,-224},{458,-204}})));
     Modelica.Blocks.Sources.CombiTimeTable sch(
       tableOnFile=true,
       tableName="tab1",
       fileName=Modelica.Utilities.Files.loadResource(
-          "modelica://Buildings/Resources/Data/DHC/Loads/HotWater/DHW_ApartmentMidRise.mos"),
+          "modelica://ProsNet/Data/Loads/HotWater/DHW_ApartmentMidRise.mos"),
       smoothness=Modelica.Blocks.Types.Smoothness.ContinuousDerivative,
       extrapolation=Modelica.Blocks.Types.Extrapolation.Periodic)
       "Domestic hot water fixture draw fraction schedule"
@@ -97,9 +28,6 @@ package New_Prosumers
           rotation=180,
           origin={449,-175})));
 
-    Buildings.DHC.Loads.HotWater.ThermostaticMixingValve theMixVal(redeclare
-        package Medium = Medium, mMix_flow_nominal=1.2*datWatHea.mDom_flow_nominal)
-      annotation (Placement(transformation(extent={{254,-218},{284,-190}})));
     Modelica.Blocks.Sources.Constant conTSetMix(k(
         final unit="K",
         displayUnit="degC") = 308.15)
@@ -107,324 +35,344 @@ package New_Prosumers
       annotation (Placement(transformation(extent={{-8,-8},{8,8}},
           rotation=180,
           origin={448,-148})));
-    Buildings.Electrical.AC.OnePhase.Loads.Inductive acLoad1(mode=Buildings.Electrical.Types.Load.VariableZ_P_input,
-        V_nominal=480)
-      annotation (Placement(transformation(extent={{23,-22},{-23,22}},
-          rotation=270,
-          origin={250,-349})));
-    Buildings.Electrical.DC.Lines.TwoPortResistance lin(R=0.05)
-      "Transmission line"
-      annotation (Placement(transformation(extent={{-25,-17},{25,17}},
-          rotation=0,
-          origin={79,-495})));
-    Buildings.Fluid.Sources.Boundary_pT souCol(
-      nPorts=1,
-      redeclare package Medium = Medium,
-      T(displayUnit="degC"))          "Source of domestic cold water"
-      annotation (Placement(transformation(extent={{-12,-12},{12,12}},
-          rotation=0,
-          origin={204,-188})));
-    Buildings.DHC.Loads.BaseClasses.BuildingTimeSeries buiHea(
-      have_chiWat=false,
-      filNam=
-          "modelica://Buildings/Resources/Data/DHC/Loads/Examples/SwissResidential_20190916.mos",
-      nPorts_aChiWat=1,
-      nPorts_bChiWat=1,
-      nPorts_bHeaWat=2,
-      nPorts_aHeaWat=2)
-      "Building with heating only"
-      annotation (Placement(transformation(extent={{174,-84},{248,-20}})));
 
-    Buildings.Fluid.Actuators.Valves.ThreeWayLinear valLin2(
-      redeclare package Medium = Buildings.Media.Water,
-      l={0.05,0.05},
-      m_flow_nominal=2,
-      use_inputFilter=false,
-      dpValve_nominal=6000,
-      energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial)
-      "Valve model, linear opening characteristics"
-      annotation (Placement(transformation(extent={{-10,-10},{10,10}},
-          rotation=180,
-          origin={120,-124})));
     Modelica.Blocks.Sources.Ramp y1(
       height=1,
       duration=1,
       offset=0) "Control signal"
-      annotation (Placement(transformation(extent={{104,10},{124,30}})));
-    Generators.Digital_Twins.NeoTower2_GC neoTower2_GC
-      annotation (Placement(transformation(extent={{-524,-174},{-414,-98}})));
-    Generators.Digital_Twins.WolfCGB14_GC wolfCGB14_GC
-      annotation (Placement(transformation(extent={{-448,-2},{-354,52}})));
-    Storage.StratifiedHeatStorage tan(
-      redeclare package Medium = Buildings.Media.Water,
+      annotation (Placement(transformation(extent={{92,18},{112,38}})));
+    Modelica.Blocks.Sources.Constant conTSetHot(k(
+        final unit="K",
+        displayUnit="degC") = 313.15)
+      "Temperature setpoint for hot water supply to fixture"
+      annotation (Placement(transformation(extent={{8,-8},{-8,8}},
+          rotation=0,
+          origin={48,-300})));
+    Fluid.Pumps.FlowControlled_m_flow pump(m_flow_nominal=10, addPowerToMedium=
+          true)
+      annotation (Placement(transformation(extent={{-118,-298},{-74,-264}})));
+    Components.Generators.Digital_Twins.WolfCGB14_GC wolfCGB14_GC1
+      annotation (Placement(transformation(extent={{-524,2},{-432,56}})));
+    Components.Generators.Digital_Twins.NeoTower2_GC neoTower2_GC1
+      annotation (Placement(transformation(extent={{-528,-194},{-436,-130}})));
+    Fluid.Sources.Boundary_pT souCol(redeclare package Medium =
+          ProsNet.Media.Water, nPorts=1)
+      annotation (Placement(transformation(extent={{170,-196},{190,-176}})));
+
+    Modelica.Blocks.Math.Gain gaiHea(k=1E6) "Gain for heating"
+      annotation (Placement(visible=true,transformation(origin={434,44},
+                                                                       extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Sources.Constant TSetHea(k=273.15 + 20)
+      "Set-point for heating"
+      annotation (Placement(visible=true, transformation(origin={388,44},extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Sources.Constant TSetCoo(k=273.15 + 27)
+      "Set-point for cooling"
+      annotation (Placement(visible=true, transformation(origin={388,18},extent={{-6,-6},{6,6}},rotation=0)));
+    Modelica.Blocks.Math.Gain gaiCoo(k=-1E6) "Gain for cooling"
+      annotation (Placement(visible=true,transformation(origin={434,18},
+                                                                       extent={{-6,-6},{6,6}},rotation=0)));
+
+    Components.Generators.Laboratory_Models.PVSimpleOriented pv(
+      A=200e3/800/0.12,
+      til=0.34906585039887,
+      azi=-0.78539816339745,
+      V_nominal=480)
+      annotation (Placement(transformation(extent={{476,-370},{564,-278}})));
+    Components.Generators.Laboratory_Models.ASHRAE93 solCol(
+      redeclare package Medium = ProsNet.Fluid.Building_Fluid.Utili.Media.Water,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      nSeg=9,
+      azi=0.010646508437165,
+      til=0.054803338512622,
+      rho=0.2,
+      nColType=ProsNet.Fluid.Building_Fluid.Utili.Fluid.SolarCollectors.Types.NumberSelection.Area,
+      totalArea=1.312,
+      sysConfig=ProsNet.Fluid.Building_Fluid.Utili.Fluid.SolarCollectors.Types.SystemConfiguration.Series,
+      per=ProsNet.Fluid.Building_Fluid.Utili.Fluid.SolarCollectors.Data.GlazedFlatPlate.FP_GuangdongFSPTY95())
+      annotation (Placement(transformation(extent={{-424,-362},{-332,-272}})));
+
+    Components.Consumers.ThermostaticMixingValve theMixVal(mMix_flow_nominal=1.2*
+          datWatHea.mDom_flow_nominal)
+      annotation (Placement(transformation(extent={{254,-242},{294,-206}})));
+    Components.Consumers.StorageTankWithExternalHeatExchanger domHotWatTan(
+      redeclare package MediumDom =
+          ProsNet.Fluid.Building_Fluid.Utili.Media.Water,
+      redeclare package MediumHea =
+          ProsNet.Fluid.Building_Fluid.Utili.Media.Water,
+      dat=datWatHea)
+      annotation (Placement(transformation(extent={{76,-336},{146,-264}})));
+    Components.Electrical.Inductive acLoad2(linearized=false, mode=ProsNet.Fluid.Building_Fluid.Utili.Electrical.Types.Load.VariableZ_P_input)
+      annotation (Placement(transformation(
+          extent={{-22,-17},{22,17}},
+          rotation=90,
+          origin={-53,-446})));
+    Components.Electrical.Inductive acLoad1(linearized=false, mode=ProsNet.Fluid.Building_Fluid.Utili.Electrical.Types.Load.VariableZ_P_input)
+      annotation (Placement(transformation(
+          extent={{-24,-16},{24,16}},
+          rotation=90,
+          origin={168,-446})));
+    Components.Electrical.Inductive acLoad(linearized=false, mode=ProsNet.Fluid.Building_Fluid.Utili.Electrical.Types.Load.VariableZ_P_input)
+      annotation (Placement(transformation(
+          extent={{-24,-16},{24,16}},
+          rotation=90,
+          origin={302,-442})));
+    Components.Electrical.ACDCConverter conv(conversionFactor=480/480, eta=0.9)
+      annotation (Placement(transformation(extent={{-72,-644},{16,-572}})));
+    Components.Electrical.BatteryControl con
+      annotation (Placement(transformation(extent={{-230,-644},{-198,-612}})));
+    Components.Electrical.Battery bat(EMax=500e3*4*3600, V_nominal=480)
+      annotation (Placement(transformation(extent={{-470,-652},{-374,-568}})));
+    Components.Electrical.Grid gri(
+      f=60,
+      V=480,
+      phiSou=0)
+      annotation (Placement(transformation(extent={{12,-530},{88,-458}})));
+    Components.Consumers.GenericDomesticHotWaterWithHeatExchanger datWatHea(VTan=0.1892706,
+        mDom_flow_nominal=6.52944E-06*1000)
+      annotation (Placement(transformation(extent={{440,-228},{460,-208}})));
+    Controls.BooleanToReal booToRea(realTrue=2.5, realFalse=0)
+      annotation (Placement(transformation(extent={{-132,-244},{-112,-224}})));
+    Components.Valves.ThreeWayLinear val3(
+    redeclare package Medium = ProsNet.Fluid.Building_Fluid.Utili.Media.Water,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+      use_inputFilter=false,
+      m_flow_nominal=2,
+      dpValve_nominal=1,
+      l={0.05,0.05})
+      annotation (Placement(transformation(extent={{-230,-30},{-210,-10}})));
+    Components.Valves.ThreeWayLinear val4(
+      redeclare package Medium = Fluid.Building_Fluid.Utili.Media.Water,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+      use_inputFilter=false,
+      m_flow_nominal=2,
+      dpValve_nominal=1,
+      l={0.05,0.05})
+      annotation (Placement(transformation(extent={{-162,-150},{-142,-130}})));
+    Components.Valves.ThreeWayLinear val1(
+      redeclare package Medium = Fluid.Building_Fluid.Utili.Media.Water,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+      use_inputFilter=false,
+      m_flow_nominal=2,
+      dpValve_nominal=1,
+      l={0.05,0.05})
+      annotation (Placement(transformation(extent={{-10,-10},{10,10}},
+          rotation=180,
+          origin={156,-142})));
+    Components.BoundryCondition.ReaderTMY3 weaDat(filNam=
+          ModelicaServices.ExternalReferences.loadResource("modelica://ProsNet/Data/weatherdata/USA_CA_San.Francisco.Intl.AP.724940_TMY3.mos"))
+      annotation (Placement(transformation(extent={{-68,120},{-48,140}})));
+    Components.Storage.Stratified tan(
+      redeclare package Medium = ProsNet.Fluid.Building_Fluid.Utili.Media.Water,
       m_flow_nominal=2,
       VTan(displayUnit="l") = 0.775,
       hTan=3,
       dIns=0.3,
       nSeg=10,
       T_start=333.15)
-      annotation (Placement(transformation(extent={{-60,-56},{16,20}})));
-    Buildings.DHC.Loads.HotWater.BaseClasses.TankChargingController tanCha
-      annotation (Placement(transformation(extent={{-688,-86},{-618,-8}})));
-    Modelica.Blocks.Sources.RealExpression SetTemp(y=343 - 5)
-      annotation (Placement(transformation(extent={{-780,-78},{-754,-54}})));
-    Buildings.ThermalZones.Detailed.Validation.BaseClasses.SingleZoneFloor sinZonFlo(
-      redeclare package Medium =
-          Modelica.Media.Water.ConstantPropertyLiquidWater,
-      use_windPressure=false,
-      gai(K=0*[0.4; 0.4; 0.2]))
-      "Single-zone floor model"
-      annotation (Placement(transformation(extent={{198,-68},{222,-44}})));
-    Modelica.Blocks.Math.Gain gaiHea(k=1E6) "Gain for heating"
-      annotation (Placement(visible=true,transformation(origin={364,-4},
-                                                                       extent={{-6,-6},{6,6}},rotation=0)));
-    Buildings.Controls.Continuous.LimPID conHeaPID(
-      Ti=300,
+      annotation (Placement(transformation(extent={{-108,-60},{10,58}})));
+    Components.Consumers.SingleZoneFloor sinZonFlo(redeclare package Medium =
+          Modelica.Media.Water.ConstantPropertyLiquidWater, use_windPressure=
+          false)
+      annotation (Placement(transformation(extent={{204,-26},{244,14}})));
+    Components.Consumers.BuildingTimeSeries buiHea(
+      have_chiWat=false,
+      filNam="modelica://ProsNet/SwissResidential_20190916.mos",
+      nPorts_aHeaWat=2,
+      nPorts_bHeaWat=2)
+      annotation (Placement(transformation(extent={{172,-48},{278,64}})));
+    Controls.LimPID conHeaPID1(
       k=0.1,
-      reverseActing=true,
-      strict=true) "Controller for heating"
-      annotation (Placement(visible=true, transformation(origin={342,-4},extent={{-6,-6},{6,6}},rotation=0)));
-    Modelica.Blocks.Sources.Constant TSetHea(k=273.15 + 20)
-      "Set-point for heating"
-      annotation (Placement(visible=true, transformation(origin={318,-4},extent={{-6,-6},{6,6}},rotation=0)));
-    Modelica.Blocks.Sources.Constant TSetCoo(k=273.15 + 27)
-      "Set-point for cooling"
-      annotation (Placement(visible=true, transformation(origin={318,-30},
-                                                                         extent={{-6,-6},{6,6}},rotation=0)));
-    Modelica.Blocks.Math.Gain gaiCoo(k=-1E6) "Gain for cooling"
-      annotation (Placement(visible=true,transformation(origin={364,-30},
-                                                                       extent={{-6,-6},{6,6}},rotation=0)));
-    Buildings.Controls.Continuous.LimPID conCooPID(
       Ti=300,
+      reverseActing=true)
+      annotation (Placement(transformation(extent={{402,36},{416,50}})));
+    Controls.LimPID conCooPID(
       k=0.1,
-      reverseActing=false,
-      strict=true) "Controller for cooling"
-      annotation (Placement(visible=true, transformation(origin={342,-30},
-                                                                         extent={{-6,-6},{6,6}},rotation=0)));
-    Buildings.Controls.OBC.CDL.Conversions.BooleanToReal booToRea(realTrue=2.5)
-      annotation (Placement(transformation(extent={{-8,-8},{8,8}},
-          rotation=180,
-          origin={-60,-224})));
-    Modelica.Blocks.Sources.Constant conTSetHot(k(
-        final unit="K",
-        displayUnit="degC") = 313.15)
-      "Temperature setpoint for hot water supply to fixture"
-      annotation (Placement(transformation(extent={{120,-264},{128,-256}})));
-    Fluid.Pumps.FlowControlled_m_flow pump(m_flow_nominal=10, addPowerToMedium=
-          true)
-      annotation (Placement(transformation(extent={{-94,-284},{-74,-264}})));
-    Consumers.StorageTankWithExternalHeatExchanger1 domHotWatTan(
-      redeclare package MediumDom = Buildings.Media.Water,
-      redeclare package MediumHea = Buildings.Media.Water,
-      dat=datWatHea)
-      annotation (Placement(transformation(extent={{144,-290},{200,-234}})));
-    Buildings.Electrical.AC.OnePhase.Loads.Inductive acLoad2(mode=Buildings.Electrical.Types.Load.VariableZ_P_input,
-        V_nominal=480)
-      annotation (Placement(transformation(extent={{23,-22},{-23,22}},
-          rotation=270,
-          origin={-44,-375})));
-    Modelica.Fluid.Interfaces.FluidPort_a port_a1
+      Ti=300,
+      reverseActing=true)
+      annotation (Placement(transformation(extent={{402,8},{418,24}})));
+    Controls.GeneratorControlPackage.ControlChargingStorage.HeatingStorageControl
+      heatingStorageControl(TStartCHP=338, TStopCHP=343)
+      annotation (Placement(transformation(extent={{-744,4},{-668,80}})));
+    Modelica.Blocks.Sources.BooleanExpression booleanExpression(y=true)
+      annotation (Placement(transformation(extent={{-896,8},{-836,60}})));
+    Modelica.Fluid.Interfaces.FluidPort_a port_a2
       "Fluid connector a (positive design flow direction is from port_a to port_b)"
-      annotation (Placement(transformation(extent={{58,124},{78,144}}),
-          iconTransformation(extent={{58,124},{78,144}})));
+      annotation (Placement(transformation(extent={{18,202},{38,222}})));
     Modelica.Fluid.Interfaces.FluidPort_b port_b1
       "Fluid connector b (positive design flow direction is from port_a to port_b)"
-      annotation (Placement(transformation(extent={{-74,124},{-54,144}}),
-          iconTransformation(extent={{-74,124},{-54,144}})));
+      annotation (Placement(transformation(extent={{62,202},{82,222}})));
   equation
-    connect(bat.SOC,con. SOC) annotation (Line(
-        points={{-176.5,-463.2},{-220,-463.2},{-220,-434},{-213.25,-434}},
-        color={0,0,127},
-        smooth=Smooth.None));
-    connect(con.y,bat. P) annotation (Line(
-        points={{-191.375,-434},{-191.375,-436},{-149,-436},{-149,-454}},
-        color={0,0,127},
-        smooth=Smooth.None));
-    connect(bat.terminal,conv. terminal_p) annotation (Line(
-        points={{-124,-477},{-44,-477},{-44,-451},{-30,-451}},
-        color={0,0,255},
-        smooth=Smooth.None));
-    connect(acLoad.terminal,gri. terminal) annotation (Line(
-        points={{300,-372},{300,-410},{82,-410}},
-        color={0,120,120},
-        smooth=Smooth.None));
-    connect(conv.terminal_n,gri. terminal) annotation (Line(
-        points={{12,-451},{82,-451},{82,-410}},
-        color={0,120,120},
-        smooth=Smooth.None));
-    connect(pv.weaBus, weaDat.weaBus) annotation (Line(
-        points={{380,-365.5},{380,120},{230,120}},
-        color={255,204,51},
-        thickness=0.5));
-    connect(y.y, valLin1.y) annotation (Line(points={{-269,66},{-234,66},{-234,
-            -4}}, color={0,0,127}));
-    connect(y.y, valLin.y) annotation (Line(points={{-269,66},{-162,66},{-162,
-            -128}},                color={0,0,127}));
-    connect(solCol.weaBus, weaDat.weaBus) annotation (Line(
-        points={{-334,-263.08},{-336,-263.08},{-336,120},{230,120}},
-        color={255,204,51},
-        thickness=0.5));
-    connect(theMixVal.yMixSet,sch. y[1]) annotation (Line(points={{252.5,-192.8},
-            {244,-192.8},{244,-175},{439.1,-175}},
-                                color={0,0,127}));
-    connect(conTSetMix.y, theMixVal.TMixSet) annotation (Line(points={{439.2,
-            -148},{240,-148},{240,-201.2},{252.5,-201.2}}, color={0,0,127}));
-    connect(acLoad1.terminal, gri.terminal) annotation (Line(points={{250,-372},
-            {250,-410},{82,-410}}, color={0,120,120}));
-    connect(lin.terminal_p, pv.terminal) annotation (Line(points={{104,-495},{
-            428,-495},{428,-397},{414,-397}}, color={0,0,255}));
-    connect(lin.terminal_n, conv.terminal_p) annotation (Line(points={{54,-495},
-            {-48,-495},{-48,-476},{-44,-476},{-44,-451},{-30,-451}}, color={0,0,
+    connect(wolfCGB14_GC1.ControlIn, realExpression.y) annotation (Line(points={{
+            -516.737,42.2545},{-516.737,48},{-559,48}}, color={0,0,127}));
+    connect(neoTower2_GC1.CHPModulation, realExpression1.y) annotation (Line(
+          points={{-512.188,-143.673},{-519.594,-143.673},{-519.594,-144},{-529,
+            -144}}, color={0,0,127}));
+
+    connect(pump.port_a, solCol.port_b) annotation (Line(points={{-118,-281},{-312,
+            -281},{-312,-317},{-332,-317}},                         color={0,127,255}));
+    connect(souCol.ports[1], theMixVal.port_col) annotation (Line(points={{190,-186},
+            {200,-186},{200,-238.4},{254,-238.4}}, color={0,127,255}));
+    connect(theMixVal.TMixSet, conTSetMix.y) annotation (Line(points={{252,-220.4},
+            {244,-220.4},{244,-196},{468,-196},{468,-132},{432,-132},{432,-148},{439.2,
+            -148}}, color={0,0,127}));
+    connect(sch.y[1], theMixVal.yMixSet) annotation (Line(points={{439.1,-175},{240,
+            -175},{240,-209.6},{252,-209.6}}, color={0,0,127}));
+    connect(conTSetHot.y, domHotWatTan.TDomSet)
+      annotation (Line(points={{39.2,-300},{72.5,-300}}, color={0,0,127}));
+    connect(theMixVal.port_hot, domHotWatTan.port_bDom) annotation (Line(points={{
+            254,-231.2},{160,-231.2},{160,-278.4},{146,-278.4}}, color={0,127,255}));
+    connect(solCol.port_a, domHotWatTan.port_bHea) annotation (Line(points={{-424,
+            -317},{-440,-317},{-440,-376},{60,-376},{60,-374},{64,-374},{64,-321.6},
+            {76,-321.6}}, color={0,127,255}));
+    connect(domHotWatTan.port_aHea, pump.port_b) annotation (Line(points={{146,-321.6},
+            {152,-321.6},{152,-260},{-60,-260},{-60,-281},{-74,-281}}, color={0,127,
             255}));
-    connect(theMixVal.port_col, souCol.ports[1]) annotation (Line(points={{254,
-            -215.2},{236,-215.2},{236,-188},{216,-188}}, color={0,127,255}));
-    connect(buiHea.PPum, acLoad.Pow) annotation (Line(points={{250.467,-45.6},{
-            290,-45.6},{290,-46},{300,-46},{300,-328}},
-                                color={0,0,127}));
-    connect(buiHea.ports_bHeaWat[1], valLin2.port_1) annotation (Line(points={{248,
-            -59.4667},{260,-59.4667},{260,-124},{130,-124}},
-                                                           color={0,127,255}));
-    connect(y1.y, valLin2.y) annotation (Line(points={{125,20},{134,20},{134,
-            -136},{120,-136}},            color={0,0,127}));
-    connect(neoTower2_GC.weaBus, weaDat.weaBus) annotation (Line(
-        points={{-455.938,-71.7455},{-455.938,-72},{-460,-72},{-460,120},{230,
-            120}},
-        color={255,204,51},
-        thickness=0.5));
-    connect(realExpression1.y, neoTower2_GC.CHPModulation) annotation (Line(
-          points={{-537,-110},{-537,-114.236},{-505.094,-114.236}}, color={0,0,
-            127}));
-    connect(neoTower2_GC.port_b, valLin.port_3) annotation (Line(points={{-436,
-            -122.873},{-436,-124},{-184,-124},{-184,-150},{-162,-150}},
-                                                                color={0,127,
-            255}));
-    connect(neoTower2_GC.port_a, valLin1.port_3) annotation (Line(points={{
-            -434.625,-144.291},{-334,-144.291},{-334,-144},{-234,-144},{-234,
-            -26}},
-          color={0,127,255}));
-    connect(neoTower2_GC.term_p, gri.terminal) annotation (Line(points={{
-            -456.625,-158.109},{-456.625,-410},{82,-410}}, color={0,120,120}));
-    connect(realExpression.y, wolfCGB14_GC.ControlIn) annotation (Line(points={{-469,58},
-            {-460,58},{-460,38.2545},{-440.579,38.2545}},           color={0,0,
-            127}));
-    connect(wolfCGB14_GC.weaBus, weaDat.weaBus) annotation (Line(
-        points={{-410.4,47.5818},{-410.4,120},{230,120}},
-        color={255,204,51},
-        thickness=0.5));
-    connect(wolfCGB14_GC.port_b, valLin.port_1) annotation (Line(points={{
-            -369.337,38.7455},{-369.337,60},{-304,60},{-304,-120},{-180,-120},{
-            -180,-140},{-172,-140}}, color={0,127,255}));
-    connect(wolfCGB14_GC.port_a, valLin1.port_1) annotation (Line(points={{
-            -362.905,18.6182},{-362,18.6182},{-362,-16},{-244,-16}}, color={0,
-            127,255}));
-    connect(wolfCGB14_GC.term_p, gri.terminal) annotation (Line(points={{
-            -398.526,-9.36364},{-398.526,-410},{82,-410}}, color={0,120,120}));
-    connect(valLin.port_2, tan.fluPorVol[10]) annotation (Line(points={{-152,
-            -140},{-150,-140},{-150,-28},{-44,-28},{-44,-11.16},{-41,-11.16}},
-                                                           color={0,127,255}));
-    connect(tanCha.charge, neoTower2_GC.CHPOn) annotation (Line(points={{-611,
-            -47},{-512,-47},{-512,-90},{-505.094,-90},{-505.094,-91.4364}},
-          color={255,0,255}));
-    connect(tanCha.TTanTop, tan.TempTop) annotation (Line(points={{-695,-49.34},
-            {-712,-49.34},{-712,84},{28,84},{28,1},{8.4,1}},
-                                                          color={0,0,127}));
-    connect(tanCha.TTanBot, tan.Tempbot) annotation (Line(points={{-695,-78.2},
-            {-712,-78.2},{-712,-78},{-716,-78},{-716,-170},{26,-170},{26,
-            -38.52},{8.4,-38.52}}, color={0,0,127}));
-    connect(SetTemp.y, tanCha.TTanTopSet) annotation (Line(points={{-752.7,-66},
-            {-712,-66},{-712,-65.72},{-692.2,-65.72}}, color={0,0,127}));
-    connect(tanCha.charge, wolfCGB14_GC.CBOn1) annotation (Line(points={{-611,
-            -47},{-512,-47},{-512,26},{-464,26},{-464,25.9818},{-443.053,
-            25.9818}}, color={255,0,255}));
-    connect(sinZonFlo.weaBus, weaDat.weaBus) annotation (Line(
-        points={{202.08,-45.8},{202.08,120},{230,120}},
-        color={255,204,51},
-        thickness=0.5));
-    connect(conHeaPID.y,gaiHea. u)
-      annotation (Line(points={{348.6,-4},{356.8,-4}},
-                                                    color={0,0,127}));
-    connect(TSetHea.y,conHeaPID. u_s)
-      annotation (Line(points={{324.6,-4},{334.8,-4}}, color={0,0,127}));
-    connect(conCooPID.u_s,TSetCoo. y)
-      annotation (Line(points={{334.8,-30},{324.6,-30}},
-                                                       color={0,0,127}));
-    connect(conCooPID.y,gaiCoo. u)
-      annotation (Line(points={{348.6,-30},{356.8,-30}},
-                                                    color={0,0,127}));
-    connect(conHeaPID.y,gaiHea. u)
-      annotation (Line(points={{348.6,-4},{356.8,-4}},
-                                                    color={0,0,127}));
-    connect(gaiCoo.u,conCooPID. y)
-      annotation (Line(points={{356.8,-30},{348.6,-30}},
-                                                    color={0,0,127}));
-    connect(sinZonFlo.TRooAir,conHeaPID. u_m) annotation (Line(points={{220.2,
-            -49.88},{220.2,16},{342,16},{342,-11.2}},
-          color={0,0,127}));
-    connect(sinZonFlo.TRooAir, conCooPID.u_m) annotation (Line(points={{220.2,
-            -49.88},{220.2,-8},{300,-8},{300,-37.2},{342,-37.2}}, color={0,0,
-            127}));
-    connect(booToRea.y, pump.m_flow_in) annotation (Line(points={{-69.6,-224},{
-            -84,-224},{-84,-262}}, color={0,0,127}));
-    connect(domHotWatTan.charge, booToRea.u) annotation (Line(points={{205.6,
-            -287.2},{205.6,-298},{0,-298},{0,-224},{-50.4,-224}}, color={255,0,
-            255}));
-    connect(domHotWatTan.port_aHea, pump.port_b) annotation (Line(points={{200,
-            -278.8},{220,-278.8},{220,-304},{-64,-304},{-64,-274},{-74,-274}},
-          color={0,127,255}));
-    connect(domHotWatTan.port_bHea, solCol.port_a) annotation (Line(points={{
-            144,-278.8},{118,-278.8},{118,-278},{90,-278},{90,-334},{-346,-334},
-            {-346,-289},{-334,-289}}, color={0,127,255}));
-    connect(domHotWatTan.port_aDom, valLin2.port_3) annotation (Line(points={{
-            144,-245.2},{104,-245.2},{104,-114},{120,-114}}, color={0,127,255}));
-    connect(domHotWatTan.TDomSet, conTSetHot.y) annotation (Line(points={{141.2,
-            -262},{134.8,-262},{134.8,-260},{128.4,-260}}, color={0,0,127}));
-    connect(domHotWatTan.port_bDom, theMixVal.port_hot) annotation (Line(points
-          ={{200,-245.2},{244,-245.2},{244,-209.6},{254,-209.6}}, color={0,127,
-            255}));
-    connect(pump.port_a, solCol.port_b) annotation (Line(points={{-94,-274},{
-            -264,-274},{-264,-289},{-274,-289}}, color={0,127,255}));
-    connect(domHotWatTan.PEle, acLoad1.Pow) annotation (Line(points={{202.8,
-            -262},{202.8,-264},{250,-264},{250,-326}}, color={0,0,127}));
-    connect(acLoad2.terminal, gri.terminal) annotation (Line(points={{-44,-398},
-            {-44,-410},{82,-410}}, color={0,120,120}));
-    connect(pump.P, acLoad2.Pow) annotation (Line(points={{-73,-265},{-58,-265},
-            {-58,-266},{-44,-266},{-44,-352}}, color={0,0,127}));
-    connect(valLin1.port_2, tan.fluPorVol[1]) annotation (Line(points={{-224,
-            -16},{-41,-16},{-41,-24.84}}, color={0,127,255}));
-    connect(buiHea.ports_aHeaWat[1], tan.fluPorVol1[1]) annotation (Line(points={{174,
-            -59.4667},{36,-59.4667},{36,-24},{-8.32,-24},{-8.32,-24.08}},
-          color={0,127,255}));
-    connect(sinZonFlo.ports[1], buiHea.ports_aHeaWat[2]) annotation (Line(
-          points={{202.98,-63.2},{202.98,-57.3333},{174,-57.3333}}, color={0,
-            127,255}));
-    connect(sinZonFlo.ports[2], buiHea.ports_bHeaWat[2]) annotation (Line(
-          points={{203.58,-63.2},{224.64,-63.2},{224.64,-57.3333},{248,-57.3333}},
-          color={0,127,255}));
-    connect(valLin2.port_2, tan.fluPorVol1[10]) annotation (Line(points={{110,
-            -124},{40,-124},{40,-56},{36,-56},{36,-10.4},{-8.32,-10.4}}, color=
+    connect(acLoad2.Pow, pump.P) annotation (Line(points={{-53,-424},{-53,-265.7},
+            {-71.8,-265.7}}, color={0,0,127}));
+    connect(acLoad1.Pow, domHotWatTan.PEle) annotation (Line(points={{168,-422},{168,
+            -300},{149.5,-300}}, color={0,0,127}));
+    connect(pv.terminal, conv.terminal_p) annotation (Line(points={{476,-324},{464,
+            -324},{464,-608},{16,-608}}, color={0,0,255}));
+    connect(bat.terminal, conv.terminal_p) annotation (Line(points={{-470,-610},{-488,
+            -610},{-488,-664},{28,-664},{28,-608},{16,-608}}, color={0,0,255}));
+    connect(con.SOC, bat.SOC) annotation (Line(points={{-232,-628},{-348,-628},{-348,
+            -584.8},{-369.2,-584.8}}, color={0,0,127}));
+    connect(con.y, bat.P) annotation (Line(points={{-197,-628},{-188,-628},{-188,-540},
+            {-422,-540},{-422,-568}}, color={0,0,127}));
+    connect(wolfCGB14_GC1.term_p, gri.terminal) annotation (Line(points={{-422.8,9.85455},
+            {-436,9.85455},{-436,10},{-448,10},{-448,-528},{-446,-528},{-446,-530},
+            {50,-530}}, color={0,120,120}));
+    connect(acLoad.terminal, gri.terminal) annotation (Line(points={{302,-466},{302,
+            -532},{100,-532},{100,-530},{50,-530}}, color={0,120,120}));
+    connect(acLoad1.terminal, gri.terminal) annotation (Line(points={{168,-470},{168,
+            -532},{110,-532},{110,-530},{50,-530}}, color={0,120,120}));
+    connect(conv.terminal_n, gri.terminal) annotation (Line(points={{-72,-608},{-84,
+            -608},{-84,-530},{50,-530}}, color={0,120,120}));
+    connect(acLoad2.terminal, gri.terminal) annotation (Line(points={{-53,-468},{-53,
+            -530},{50,-530}}, color={0,120,120}));
+    connect(neoTower2_GC1.term_p, gri.terminal) annotation (Line(points={{-439.45,
+            -192.255},{-448,-192.255},{-448,-434},{-446,-434},{-446,-530},{50,
+            -530}},
+          color={0,120,120}));
+    connect(booToRea.u, domHotWatTan.charge) annotation (Line(points={{-134,-234},
+            {-142,-234},{-142,-348},{153,-348},{153,-332.4}}, color={255,0,255}));
+    connect(booToRea.y, pump.m_flow_in) annotation (Line(points={{-110,-234},{-98,
+            -234},{-98,-260.6},{-96,-260.6}}, color={0,0,127}));
+    connect(wolfCGB14_GC1.port_a, val3.port_1) annotation (Line(points={{
+            -440.716,22.6182},{-240,22.6182},{-240,-20},{-230,-20}},
+                                                            color={0,127,255}));
+    connect(val3.port_3, neoTower2_GC1.port_a) annotation (Line(points={{-220,
+            -30},{-220,-168.982},{-453.25,-168.982}},
+                                                 color={0,127,255}));
+    connect(val3.y, y.y)
+      annotation (Line(points={{-220,-8},{-220,66},{-269,66}}, color={0,0,127}));
+    connect(val4.port_3, neoTower2_GC1.port_b) annotation (Line(points={{-152,
+            -150},{-152,-160},{-428,-160},{-428,-128},{-454.4,-128},{-454.4,
+            -150.945}}, color={0,127,255}));
+    connect(val4.port_1, wolfCGB14_GC1.port_b) annotation (Line(points={{-162,
+            -140},{-414,-140},{-414,68},{-447.011,68},{-447.011,42.7455}}, color=
             {0,127,255}));
-    connect(tan.port_a, port_a1) annotation (Line(points={{-22,20},{-2,20},{-2,
-            134},{68,134}}, color={0,127,255}));
-    connect(tan.port_b, port_b1) annotation (Line(points={{-22,-56},{-54,-56},{
-            -54,134},{-64,134}}, color={0,127,255}));
-    annotation (
+    connect(val4.y, y.y) annotation (Line(points={{-152,-128},{-152,66},{-269,66}},
+          color={0,0,127}));
+    connect(val1.port_3, domHotWatTan.port_aDom) annotation (Line(points={{156,
+            -132},{156,-128},{36,-128},{36,-278},{76,-278},{76,-278.4}},   color=
+            {0,127,255}));
+    connect(val1.y, y1.y) annotation (Line(points={{156,-154},{156,-164},{120,-164},
+            {120,28},{113,28}},                    color={0,0,127}));
+    connect(pv.weaBus, weaDat.weaBus) annotation (Line(
+        points={{520,-282.6},{520,130},{-48,130}},
+        color={255,204,51},
+        thickness=0.5));
+    connect(weaDat.weaBus, solCol.weaBus) annotation (Line(
+        points={{-48,130},{-248,130},{-248,-248},{-424,-248},{-424,-273.8}},
+        color={255,204,51},
+        thickness=0.5));
+    connect(wolfCGB14_GC1.weaBus, weaDat.weaBus) annotation (Line(
+        points={{-559.832,39.3091},{-559.832,24},{-600,24},{-600,130},{-48,130}},
+        color={255,204,51},
+        thickness=0.5));
+
+    connect(weaDat.weaBus, neoTower2_GC1.weaBus) annotation (Line(
+        points={{-48,130},{-600,130},{-600,-120.691},{-570.55,-120.691}},
+        color={255,204,51},
+        thickness=0.5));
+    connect(val3.port_2, tan.fluPorVol[1]) annotation (Line(points={{-210,-20},{
+            -210,14},{-80,14},{-80,-11.62},{-78.5,-11.62}},   color={0,127,255}));
+    connect(val4.port_2, tan.fluPorVol[10]) annotation (Line(points={{-142,-140},
+            {-132,-140},{-132,-8},{-78,-8},{-78,9.62},{-78.5,9.62}},   color={0,
+            127,255}));
+    connect(val1.port_2, tan.fluPorVol1[10]) annotation (Line(points={{146,-142},
+            {88,-142},{88,-16},{2,-16},{2,10},{1.74,10},{1.74,10.8}},
+                                                                color={0,127,255}));
+    connect(sinZonFlo.weaBus, weaDat.weaBus) annotation (Line(
+        points={{210.8,11},{132,11},{132,130},{-48,130}},
+        color={255,204,51},
+        thickness=0.5));
+    connect(tan.fluPorVol1[1], buiHea.ports_aHeaWat[1]) annotation (Line(points={
+            {1.74,-10.44},{1.74,12},{68,12},{68,-4},{124,-4},{124,-5.06667},{172,
+            -5.06667}}, color={0,127,255}));
+    connect(val1.port_1, buiHea.ports_bHeaWat[1]) annotation (Line(points={{166,
+            -142},{292,-142},{292,-5.06667},{278,-5.06667}}, color={0,127,255}));
+    connect(buiHea.PPum, acLoad.Pow) annotation (Line(points={{281.533,19.2},{
+            294,19.2},{294,20},{308,20},{308,-404},{302,-404},{302,-418}},
+                                                                       color={0,0,
+            127}));
+    connect(sinZonFlo.ports[2], buiHea.ports_bHeaWat[2]) annotation (Line(points=
+            {{213.3,-18},{213.3,-4},{272,-4},{272,-1.33333},{278,-1.33333}},
+          color={0,127,255}));
+    connect(sinZonFlo.ports[1], buiHea.ports_aHeaWat[2]) annotation (Line(points=
+            {{212.3,-18},{212.3,-12},{212,-12},{212,-4},{174,-4},{174,-1.33333},{
+            172,-1.33333}}, color={0,127,255}));
+    connect(TSetHea.y, conHeaPID1.u_s) annotation (Line(points={{394.6,44},{397.6,
+            44},{397.6,43},{400.6,43}}, color={0,0,127}));
+    connect(gaiHea.u, conHeaPID1.y) annotation (Line(points={{426.8,44},{421.75,
+            44},{421.75,43},{416.7,43}}, color={0,0,127}));
+    connect(sinZonFlo.TRooAir, conHeaPID1.u_m) annotation (Line(points={{241,4.2},
+            {372,4.2},{372,60},{409,60},{409,34.6}}, color={0,0,127}));
+    connect(conCooPID.y, gaiCoo.u) annotation (Line(points={{418.8,16},{418.8,18},
+            {426.8,18}}, color={0,0,127}));
+    connect(conCooPID.u_m, sinZonFlo.TRooAir)
+      annotation (Line(points={{410,6.4},{410,4.2},{241,4.2}}, color={0,0,127}));
+    connect(TSetCoo.y, conCooPID.u_s) annotation (Line(points={{394.6,18},{394.6,
+            16},{400.4,16}}, color={0,0,127}));
+    connect(heatingStorageControl.CHPON, wolfCGB14_GC1.CBOn1) annotation (Line(
+          points={{-673.32,42},{-588,42},{-588,20},{-540,20},{-540,29.9818},{
+            -519.158,29.9818}},
+                       color={255,0,255}));
+    connect(heatingStorageControl.CHPON, neoTower2_GC1.CHPOn) annotation (Line(
+          points={{-673.32,42},{-588,42},{-588,20},{-540,20},{-540,-104},{
+            -512.188,-104},{-512.188,-124.473}},
+                                        color={255,0,255}));
+    connect(tan.T1, heatingStorageControl.TopTlayer) annotation (Line(points={{11.18,
+            55.64},{11.18,72},{-260,72},{-260,84},{-656,84},{-656,92},{-776,92},{-776,
+            54.16},{-754.64,54.16}}, color={0,0,127}));
+    connect(tan.T10, heatingStorageControl.LowTlayer) annotation (Line(points={
+            {31.24,-52.92},{48,-52.92},{48,-76},{-560,-76},{-560,-128},{-776,-128},
+            {-776,12.36},{-754.64,12.36}}, color={0,0,127}));
+    connect(booleanExpression.y, heatingStorageControl.UseChp) annotation (Line(
+          points={{-833,34},{-793.82,34},{-793.82,35.16},{-754.64,35.16}},
+          color={255,0,255}));
+    connect(port_a2, tan.fluPorVol1[2]) annotation (Line(points={{28,212},{28,
+            16},{1.74,16},{1.74,-8.08}}, color={0,127,255}));
+    connect(port_b1, tan.fluPorVol1[2]) annotation (Line(points={{72,212},{72,
+            -12},{1.74,-12},{1.74,-8.08}}, color={0,127,255}));
+                                                        annotation (Line(points={{-754.64,38.96},{-786.32,38.96},{-786.32,40},{-818,
+            40}}, color={255,0,255}),
       Icon(
         coordinateSystem(
           preserveAspectRatio=false, extent={{-460,-500},{380,120}}), graphics
           ={
-          Line(points={{-218,2},{-2,120}}, color={28,108,200}),
-          Line(points={{4,122},{208,0}}, color={28,108,200}),
-          Rectangle(extent={{-216,0},{208,-406}}, lineColor={28,108,200}),
-          Line(points={{-72,130},{-72,84},{-58,92},{-56,130}}, color={28,108,
-                200}),
-          Line(points={{58,130},{60,86},{74,82},{78,136}}, color={28,108,200})}),
+          Rectangle(extent={{-158,2},{152,-350}}, lineColor={28,108,200}),
+          Line(points={{-156,12},{2,122}}, color={28,108,200}),
+          Line(points={{4,120},{152,6}}, color={28,108,200})}),
       Diagram(
           coordinateSystem(
           preserveAspectRatio=false, extent={{-460,-500},{380,120}})),
       __Dymola_Commands(
         file="modelica://Buildings/Resources/Scripts/Dymola/DHC/Loads/Heating/Examples/BuildingTimeSeriesWithETS.mos" "Simulate and plot"),
       experiment(
-        StopTime=20000,
+        StopTime=19500,
         Tolerance=1e-06,
         __Dymola_Algorithm="Dassl"),
       Documentation(info="<html>
@@ -441,7 +389,7 @@ First implementation.
 </li>
 </ul>
 </html>"));
-  end SF1_expp;
+  end SF1_indep_Newcontrol;
 
   package validation_SF1
     model Test_heat_transfer_station_production

@@ -1,5 +1,5 @@
 heat_transfer_station
-heat_source_sink_ideal
+heat_source_sink
 Conversion
 Test_Conversion
 Test_heat_source_sink_ideal

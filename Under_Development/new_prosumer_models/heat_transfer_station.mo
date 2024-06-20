@@ -192,17 +192,18 @@ final l=l_cheVal) annotation (Placement(transformation(
     extent={{10,-10},{-10,10}},
     rotation=90,
     origin={62,-70})));
-  Modelica.Fluid.Interfaces.FluidPort_b cold_prim(redeclare final package Medium =
+  Modelica.Fluid.Interfaces.FluidPort_b cold_prim(redeclare final package
+      Medium =
         Medium_prim)
 annotation (Placement(transformation(extent={{130,-190},{150,-170}})));
   Modelica.Fluid.Interfaces.FluidPort_a hot_prim(redeclare final package Medium =
         Medium_prim)
 annotation (Placement(transformation(extent={{-150,-192},{-130,-172}})));
-  heat_source_sink_ideal ideal_house(
-energyDynamics_cv=Modelica.Fluid.Types.Dynamics.FixedInitial,
-tau_cv=10,
-T_start_cv=313.15)
-annotation (Placement(transformation(extent={{18,120},{62,152}})));
+  heat_source_sink ideal_house(
+    energyDynamics_cv=Modelica.Fluid.Types.Dynamics.FixedInitial,
+    tau_cv=10,
+    T_start_cv=313.15)
+    annotation (Placement(transformation(extent={{18,120},{62,152}})));
   Conversion conversion
 annotation (Placement(transformation(extent={{-100,-4},{-52,66}})));
   Modelica.Fluid.Sensors.MassFlowRate m_dot_sens_prim(

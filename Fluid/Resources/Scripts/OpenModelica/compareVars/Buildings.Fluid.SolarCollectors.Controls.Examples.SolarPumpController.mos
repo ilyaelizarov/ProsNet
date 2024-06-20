@@ -1,0 +1,6 @@
+compareVars :=
+  {
+    "pumCon.on",
+    "pumCon.criSol.G_TC",
+    "pumCon.weaBus.HDirNor"
+  };

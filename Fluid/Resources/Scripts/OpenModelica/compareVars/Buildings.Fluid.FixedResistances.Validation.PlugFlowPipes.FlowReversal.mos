@@ -1,0 +1,8 @@
+compareVars :=
+  {
+    "m_flow.y",
+    "senTemIn.T",
+    "senTemOut.T",
+    "pip.v_nominal",
+    "pip.v"
+  };

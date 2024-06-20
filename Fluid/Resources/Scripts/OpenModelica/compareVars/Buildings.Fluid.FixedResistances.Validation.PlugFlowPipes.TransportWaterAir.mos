@@ -1,0 +1,14 @@
+compareVars :=
+  {
+    "Tin.y",
+    "senTemOutW.T",
+    "senTemOutA.T",
+    "duc.port_b.Xi_outflow[1]",
+    "XiIn[1].y",
+    "duc.port_b.C_outflow[1]",
+    "CIn[1].y",
+    "pip.v_nominal",
+    "pip.v",
+    "duc.v_nominal",
+    "duc.v"
+  };

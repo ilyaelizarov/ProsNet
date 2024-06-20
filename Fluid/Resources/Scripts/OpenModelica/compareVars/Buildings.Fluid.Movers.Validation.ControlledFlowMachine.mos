@@ -1,0 +1,9 @@
+compareVars :=
+  {
+    "fan1.m_flow",
+    "fan2.m_flow",
+    "fan3.m_flow",
+    "fan1.dp",
+    "fan2.dp",
+    "fan3.dp"
+  };

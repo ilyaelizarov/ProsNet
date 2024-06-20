@@ -1014,8 +1014,9 @@ First implementation. This is for issue
             80},{-88,-6},{-81,-6}}, color={0,0,127}));
     connect(conPum.TDomSet, TDomSet) annotation (Line(points={{-81,0},{-92,0},{-92,
             0},{-110,0}}, color={0,0,127}));
-    connect(conCha.TTanTop, TTanTop.T) annotation (Line(points={{70,-80},{66,-80},
-            {66,10},{61,10}},   color={0,0,127}));
+    connect(conCha.TTanTop, TTanTop.T) annotation (Line(points={{70,-80.6},{66,
+            -80.6},{66,10},{61,10}},
+                                color={0,0,127}));
     connect(conCha.charge, charge) annotation (Line(points={{94,-80},{120,-80}},
                              color={255,0,255}));
     connect(senTemHot.port_b, port_bDom)
@@ -1032,7 +1033,8 @@ First implementation. This is for issue
     connect(TTanBot.T, conCha.TTanBot) annotation (Line(points={{61,-20},{62,-20},
             {62,-88},{70,-88}}, color={0,0,127}));
     connect(realExpression1.y, conCha.TTanTopSet)
-      annotation (Line(points={{53,-72},{71,-72}}, color={0,0,127}));
+      annotation (Line(points={{53,-72},{62,-72},{62,-84.8},{70.8,-84.8}},
+                                                   color={0,0,127}));
     connect(tan.port_a, junTop.port_3) annotation (Line(points={{10,6},{10,14},
             {20,14},{20,20}}, color={0,127,255}));
     connect(tan.port_b, port_bHea) annotation (Line(points={{10,-22},{10,-60},{

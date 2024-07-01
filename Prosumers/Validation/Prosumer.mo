@@ -56,31 +56,31 @@ model Prosumer
     annotation (Placement(transformation(extent={{-12,68},{8,88}})));
 equation
   connect(bou1.ports[1], prodSteadyState.port_a) annotation (Line(points={{-68,
-          19.2},{-46,19.2},{-46,36},{-12,36}},
+          14.4},{-46,14.4},{-46,36},{-12,36}},
                                        color={0,127,255}));
   connect(bou2.ports[1], prodSteadyState.port_b) annotation (Line(points={{66,
-          16.6667},{50,16.6667},{50,36},{8,36}},
+          12.6667},{50,12.6667},{50,36},{8,36}},
                                     color={0,127,255}));
   connect(prodFixedInitial.port_b, bou2.ports[2]) annotation (Line(points={{8,-2},{
           50,-2},{50,14},{66,14}},  color={0,127,255}));
   connect(prodFixedInitial.port_a, bou1.ports[2]) annotation (Line(points={{-12,-2},
-          {-46,-2},{-46,17.6},{-68,17.6}}, color={0,127,255}));
+          {-46,-2},{-46,15.2},{-68,15.2}}, color={0,127,255}));
   connect(consSteadyState.port_b, bou4.ports[1])
-    annotation (Line(points={{8,-42},{38,-42},{38,-40},{66,-40}},
+    annotation (Line(points={{8,-42},{38,-42},{38,-43},{66,-43}},
                                                            color={0,127,255}));
   connect(consSteadyState.port_a, bou1.ports[3]) annotation (Line(points={{-12,-42},
           {-46,-42},{-46,14},{-68,14},{-68,16}},
                                                color={0,127,255}));
   connect(consValveFilter.port_a, bou1.ports[4]) annotation (Line(points={{-12,-76},
-          {-46,-76},{-46,14},{-68,14},{-68,14.4}},
+          {-46,-76},{-46,14},{-68,14},{-68,16.8}},
                                                  color={0,127,255}));
   connect(consValveFilter.port_b, bou4.ports[2]) annotation (Line(points={{8,-76},
-          {52,-76},{52,-44},{66,-44}},
+          {52,-76},{52,-41},{66,-41}},
                                    color={0,127,255}));
   connect(prodSecPumpDyn.port_b, bou2.ports[3]) annotation (Line(points={{8,78},{
-          50,78},{50,20},{66,20},{66,11.3333}},  color={0,127,255}));
-  connect(prodSecPumpDyn.port_a, bou1.ports[5]) annotation (Line(points={{-12,
-          78},{-46,78},{-46,34},{-68,34},{-68,12.8}}, color={0,127,255}));
+          50,78},{50,20},{66,20},{66,15.3333}},  color={0,127,255}));
+  connect(prodSecPumpDyn.port_a, bou1.ports[5]) annotation (Line(points={{-12,78},
+          {-46,78},{-46,34},{-68,34},{-68,17.6}},     color={0,127,255}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false)),
     experiment(StopTime=100, __Dymola_Algorithm="Dassl"));

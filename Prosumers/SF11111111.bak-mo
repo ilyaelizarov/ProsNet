@@ -170,7 +170,9 @@ model SF11111111 "Example model of a building with loads provided as time series
     kIns=0.2,
     nSeg=10,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
-    T_start=351.15)
+    T_start=351.15,
+    TFlu_start={353.15,348.15,345.15,340.15,336.15,330.15,326.15,321.15,317.15,
+        314.15})
     annotation (Placement(transformation(extent={{-104,-62},{14,56}})));
   Components.Consumers.SingleZoneFloor sinZonFlo(redeclare package Medium =
         Modelica.Media.Water.ConstantPropertyLiquidWater, use_windPressure=

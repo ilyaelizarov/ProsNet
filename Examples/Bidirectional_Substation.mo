@@ -153,7 +153,6 @@ package Bidirectional_Substation
         dp2_nominal=20000,
         redeclare Fluid.Pumps.Data.Pumps_FSP.GrundfosCR17AAAEHQQE feedinPer,
         energyDynamics_feedPump=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
-
         tau_feedPump=3,
         use_inputFilter_feedPump=true,
         riseTime_feedPump=35,
@@ -169,7 +168,6 @@ package Bidirectional_Substation
         R_ins_transferpipe=1000,
         ambient_temperature=system.T_ambient,
         energyDynamics_pumpsSec=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
-
         tau_pumpsSec=3,
         use_inputFilter_pumpsSec=true,
         riseTime_pumpsSec=35,
@@ -189,7 +187,6 @@ package Bidirectional_Substation
         dp2_nominal=20000,
         redeclare Fluid.Pumps.Data.Pumps_FSP.GrundfosCR17AAAEHQQE feedinPer,
         energyDynamics_feedPump=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
-
         tau_feedPump=3,
         use_inputFilter_feedPump=true,
         riseTime_feedPump=35,
@@ -205,7 +202,6 @@ package Bidirectional_Substation
         R_ins_transferpipe=1000,
         ambient_temperature=system.T_ambient,
         energyDynamics_pumpsSec=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
-
         tau_pumpsSec=3,
         use_inputFilter_pumpsSec=true,
         riseTime_pumpsSec=35,
@@ -364,7 +360,6 @@ package Bidirectional_Substation
         dp2_nominal=20000,
         redeclare Fluid.Pumps.Data.Pumps_FSP.GrundfosCR17AAAEHQQE feedinPer,
         energyDynamics_feedPump=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
-
         tau_feedPump=3,
         use_inputFilter_feedPump=true,
         riseTime_feedPump=35,
@@ -380,7 +375,6 @@ package Bidirectional_Substation
         R_ins_transferpipe=1000,
         ambient_temperature=system.T_ambient,
         energyDynamics_pumpsSec=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
-
         tau_pumpsSec=3,
         use_inputFilter_pumpsSec=true,
         riseTime_pumpsSec=35,
@@ -473,7 +467,6 @@ package Bidirectional_Substation
         dp2_nominal=20000,
         redeclare Fluid.Pumps.Data.Pumps_FSP.GrundfosCR35AAAEHQQE feedinPer,
         energyDynamics_feedPump=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
-
         tau_feedPump=3,
         use_inputFilter_feedPump=true,
         riseTime_feedPump=35,
@@ -489,7 +482,6 @@ package Bidirectional_Substation
         R_ins_transferpipe=1000,
         ambient_temperature=system.T_ambient,
         energyDynamics_pumpsSec=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
-
         tau_pumpsSec=3,
         use_inputFilter_pumpsSec=true,
         riseTime_pumpsSec=35,
@@ -582,7 +574,6 @@ package Bidirectional_Substation
         dp2_nominal=20000,
         redeclare Fluid.Pumps.Data.Pumps_FSP.GrundfosCR17AAAEHQQE feedinPer,
         energyDynamics_feedPump=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
-
         tau_feedPump=3,
         use_inputFilter_feedPump=true,
         riseTime_feedPump=35,
@@ -598,7 +589,6 @@ package Bidirectional_Substation
         R_ins_transferpipe=1000,
         ambient_temperature=system.T_ambient,
         energyDynamics_pumpsSec=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
-
         tau_pumpsSec=3,
         use_inputFilter_pumpsSec=true,
         riseTime_pumpsSec=35,

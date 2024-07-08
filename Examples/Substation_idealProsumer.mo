@@ -5,7 +5,7 @@ package Substation_idealProsumer
     model Speer_IEWT2023 "Producer and Consumer with Controller"
       Real Losses;
 
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         PROSUMER1(
         Q_flow_nominal=25273*1.2,
         T_a1_nominal=338.15,
@@ -17,6 +17,7 @@ package Substation_idealProsumer
         redeclare ProsNet.Fluid.Pumps.Data.Pumps_FSP.GrundfosCR17AAAEHQQE
           feedinPer,
         energyDynamics_feedPump=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
+
         tau_feedPump=3,
         use_inputFilter_feedPump=true,
         riseTime_feedPump=35,
@@ -32,6 +33,7 @@ package Substation_idealProsumer
         R_ins_transferpipe=1000,
         ambient_temperature=system.T_ambient,
         energyDynamics_pumpsSec=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
+
         tau_pumpsSec=3,
         use_inputFilter_pumpsSec=true,
         riseTime_pumpsSec=35,
@@ -41,7 +43,7 @@ package Substation_idealProsumer
         heat_exchanger(T_a1_nominal=338.15, T_a2_nominal=318.15))
         annotation (Placement(transformation(extent={{-190,-10},{-138,42}})));
 
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         PROSUMER2(
         Q_flow_nominal=21508*1.2,
         T_a1_nominal=338.15,
@@ -53,6 +55,7 @@ package Substation_idealProsumer
         redeclare ProsNet.Fluid.Pumps.Data.Pumps_FSP.GrundfosCR17AAAEHQQE
           feedinPer,
         energyDynamics_feedPump=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
+
         tau_feedPump=3,
         use_inputFilter_feedPump=true,
         riseTime_feedPump=35,
@@ -68,6 +71,7 @@ package Substation_idealProsumer
         R_ins_transferpipe=1000,
         ambient_temperature=system.T_ambient,
         energyDynamics_pumpsSec=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
+
         tau_pumpsSec=3,
         use_inputFilter_pumpsSec=true,
         riseTime_pumpsSec=35,
@@ -219,7 +223,7 @@ package Substation_idealProsumer
             28800,341.15; 29700,318.15; 30600,318.15; 31500,318.15; 32400,
             318.15; 33300,318.15])
         annotation (Placement(transformation(extent={{166,-14},{146,6}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         PROSUMER3(
         Q_flow_nominal=21245*1.2,
         T_a1_nominal=338.15,
@@ -231,6 +235,7 @@ package Substation_idealProsumer
         redeclare ProsNet.Fluid.Pumps.Data.Pumps_FSP.GrundfosCR17AAAEHQQE
           feedinPer,
         energyDynamics_feedPump=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
+
         tau_feedPump=3,
         use_inputFilter_feedPump=true,
         riseTime_feedPump=35,
@@ -246,6 +251,7 @@ package Substation_idealProsumer
         R_ins_transferpipe=1000,
         ambient_temperature=system.T_ambient,
         energyDynamics_pumpsSec=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
+
         tau_pumpsSec=3,
         use_inputFilter_pumpsSec=true,
         riseTime_pumpsSec=35,
@@ -329,7 +335,7 @@ package Substation_idealProsumer
             27000,8.15; 27900,8.15; 28800,4.07; 29700,-4.07; 30600,-8.15; 31500,
             -8.15; 32400,-8.15; 33300,-8.15])
         annotation (Placement(transformation(extent={{422,-14},{402,6}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         PROSUMER4(
         Q_flow_nominal=41827*1.2,
         T_a1_nominal=338.15,
@@ -341,6 +347,7 @@ package Substation_idealProsumer
         redeclare ProsNet.Fluid.Pumps.Data.Pumps_FSP.GrundfosCR35AAAEHQQE
           feedinPer,
         energyDynamics_feedPump=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
+
         tau_feedPump=3,
         use_inputFilter_feedPump=true,
         riseTime_feedPump=35,
@@ -356,6 +363,7 @@ package Substation_idealProsumer
         R_ins_transferpipe=1000,
         ambient_temperature=system.T_ambient,
         energyDynamics_pumpsSec=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
+
         tau_pumpsSec=3,
         use_inputFilter_pumpsSec=true,
         riseTime_pumpsSec=35,
@@ -439,7 +447,7 @@ package Substation_idealProsumer
         energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
         T_start=313.15)
         annotation (Placement(transformation(extent={{394,-60},{360,-26}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         PROSUMER5(
         Q_flow_nominal=21245*1.2,
         T_a1_nominal=338.15,
@@ -451,6 +459,7 @@ package Substation_idealProsumer
         redeclare ProsNet.Fluid.Pumps.Data.Pumps_FSP.GrundfosCR17AAAEHQQE
           feedinPer,
         energyDynamics_feedPump=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
+
         tau_feedPump=3,
         use_inputFilter_feedPump=true,
         riseTime_feedPump=35,
@@ -466,6 +475,7 @@ package Substation_idealProsumer
         R_ins_transferpipe=1000,
         ambient_temperature=system.T_ambient,
         energyDynamics_pumpsSec=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
+
         tau_pumpsSec=3,
         use_inputFilter_pumpsSec=true,
         riseTime_pumpsSec=35,
@@ -907,7 +917,7 @@ SF1"),      Text(
     end Speer_IEWT2023;
 
     model A1a_Licklederer_crossover_noheat_noweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -919,7 +929,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -928,7 +938,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -1111,7 +1121,7 @@ SF1"),      Text(
     end A1a_Licklederer_crossover_noheat_noweight;
 
     model A1b_Licklederer_crossover_noheat_defweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -1123,7 +1133,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -1132,7 +1142,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -1300,7 +1310,7 @@ SF1"),      Text(
     end A1b_Licklederer_crossover_noheat_defweight;
 
     model A1c_Licklederer_crossover_noheat_weight2
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -1312,7 +1322,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -1321,7 +1331,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -1504,7 +1514,7 @@ SF1"),      Text(
     end A1c_Licklederer_crossover_noheat_weight2;
 
     model A2a_Licklederer_crossover_heat_noweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -1515,7 +1525,7 @@ SF1"),      Text(
             origin={-48,8})));
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=5, length=100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -1524,7 +1534,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -1704,7 +1714,7 @@ SF1"),      Text(
     end A2a_Licklederer_crossover_heat_noweight;
 
     model A2b_Licklederer_crossover_heat_defweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -1715,7 +1725,7 @@ SF1"),      Text(
             origin={-48,8})));
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=5, length=100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -1724,7 +1734,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -1889,7 +1899,7 @@ SF1"),      Text(
     end A2b_Licklederer_crossover_heat_defweight;
 
     model A2c_Licklederer_crossover_heat_weight2
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -1900,7 +1910,7 @@ SF1"),      Text(
             origin={-48,8})));
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=5, length=100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -1909,7 +1919,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -2089,7 +2099,7 @@ SF1"),      Text(
     end A2c_Licklederer_crossover_heat_weight2;
 
     model A3a_Licklederer_crossover_smallpump_noweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -2101,7 +2111,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -2110,7 +2120,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -2293,7 +2303,7 @@ SF1"),      Text(
     end A3a_Licklederer_crossover_smallpump_noweight;
 
     model A3b_Licklederer_crossover_smallpump_defweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -2305,7 +2315,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -2314,7 +2324,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -2484,7 +2494,7 @@ SF1"),      Text(
     end A3b_Licklederer_crossover_smallpump_defweight;
 
     model A3c_Licklederer_crossover_smallpump_weight2
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -2496,7 +2506,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -2505,7 +2515,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -2690,7 +2700,7 @@ SF1"),      Text(
     end A3c_Licklederer_crossover_smallpump_weight2;
 
     model B1a_Licklederer_sameside_noheat_noweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -2711,7 +2721,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -2729,7 +2739,7 @@ SF1"),      Text(
             extent={{-12,-17},{12,17}},
             rotation=0,
             origin={52,73})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -2900,7 +2910,7 @@ SF1"),      Text(
     end B1a_Licklederer_sameside_noheat_noweight;
 
     model B1b_Licklederer_sameside_noheat_defweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -2917,7 +2927,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -2931,7 +2941,7 @@ SF1"),      Text(
             extent={{-12,-17},{12,17}},
             rotation=0,
             origin={52,73})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -3098,7 +3108,7 @@ SF1"),      Text(
     end B1b_Licklederer_sameside_noheat_defweight;
 
     model B1c_Licklederer_sameside_noheat_weight2
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -3119,7 +3129,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -3137,7 +3147,7 @@ SF1"),      Text(
             extent={{-12,-17},{12,17}},
             rotation=0,
             origin={52,73})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -3308,7 +3318,7 @@ SF1"),      Text(
     end B1c_Licklederer_sameside_noheat_weight2;
 
     model B2a_Licklederer_sameside_heat_noweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -3328,7 +3338,7 @@ SF1"),      Text(
             origin={-44,75})));
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=5, length=100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -3346,7 +3356,7 @@ SF1"),      Text(
             extent={{-12,-17},{12,17}},
             rotation=0,
             origin={52,73})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -3514,7 +3524,7 @@ SF1"),      Text(
     end B2a_Licklederer_sameside_heat_noweight;
 
     model B2b_Licklederer_sameside_heat_defweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -3530,7 +3540,7 @@ SF1"),      Text(
             origin={-44,77})));
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=5, length=100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -3544,7 +3554,7 @@ SF1"),      Text(
             extent={{-12,-17},{12,17}},
             rotation=0,
             origin={52,73})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -3708,7 +3718,7 @@ SF1"),      Text(
     end B2b_Licklederer_sameside_heat_defweight;
 
     model B2c_Licklederer_sameside_heat_weight2
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -3728,7 +3738,7 @@ SF1"),      Text(
             origin={-44,77})));
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=5, length=100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -3746,7 +3756,7 @@ SF1"),      Text(
             extent={{-12,-17},{12,17}},
             rotation=0,
             origin={52,73})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -3914,7 +3924,7 @@ SF1"),      Text(
     end B2c_Licklederer_sameside_heat_weight2;
 
     model B3a_Licklederer_sameside_smallpump_noweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -3935,7 +3945,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -3953,7 +3963,7 @@ SF1"),      Text(
             extent={{-12,-17},{12,17}},
             rotation=0,
             origin={52,73})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -4124,7 +4134,7 @@ SF1"),      Text(
     end B3a_Licklederer_sameside_smallpump_noweight;
 
     model B3b_Licklederer_sameside_smallpump_defweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -4141,7 +4151,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -4155,7 +4165,7 @@ SF1"),      Text(
             extent={{-12,-17},{12,17}},
             rotation=0,
             origin={52,73})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -4322,7 +4332,7 @@ SF1"),      Text(
     end B3b_Licklederer_sameside_smallpump_defweight;
 
     model B3c_Licklederer_sameside_smallpump_weight2
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -4343,7 +4353,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -4361,7 +4371,7 @@ SF1"),      Text(
             extent={{-12,-17},{12,17}},
             rotation=0,
             origin={52,73})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -4532,7 +4542,7 @@ SF1"),      Text(
     end B3c_Licklederer_sameside_smallpump_weight2;
 
     model C1a_Licklederer_mix1_noheat_noweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -4544,7 +4554,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -4553,7 +4563,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -4736,7 +4746,7 @@ SF1"),      Text(
     end C1a_Licklederer_mix1_noheat_noweight;
 
     model C1b_Licklederer_mix1_noheat_defweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -4748,7 +4758,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -4757,7 +4767,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -4925,7 +4935,7 @@ SF1"),      Text(
     end C1b_Licklederer_mix1_noheat_defweight;
 
     model C1c_Licklederer_mix1_noheat_weight2
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -4937,7 +4947,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -4946,7 +4956,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -5129,7 +5139,7 @@ SF1"),      Text(
     end C1c_Licklederer_mix1_noheat_weight2;
 
     model C2a_Licklederer_mix1_heat_noweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -5140,7 +5150,7 @@ SF1"),      Text(
             origin={-48,8})));
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=5, length=100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -5149,7 +5159,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -5329,7 +5339,7 @@ SF1"),      Text(
     end C2a_Licklederer_mix1_heat_noweight;
 
     model C2b_Licklederer_mix1_heat_defweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -5340,7 +5350,7 @@ SF1"),      Text(
             origin={-48,8})));
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=5, length=100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -5349,7 +5359,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -5514,7 +5524,7 @@ SF1"),      Text(
     end C2b_Licklederer_mix1_heat_defweight;
 
     model C2c_Licklederer_mix1_heat_weight2
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -5525,7 +5535,7 @@ SF1"),      Text(
             origin={-48,8})));
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=5, length=100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -5534,7 +5544,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -5714,7 +5724,7 @@ SF1"),      Text(
     end C2c_Licklederer_mix1_heat_weight2;
 
     model C3a_Licklederer_mix1_smallpump_noweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -5726,7 +5736,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -5735,7 +5745,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -5918,7 +5928,7 @@ SF1"),      Text(
     end C3a_Licklederer_mix1_smallpump_noweight;
 
     model C3b_Licklederer_mix1_smallpump_defweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -5930,7 +5940,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -5939,7 +5949,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -6107,7 +6117,7 @@ SF1"),      Text(
     end C3b_Licklederer_mix1_smallpump_defweight;
 
     model C3c_Licklederer_mix1_smallpump_weight2
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -6119,7 +6129,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -6128,7 +6138,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -6311,7 +6321,7 @@ SF1"),      Text(
     end C3c_Licklederer_mix1_smallpump_weight2;
 
     model D1a_Licklederer_mix2_noheat_noweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -6323,7 +6333,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -6332,7 +6342,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -6515,7 +6525,7 @@ SF1"),      Text(
     end D1a_Licklederer_mix2_noheat_noweight;
 
     model D1b_Licklederer_mix2_noheat_defweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -6527,7 +6537,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -6536,7 +6546,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -6704,7 +6714,7 @@ SF1"),      Text(
     end D1b_Licklederer_mix2_noheat_defweight;
 
     model D1c_Licklederer_mix2_noheat_weight2
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -6716,7 +6726,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -6725,7 +6735,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -6908,7 +6918,7 @@ SF1"),      Text(
     end D1c_Licklederer_mix2_noheat_weight2;
 
     model D2a_Licklederer_mix2_heat_noweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -6919,7 +6929,7 @@ SF1"),      Text(
             origin={-48,8})));
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=5, length=100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -6928,7 +6938,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -7108,7 +7118,7 @@ SF1"),      Text(
     end D2a_Licklederer_mix2_heat_noweight;
 
     model D2b_Licklederer_mix2_heat_defweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -7119,7 +7129,7 @@ SF1"),      Text(
             origin={-48,8})));
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=5, length=100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -7128,7 +7138,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -7293,7 +7303,7 @@ SF1"),      Text(
     end D2b_Licklederer_mix2_heat_defweight;
 
     model D2c_Licklederer_mix2_heat_weight2
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -7304,7 +7314,7 @@ SF1"),      Text(
             origin={-48,8})));
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=5, length=100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -7313,7 +7323,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -7493,7 +7503,7 @@ SF1"),      Text(
     end D2c_Licklederer_mix2_heat_weight2;
 
     model D3a_Licklederer_mix2_smallpump_noweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -7505,7 +7515,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -7514,7 +7524,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -7697,7 +7707,7 @@ SF1"),      Text(
     end D3a_Licklederer_mix2_smallpump_noweight;
 
     model D3b_Licklederer_mix2_smallpump_defweight
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -7709,7 +7719,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -7718,7 +7728,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -7886,7 +7896,7 @@ SF1"),      Text(
     end D3b_Licklederer_mix2_smallpump_defweight;
 
     model D3c_Licklederer_mix2_smallpump_weight2
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -7898,7 +7908,7 @@ SF1"),      Text(
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=100000, length=
             100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -7907,7 +7917,7 @@ SF1"),      Text(
             extent={{20,-18},{-20,18}},
             rotation=0,
             origin={50,8})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B3(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
@@ -8093,7 +8103,7 @@ SF1"),      Text(
 
   package ISGT2024
     model D2c_Licklederer_2prosumers
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B1(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
@@ -8104,7 +8114,7 @@ SF1"),      Text(
             origin={-48,8})));
       ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_hot12(R_ins=5, length=100)
         annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
-      BidirectionalSubstation.Substation_idealProsumer.Ideal_Substation.heat_transfer_station
+      BidirectionalSubstation.Substation_idealProsumer.new_prosumer_models.heat_transfer_station
         B2(
         n=0.5,
         redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180

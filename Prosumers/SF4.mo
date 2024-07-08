@@ -71,7 +71,9 @@ model SF4 "Example model of a building with loads provided as time series and
     hTan=3,
     dIns=0.3,
     nSeg=10,
-    T_start=353.15)
+    T_start=353.15,
+    TFlu_start={353.15,348.15,345.15,340.15,336.15,330.15,326.15,321.15,317.15,
+        314.15})
     annotation (Placement(transformation(extent={{-72,-72},{50,50}})));
   Modelica.Blocks.Math.Gain gaiHea1(k=1E6)
                                           "Gain for heating"

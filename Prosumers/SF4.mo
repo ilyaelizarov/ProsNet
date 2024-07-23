@@ -309,7 +309,15 @@ equation
       coordinateSystem(
         preserveAspectRatio=false, extent={{-460,-480},{380,120}}), graphics={
           Bitmap(extent={{-402,-420},{372,226}}, fileName=
-              "modelica://ProsNet/../thesis/report 7/New folder/sf4.JPG")}),
+              "modelica://ProsNet/../thesis/report 7/New folder/sf4.JPG"),
+        Rectangle(
+          extent={{-456,-60},{380,-470}},
+          lineColor={0,0,0},
+          lineThickness=1),
+        Polygon(
+          points={{380,-62},{52,120},{-126,118},{-454,-60},{380,-62}},
+          lineColor={0,0,0},
+          lineThickness=1)}),
     Diagram(
         coordinateSystem(
         preserveAspectRatio=false, extent={{-460,-480},{380,120}})),

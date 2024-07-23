@@ -349,13 +349,21 @@ equation
           40}}, color={255,0,255}),
     Icon(
       coordinateSystem(
-        preserveAspectRatio=false, extent={{-460,-500},{380,120}}), graphics={
-        Bitmap(extent={{-382,-298},{390,184}},
+        preserveAspectRatio=false, extent={{-460,-500},{380,320}}), graphics={
+        Bitmap(extent={{-282,-138},{332,188}},
                                            fileName=
-              "modelica://ProsNet/../thesis/report 7/New folder/mf5.JPG")}),
+              "modelica://ProsNet/../thesis/report 7/New folder/mf5.JPG"),
+        Rectangle(
+          extent={{-436,34},{400,-376}},
+          lineColor={0,0,0},
+          lineThickness=1),
+        Polygon(
+          points={{400,34},{72,216},{-106,214},{-434,36},{400,34}},
+          lineColor={0,0,0},
+          lineThickness=1)}),
     Diagram(
         coordinateSystem(
-        preserveAspectRatio=false, extent={{-460,-500},{380,120}})),
+        preserveAspectRatio=false, extent={{-460,-500},{380,320}})),
     __Dymola_Commands(
       file="modelica://Buildings/Resources/Scripts/Dymola/DHC/Loads/Heating/Examples/BuildingTimeSeriesWithETS.mos" "Simulate and plot"),
     experiment(

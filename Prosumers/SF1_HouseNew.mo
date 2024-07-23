@@ -140,7 +140,8 @@ model SF1_HouseNew "Example model of a building with loads provided as time seri
         rotation=180,
         origin={156,-142})));
   Components.BoundryCondition.ReaderTMY3 weaDat(filNam=
-        ModelicaServices.ExternalReferences.loadResource("modelica://ProsNet/Data/weatherdata/USA_CA_San.Francisco.Intl.AP.724940_TMY3.mos"))
+        ModelicaServices.ExternalReferences.loadResource(
+        "modelica://ProsNet/Data/weatherdata/DEU_Munich.108660_IWEC.mos"))
     annotation (Placement(transformation(extent={{-68,120},{-48,140}})));
   Components.Storage.Stratified tan(
     redeclare package Medium = ProsNet.Fluid.Building_Fluid.Utili.Media.Water,
@@ -162,7 +163,7 @@ model SF1_HouseNew "Example model of a building with loads provided as time seri
       =338, TStopCHP=353)
     annotation (Placement(transformation(extent={{-682,-214},{-614,-146}})));
   Controls.GeneratorControlPackage.ControlGenerator.GeneratorControl ChpControl(TStartCHP
-      =333, TStopCHP=343)
+      =333, TStopCHP=336)
     annotation (Placement(transformation(extent={{-694,6},{-628,72}})));
   Modelica.Fluid.Interfaces.FluidPort_a port_a1
     "Fluid connector a (positive design flow direction is from port_a to port_b)"
@@ -187,6 +188,8 @@ model SF1_HouseNew "Example model of a building with loads provided as time seri
     annotation (Placement(transformation(extent={{182,208},{202,228}})));
   Fluid.Building_Fluid.Utili.DHC.Loads.BaseClasses.BuildingRCZ1Valve
     buildingRCZ1Valve(
+    facMul=35,
+    nZon=3,
     nPorts_bChiWat=1,
     nPorts_aChiWat=1,
     nPorts_bHeaWat=1,
@@ -354,8 +357,16 @@ equation
     Icon(
       coordinateSystem(
         preserveAspectRatio=false, extent={{-460,-500},{380,120}}), graphics={
-          Bitmap(extent={{-408,-518},{368,320}}, fileName=
-              "modelica://ProsNet/../thesis/report 7/New folder/Capture.JPG")}),
+          Bitmap(extent={{-308,-406},{262,210}}, fileName=
+              "modelica://ProsNet/../thesis/report 7/New folder/Capture.JPG"),
+        Rectangle(
+          extent={{-444,-64},{392,-474}},
+          lineColor={0,0,0},
+          lineThickness=1),
+        Polygon(
+          points={{392,-64},{64,118},{-114,116},{-442,-62},{392,-64}},
+          lineColor={0,0,0},
+          lineThickness=1)}),
     Diagram(
         coordinateSystem(
         preserveAspectRatio=false, extent={{-460,-500},{380,120}})),

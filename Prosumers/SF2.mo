@@ -109,8 +109,8 @@ model SF2 "Example model of a building with loads provided as time series and
     nSeg=10,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     T_start=353.15,
-    TFlu_start={353.15,348.15,345.15,340.15,336.15,330.15,326.15,321.15,317.15,
-        314.15})
+    TFlu_start={353.15,349.15,345.15,342.15,338.15,334.15,330.15,326.15,322.15,
+        318.15})
     annotation (Placement(transformation(extent={{-104,-62},{14,56}})));
   Components.Consumers.SingleZoneFloor sinZonFlo(redeclare package Medium =
         Modelica.Media.Water.ConstantPropertyLiquidWater, use_windPressure=
@@ -430,7 +430,15 @@ equation
       coordinateSystem(
         preserveAspectRatio=false, extent={{-460,-500},{380,120}}), graphics={
           Bitmap(extent={{-414,-484},{404,240}}, fileName=
-              "modelica://ProsNet/../thesis/report 7/New folder/sf2.JPG")}),
+              "modelica://ProsNet/../thesis/report 7/New folder/sf2.JPG"),
+        Rectangle(
+          extent={{-416,-56},{420,-466}},
+          lineColor={0,0,0},
+          lineThickness=1),
+        Polygon(
+          points={{420,-56},{92,126},{-86,124},{-414,-54},{420,-56}},
+          lineColor={0,0,0},
+          lineThickness=1)}),
     Diagram(
         coordinateSystem(
         preserveAspectRatio=false, extent={{-460,-500},{380,120}})),

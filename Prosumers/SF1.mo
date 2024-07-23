@@ -171,8 +171,8 @@ model SF1 "Example model of a building with loads provided as time series and
     nSeg=10,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     T_start=351.15,
-    TFlu_start={353.15,348.15,345.15,340.15,336.15,330.15,326.15,321.15,317.15,
-        314.15})
+    TFlu_start={353.15,349.15,345.15,342.15,338.15,334.15,330.15,326.15,322.15,
+        318.15})
     annotation (Placement(transformation(extent={{-104,-62},{14,56}})));
   Components.Consumers.SingleZoneFloor sinZonFlo(redeclare package Medium =
         Modelica.Media.Water.ConstantPropertyLiquidWater, use_windPressure=
@@ -400,8 +400,16 @@ equation
     Icon(
       coordinateSystem(
         preserveAspectRatio=false, extent={{-460,-500},{380,120}}), graphics={
-          Bitmap(extent={{-408,-518},{368,320}}, fileName=
-              "modelica://ProsNet/../thesis/report 7/New folder/Capture.JPG")}),
+          Bitmap(extent={{-334,-420},{306,278}}, fileName=
+              "modelica://ProsNet/../thesis/report 7/New folder/Capture.JPG"),
+        Rectangle(
+          extent={{-458,-88},{378,-498}},
+          lineColor={0,0,0},
+          lineThickness=1),
+        Polygon(
+          points={{378,-88},{50,94},{-128,92},{-456,-86},{378,-88}},
+          lineColor={0,0,0},
+          lineThickness=1)}),
     Diagram(
         coordinateSystem(
         preserveAspectRatio=false, extent={{-460,-500},{380,120}})),

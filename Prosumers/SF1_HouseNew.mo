@@ -186,15 +186,14 @@ model SF1_HouseNew "Example model of a building with loads provided as time seri
     m_flow_nominal=10,
     dpValve_nominal=6000)
     annotation (Placement(transformation(extent={{182,208},{202,228}})));
-  Fluid.Building_Fluid.Utili.DHC.Loads.BaseClasses.BuildingRCZ1Valve
-    buildingRCZ1Valve(
+  Components.Consumers.BuildingRCZ1Valve buildingRCZ1Valve(
     facMul=35,
     nZon=3,
-    nPorts_bChiWat=1,
+    nPorts_aHeaWat=1,
     nPorts_aChiWat=1,
     nPorts_bHeaWat=1,
-    nPorts_aHeaWat=1)
-    annotation (Placement(transformation(extent={{216,-76},{312,22}})));
+    nPorts_bChiWat=1)
+    annotation (Placement(transformation(extent={{242,-102},{326,-16}})));
 equation
   connect(wolfCGB14_GC1.ControlIn, realExpression.y) annotation (Line(points={{
           -516.737,42.2545},{-537,42.2545},{-537,64}},color={0,0,127}));
@@ -336,20 +335,20 @@ equation
           127,255}));
   connect(val3.port_2, tan.fluPorVol[1]) annotation (Line(points={{-210,-20},{
           -210,-24},{-120,-24},{-120,-13.62},{-74.5,-13.62}}, color={0,127,255}));
-  connect(buildingRCZ1Valve.ports_bChiWat[1], val1.port_1) annotation (Line(
-        points={{312,-56.4},{328,-56.4},{328,-96},{192,-96},{192,-142},{166,
-          -142}}, color={0,127,255}));
-  connect(buildingRCZ1Valve.ports_aChiWat[1], souCol.ports[2]) annotation (Line(
-        points={{216,-56.4},{200,-56.4},{200,-160},{208,-160},{208,-185},{190,
-          -185}}, color={0,127,255}));
-  connect(buildingRCZ1Valve.ports_bHeaWat[1], tan.fluPorVol1[10]) annotation (
-      Line(points={{312,-36.8},{320,-36.8},{320,-88},{192,-88},{192,24},{128,24},
-          {128,56},{56,56},{56,8.8},{5.74,8.8}}, color={0,127,255}));
   connect(buildingRCZ1Valve.ports_aHeaWat[1], tan.fluPorVol1[1]) annotation (
-      Line(points={{216,-36.8},{192,-36.8},{192,24},{128,24},{128,56},{56,56},{
-          56,-12.44},{5.74,-12.44}}, color={0,127,255}));
+      Line(points={{242,-67.6},{176,-67.6},{176,-16},{56,-16},{56,-12.44},{5.74,
+          -12.44}}, color={0,127,255}));
+  connect(buildingRCZ1Valve.ports_aChiWat[1], souCol.ports[2]) annotation (Line(
+        points={{242,-84.8},{232,-84.8},{232,-185},{190,-185}}, color={0,127,
+          255}));
+  connect(buildingRCZ1Valve.ports_bHeaWat[1], tan.fluPorVol1[10]) annotation (
+      Line(points={{326,-67.6},{344,-67.6},{344,6},{56,6},{56,8.8},{5.74,8.8}},
+        color={0,127,255}));
+  connect(buildingRCZ1Valve.ports_bChiWat[1], val1.port_1) annotation (Line(
+        points={{326,-84.8},{344,-84.8},{344,-142},{166,-142}}, color={0,127,
+          255}));
   connect(buildingRCZ1Valve.weaBus, weaDat.weaBus) annotation (Line(
-      points={{264.16,7.95333},{264.16,130},{-48,130}},
+      points={{284.14,-28.3267},{284.14,130},{-48,130}},
       color={255,204,51},
       thickness=0.5));
                                                       annotation (Line(points={{-754.64,38.96},{-786.32,38.96},{-786.32,40},{-818,

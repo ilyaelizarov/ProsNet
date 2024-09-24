@@ -250,11 +250,6 @@ package BidirectionalSubstation "Models that are currently under development"
         extent={{-10,-10},{10,10}},
         rotation=-90,
         origin={80,-110})));
-      Fluid.Sources.Boundary_pT bou(
-        redeclare package Medium = Medium_sec,
-    T=313.15,
-      nPorts=1)
-    annotation (Placement(transformation(extent={{128,118},{108,138}})));
 
       Fluid.Sensors.RelativePressure pressureDifference(redeclare package
           Medium =
@@ -280,9 +275,8 @@ package BidirectionalSubstation "Models that are currently under development"
         rotation=-90,
         origin={80,-140})));
       Fluid.Pumps.SpeedControlled_y pump_sec_prod(
-        redeclare final package Medium = Medium_prim,
+        redeclare final package Medium = Medium_sec,
         final energyDynamics=energyDynamics_feedPump,
-        T_start=313.15,
         final tau=tau_feedPump,
         final per=feedinPer,
         final use_inputFilter=use_inputFilter_feedPump,
@@ -293,9 +287,8 @@ package BidirectionalSubstation "Models that are currently under development"
             rotation=-90,
             origin={100,28})));
       Fluid.Pumps.SpeedControlled_y pump_sec_cons(
-        redeclare final package Medium = Medium_prim,
+        redeclare final package Medium = Medium_sec,
         final energyDynamics=energyDynamics_feedPump,
-        T_start=313.15,
         final tau=tau_feedPump,
         final per=feedinPer,
         final use_inputFilter=use_inputFilter_feedPump,
@@ -323,18 +316,38 @@ package BidirectionalSubstation "Models that are currently under development"
             extent={{-10,-10},{10,10}},
             rotation=-90,
             origin={52,106})));
-      Modelica.Fluid.Sensors.MassFlowRate massFlowRate(redeclare package Medium =
-            Media.Water)        annotation (Placement(
-            transformation(
+      Modelica.Fluid.Sensors.MassFlowRate massFlowRate_sec_cold(redeclare
+          package Medium = Media.Water) annotation (Placement(transformation(
             extent={{-10,10},{10,-10}},
             rotation=270,
-            origin={-14,116})));
+            origin={-12,116})));
       Modelica.Fluid.Interfaces.FluidPort_a port_a1
         "Fluid connector a (positive design flow direction is from port_a to port_b)"
-        annotation (Placement(transformation(extent={{82,160},{102,180}})));
+        annotation (Placement(transformation(extent={{124,162},{144,182}}),
+            iconTransformation(extent={{124,162},{144,182}})));
       Modelica.Fluid.Interfaces.FluidPort_b port_b1
         "Fluid connector b (positive design flow direction is from port_a to port_b)"
-        annotation (Placement(transformation(extent={{-100,160},{-80,180}})));
+        annotation (Placement(transformation(extent={{-142,162},{-122,182}}),
+            iconTransformation(extent={{-142,162},{-122,182}})));
+      Modelica.Blocks.Interfaces.RealOutput m_flow_prim1
+        "Mass flow rate from port_a to port_b"
+        annotation (Placement(transformation(extent={{-60,-82},{-40,-62}})));
+      Fluid.Sensors.RelativePressure pressureDifference_sec(redeclare package
+          Medium = Medium_prim) annotation (Placement(transformation(
+            extent={{-10,-10},{10,10}},
+            rotation=180,
+            origin={20,170})));
+      Modelica.Fluid.Sensors.MassFlowRate massFlowRate_sec_hot(redeclare
+          package Medium = Media.Water) annotation (Placement(transformation(
+            extent={{10,10},{-10,-10}},
+            rotation=270,
+            origin={56,134})));
+      Controls.GeneratorControlPackage.ControlGenerator.HeatFlowRate
+        heatFlowRate
+        annotation (Placement(transformation(extent={{162,134},{182,154}})));
+      Fluid.Sources.Boundary_pT bou1(redeclare package Medium =
+            ProsNet.Media.Water, nPorts=1)
+    annotation (Placement(transformation(extent={{-54,114},{-42,126}})));
     equation
 
 
@@ -397,10 +410,6 @@ package BidirectionalSubstation "Models that are currently under development"
                                                        color={0,127,255}));
 
       connect(
-          bou.ports[1], cheVal_sec_prod.port_b)
-    annotation (Line(points={{108,128},{100,128},{100,80}},
-                                                         color={0,127,255}));
-      connect(
           hot_prim, pressureDifference.port_a) annotation (Line(points={{-140,-182},
           {-140,-154},{4,-154}},  color={0,127,255}));
       connect(
@@ -459,9 +468,9 @@ package BidirectionalSubstation "Models that are currently under development"
       connect(conversion.u_set_sec_prod, contr_vars_real[2]) annotation (Line(
             points={{-99.04,50.0556},{-134,50.0556},{-134,-5},{-202,-5}}, color={0,0,
               127}));
-      connect(conversion.pump_y2, pump_sec_cons.y) annotation (Line(points={{-50.08,
-              57.4444},{38,57.4444},{38,74},{72,74}},        color={0,0,127}));
-      connect(conversion.pump_y1, pump_sec_prod.y) annotation (Line(points={{-50.56,
+      connect(conversion.pump_y2cons, pump_sec_cons.y) annotation (Line(points={{-50.08,
+              57.4444},{38,57.4444},{38,74},{72,74}},          color={0,0,127}));
+      connect(conversion.pump_y1pro, pump_sec_prod.y) annotation (Line(points={{-50.56,
               62.1111},{2,62.1111},{2,56},{80,56},{80,28},{88,28}},
             color={0,0,127}));
       connect(pump_sec_cons.port_b, cheVa_sec_cons.port_a)
@@ -470,17 +479,37 @@ package BidirectionalSubstation "Models that are currently under development"
             points={{52,96},{52,90},{60,90},{60,84}}, color={0,127,255}));
       connect(T_sens_sec_cold.port_b, cheVal_sec_prod.port_b) annotation (Line(
             points={{52,96},{52,90},{100,90},{100,80}}, color={0,127,255}));
-      connect(massFlowRate.port_a, T_sens_sec_hot.port_a) annotation (Line(
-            points={{-14,126},{-14,136},{-40,136},{-40,142}}, color={0,127,255}));
-      connect(massFlowRate.port_b, heat_exchanger.port_b2) annotation (Line(
-            points={{-14,106},{-14,8},{30,8}}, color={0,127,255}));
-      connect(massFlowRate.m_flow, conversion.m_dot_sec_is) annotation (Line(
-            points={{-25,116},{-30,116},{-30,50.8333},{-52,50.8333}}, color={0,
-              0,127}));
-      connect(T_sens_sec_cold.port_a, port_a1) annotation (Line(points={{52,116},
-              {72,116},{72,170},{92,170}}, color={0,127,255}));
+      connect(massFlowRate_sec_cold.port_a, T_sens_sec_hot.port_a) annotation (
+          Line(points={{-12,126},{-12,136},{-40,136},{-40,142}}, color={0,127,
+              255}));
+      connect(massFlowRate_sec_cold.port_b, heat_exchanger.port_b2) annotation (
+         Line(points={{-12,106},{-12,8},{30,8}}, color={0,127,255}));
+      connect(massFlowRate_sec_cold.m_flow, conversion.m_dot_sec_is)
+        annotation (Line(points={{-23,116},{-30,116},{-30,50.8333},{-52,50.8333}},
+            color={0,0,127}));
       connect(T_sens_sec_hot.port_b, port_b1) annotation (Line(points={{-40,162},
-              {-66,162},{-66,170},{-90,170}}, color={0,127,255}));
+              {-66,162},{-66,172},{-132,172}},color={0,127,255}));
+      connect(m_dot_sens_prim.m_flow, m_flow_prim1)
+        annotation (Line(points={{-31,-72},{-50,-72}}, color={0,0,127}));
+      connect(port_a1, pressureDifference_sec.port_a) annotation (Line(points={{134,172},
+              {134,170},{30,170}},                  color={0,127,255}));
+      connect(pressureDifference_sec.port_b, port_b1) annotation (Line(points={{10,170},
+              {-66,170},{-66,172},{-132,172}},         color={0,127,255}));
+      connect(T_sens_sec_cold.port_a, massFlowRate_sec_hot.port_a) annotation (
+          Line(points={{52,116},{52,118},{56,118},{56,124}}, color={0,127,255}));
+      connect(massFlowRate_sec_hot.port_b, port_a1) annotation (Line(points={{
+              56,144},{56,154},{72,154},{72,172},{134,172}}, color={0,127,255}));
+      connect(heatFlowRate.Thot, T_sens_sec_hot.T) annotation (Line(points={{
+              158.6,148.4},{72,148.4},{72,152},{38,152},{38,138},{-42,138},{-42,
+              136},{-56,136},{-56,152},{-51,152}}, color={0,0,127}));
+      connect(heatFlowRate.Tcold, T_sens_sec_cold.T) annotation (Line(points={{
+              158.4,143},{72,143},{72,106},{63,106}}, color={0,0,127}));
+      connect(heatFlowRate.mdot, massFlowRate_sec_hot.m_flow) annotation (Line(
+            points={{158.4,138.2},{130,138.2},{130,146},{40,146},{40,134},{45,
+              134}}, color={0,0,127}));
+      connect(bou1.ports[1], massFlowRate_sec_cold.port_a) annotation (Line(
+            points={{-42,120},{-32,120},{-32,136},{-12,136},{-12,126}}, color={
+              0,127,255}));
       annotation (Diagram(coordinateSystem(extent={{-200,-180},{200,180}})), Icon(
         coordinateSystem(extent={{-200,-180},{200,180}}), graphics={
         Line(
@@ -495,7 +524,7 @@ package BidirectionalSubstation "Models that are currently under development"
           extent={{-38,30},{48,-48}},
           lineColor={0,0,0},
           lineThickness=1),
-        Bitmap(extent={{-106,88},{108,176}}, fileName=
+        Bitmap(extent={{-102,-48},{112,40}}, fileName=
               "modelica://ProsNet/../../../../Downloads/noun-home-121812.svg"),
         Line(
           points={{32,86},{32,28}},
@@ -521,7 +550,23 @@ package BidirectionalSubstation "Models that are currently under development"
           points={{36,-50},{36,-102}},
           color={28,108,200},
           thickness=0.5),
-        Rectangle(extent={{-200,180},{200,-180}}, lineColor={0,0,0})}));
+        Rectangle(extent={{-200,180},{200,-180}}, lineColor={0,0,0}),
+        Line(
+          points={{-142,86},{-24,86}},
+          color={238,46,47},
+          thickness=0.5),
+        Line(
+          points={{134,86},{34,86}},
+          color={28,108,200},
+          thickness=0.5),
+        Line(
+          points={{-136,164},{-136,92}},
+          color={238,46,47},
+          thickness=0.5),
+        Line(
+          points={{134,162},{134,94}},
+          color={28,108,200},
+          thickness=0.5)}));
     end HTS;
 
     model Conversion
@@ -577,14 +622,14 @@ package BidirectionalSubstation "Models that are currently under development"
       Modelica.Blocks.Interfaces.RealInput u_set_sec_prod "[0;1]" annotation (
           Placement(transformation(extent={{-116,98},{-76,138}}),
             iconTransformation(extent={{-116,98},{-76,138}})));
-      Modelica.Blocks.Interfaces.RealOutput pump_y1
-        "0-1 voltage for production pump"
-        annotation (Placement(transformation(extent={{96,170},{116,190}}),
-            iconTransformation(extent={{96,170},{116,190}})));
-      Modelica.Blocks.Interfaces.RealOutput pump_y2
-        "0-1 voltage for consumption pump"
-        annotation (Placement(transformation(extent={{98,146},{118,166}}),
-            iconTransformation(extent={{98,146},{118,166}})));
+      Modelica.Blocks.Interfaces.RealOutput pump_y1pro
+        "0-1 voltage for production pump" annotation (Placement(transformation(
+              extent={{96,170},{116,190}}), iconTransformation(extent={{96,170},
+                {116,190}})));
+      Modelica.Blocks.Interfaces.RealOutput pump_y2cons
+        "0-1 voltage for consumption pump" annotation (Placement(transformation(
+              extent={{98,146},{118,166}}), iconTransformation(extent={{98,146},
+                {118,166}})));
       Modelica.Blocks.Math.Product mass2volume_flow
         annotation (Placement(transformation(extent={{26,76},{6,96}})));
       Modelica.Blocks.Sources.Constant factor2(k=(60000)*(1/Medium.d_const))
@@ -646,10 +691,6 @@ package BidirectionalSubstation "Models that are currently under development"
               127}));
       connect(u_set_sec_prod, priFlowCon1.valve_op_set) annotation (Line(points
             ={{-96,118},{-18,118},{-18,224}}, color={0,0,127}));
-      connect(priFlowCon1.pump_y, pump_y1) annotation (Line(points={{-11,241.1},
-              {12.5,241.1},{12.5,180},{106,180}},color={0,0,127}));
-      connect(priFlowCon1.valve_op, pump_y2) annotation (Line(points={{-11,
-              230.9},{18,230.9},{18,156},{108,156}},color={0,0,127}));
       connect(u_set_sec_prod, volume2mass_flow.u2) annotation (Line(points={{-96,
               118},{-22,118},{-22,26},{-12,26}}, color={0,0,127}));
       connect(factor2.y,mass2volume_flow. u2) annotation (Line(points={{39,74},
@@ -658,6 +699,10 @@ package BidirectionalSubstation "Models that are currently under development"
               {38,122},{38,92},{28,92}}, color={0,0,127}));
       connect(mass2volume_flow.y, V_dot_sec_is) annotation (Line(points={{5,86},{
               0,86},{0,250},{44,250},{44,270}},  color={0,0,127}));
+      connect(pump_y1pro, u_set_sec_prod) annotation (Line(points={{106,180},{
+              -18,180},{-18,118},{-96,118}}, color={0,0,127}));
+      connect(pump_y2cons, u_set_sec_cons) annotation (Line(points={{108,156},{
+              -42,156},{-42,158},{-96,158}}, color={0,0,127}));
       annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
                 -160},{100,200}}),
                              graphics={Rectangle(
@@ -741,8 +786,8 @@ package BidirectionalSubstation "Models that are currently under development"
         Controller_PID_based.PID_Q_T_weighted_crossover_new
           pID_Q_T_weighted_crossover_new annotation (Placement(
               transformation(extent={{-30,-18},{-6,16}})));
-        Prosumers.SF1 sF11111111_1 annotation (Placement(transformation(
-                extent={{-28,-52},{-10,-40}})));
+        Prosumers.SF1_HouseNew sF1_HouseNew
+          annotation (Placement(transformation(extent={{-102,-46},{-84,-32}})));
       equation
         connect(add.u1,realExpression. y) annotation (Line(points={{2,47},{2,49.5},
                 {22,49.5}},                color={0,0,127}));
@@ -773,12 +818,12 @@ package BidirectionalSubstation "Models that are currently under development"
         connect(B1.states, pID_Q_T_weighted_crossover_new.states)
           annotation (Line(points={{-38,-54},{-46,-54},{-46,-2},{-30,-2}},
               color={0,0,127}));
-        connect(sF11111111_1.port_b1, B1.port_b1) annotation (Line(points={{-16.6,
-                -37.1355},{-12.3333,-37.1355},{-12.3333,-37},{-9,-37}},
+        connect(B1.port_a1, sF1_HouseNew.port_a1) annotation (Line(points={{-27.2,
+                -37},{-27.2,-26},{-98,-26},{-98,-31.4806},{-97.1357,-31.4806}},
+                            color={0,127,255}));
+        connect(B1.port_b1, sF1_HouseNew.port_b1) annotation (Line(points={{-9,-37},
+                {-10,-37},{-10,-28},{-88.8643,-28},{-88.8643,-31.5484}},
               color={0,127,255}));
-        connect(B1.port_a1, sF11111111_1.port_a1) annotation (Line(points={{-27.2,
-                -37},{-21.6952,-37},{-21.6952,-37.0194},{-17.5429,-37.0194}},
-                              color={0,127,255}));
         annotation (Diagram(graphics={                               Rectangle(extent={{-62,92},
                     {28,-82}},      lineColor={28,108,200})}));
       end Test_heat_transfer_station_production;
@@ -847,8 +892,8 @@ package BidirectionalSubstation "Models that are currently under development"
         Controller_PID_based.PID_Q_T_weighted_crossover_new
           pID_Q_T_weighted_crossover_new(alpha_sec_cons=1) annotation (
             Placement(transformation(extent={{-10,-16},{14,18}})));
-        Prosumers.SF3 sF3_1 annotation (Placement(transformation(extent={{
-                  -122,-86},{-38,-26}})));
+        Prosumers.SF1_HouseNew sF1_HouseNew
+          annotation (Placement(transformation(extent={{-150,-88},{-66,-26}})));
       equation
         connect(realExpression1.y,add1. u1) annotation (Line(points={{24,47.5},{
                 24,45},{4,45}},             color={0,0,127}));
@@ -877,11 +922,12 @@ package BidirectionalSubstation "Models that are currently under development"
         connect(pID_Q_T_weighted_crossover_new.contr_vars_real, B2.contr_vars_real)
           annotation (Line(points={{14,0},{22,0},{22,-54},{12.2,-54}},
               color={0,0,127}));
-        connect(B2.port_b1, sF3_1.port_b1) annotation (Line(points={{1,-37},
-                {1,-24},{-40,-24},{-40,-16.8},{-66.4,-16.8}}, color={0,127,
-                255}));
-        connect(B2.port_a1, sF3_1.port_a1) annotation (Line(points={{-17.2,
-                -37},{-17.2,-20},{-69,-20},{-69,-16.8}}, color={0,127,255}));
+        connect(B2.port_a1, sF1_HouseNew.port_a1) annotation (Line(points={{
+                -17.2,-37},{-17.2,-30},{-60,-30},{-60,-10},{-127.3,-10},{-127.3,
+                -23.7}}, color={0,127,255}));
+        connect(B2.port_b1, sF1_HouseNew.port_b1) annotation (Line(points={{1,
+                -37},{1,-26},{-62,-26},{-62,-14},{-76,-14},{-76,-12},{-88.7,-12},
+                {-88.7,-24}}, color={0,127,255}));
         annotation (Diagram(graphics={                               Rectangle(extent={{-52,92},
                     {38,-82}},      lineColor={28,108,200})}));
       end Test_heat_transfer_station_Consumption;
@@ -1803,7 +1849,7 @@ package BidirectionalSubstation "Models that are currently under development"
       energyDynamics_cv=Modelica.Fluid.Types.Dynamics.FixedInitial,
       tau_cv=10,
       T_start_cv=313.15)
-      annotation (Placement(transformation(extent={{18,120},{62,152}})));
+      annotation (Placement(transformation(extent={{16,172},{60,204}})));
         Conversion conversion
       annotation (Placement(transformation(extent={{-100,-4},{-52,66}})));
         Modelica.Fluid.Sensors.MassFlowRate m_dot_sens_prim(
@@ -1830,7 +1876,7 @@ package BidirectionalSubstation "Models that are currently under development"
           redeclare package Medium = Medium_sec,
           T=313.15,
           nPorts=1)
-          annotation (Placement(transformation(extent={{128,118},{108,138}})));
+          annotation (Placement(transformation(extent={{136,108},{116,128}})));
 
         ProsNet.Fluid.Sensors.RelativePressure pressureDifference(redeclare
             package Medium = Medium_prim)
@@ -1854,6 +1900,37 @@ package BidirectionalSubstation "Models that are currently under development"
               extent={{-10,-10},{10,10}},
               rotation=-90,
               origin={80,-140})));
+        Modelica.Fluid.Sensors.MassFlowRate m_dot_sens_sec(redeclare package
+            Medium = Modelica.Media.Water.ConstantPropertyLiquidWater,
+            allowFlowReversal=true) annotation (Placement(transformation(
+              extent={{6,-7},{-6,7}},
+              rotation=270,
+              origin={81,128})));
+        Modelica.Blocks.Interfaces.RealOutput m_flow_prim1
+          "Mass flow rate from port_a to port_b"
+          annotation (Placement(transformation(extent={{-56,-82},{-36,-62}})));
+        Fluid.Sensors.RelativePressure pressureDifference_sec(redeclare package
+            Medium = Medium_prim) annotation (Placement(transformation(
+              extent={{-5,-5},{5,5}},
+              rotation=180,
+              origin={39,153})));
+        Modelica.Fluid.Sensors.TemperatureTwoPort T_sens_sec_hot(redeclare
+            package Medium = Medium_prim, allowFlowReversal=true)
+                                                          annotation (Placement(
+              transformation(
+              extent={{-10,-10},{10,10}},
+              rotation=90,
+              origin={4,130})));
+        Modelica.Fluid.Sensors.TemperatureTwoPort T_sens_sec_cold(redeclare
+            package Medium = Medium_prim, allowFlowReversal=true)
+                                                          annotation (Placement(
+              transformation(
+              extent={{6,-6},{-6,6}},
+              rotation=-90,
+              origin={80,150})));
+        Controls.GeneratorControlPackage.ControlGenerator.HeatFlowRate
+          heatFlowRate
+          annotation (Placement(transformation(extent={{152,168},{172,188}})));
       equation
 
         connect(
@@ -1911,7 +1988,7 @@ package BidirectionalSubstation "Models that are currently under development"
                                                    color={0,127,255}));
         connect(
             conversion.T_sec_in, ideal_house.T_set) annotation (Line(points={{-66.4,
-            66},{-70,66},{-70,158},{40,158},{40,152}}, color={0,0,127}));
+                66},{-66.4,214},{38,214},{38,204}},    color={0,0,127}));
         connect(
             conversion.pump_contr, pump_prim_prod.y) annotation (Line(points={{-52,
                 20.7059},{-38,20.7059},{-38,20},{-24,20},{-24,-24},{82,-24},{82,
@@ -1946,20 +2023,8 @@ package BidirectionalSubstation "Models that are currently under development"
                                                          color={0,127,255}));
 
         connect(
-            ideal_house.port_cold, cheVal_sec_prod.port_b) annotation (Line(
-          points={{53.2,120},{54,120},{54,100},{80,100},{80,88},{100,88},{100,80}},
-          color={0,127,255}));
-        connect(
-            ideal_house.port_cold, pump_sec_cons.port_a) annotation (Line(points={{53.2,
-            120},{54,120},{54,100},{80,100},{80,88},{60,88},{60,80}},       color=
-           {0,127,255}));
-        connect(
-            ideal_house.port_hot, heat_exchanger.port_b2) annotation (Line(points={{26.8,
-            120},{32,120},{32,100},{0,100},{0,8},{30,8}},             color={0,127,
-            255}));
-        connect(
             bou.ports[1], cheVal_sec_prod.port_b)
-      annotation (Line(points={{108,128},{100,128},{100,80}},
+      annotation (Line(points={{116,118},{100,118},{100,80}},
                                                            color={0,127,255}));
         connect(
             hot_prim, pressureDifference.port_a) annotation (Line(points={{-140,-182},
@@ -2011,6 +2076,35 @@ package BidirectionalSubstation "Models that are currently under development"
         connect(
             pipe_prim_cold.port_b, cold_prim) annotation (Line(points={{80,-150},{80,-166},
             {140,-166},{140,-180}}, color={0,127,255}));
+        connect(m_dot_sens_sec.port_a, pump_sec_cons.port_a) annotation (Line(
+              points={{81,122},{81,80},{60,80}}, color={0,127,255}));
+        connect(cheVal_sec_prod.port_b, m_dot_sens_sec.port_a) annotation (Line(
+              points={{100,80},{100,82},{81,82},{81,122}}, color={0,127,255}));
+        connect(m_dot_sens_prim.m_flow, m_flow_prim1)
+          annotation (Line(points={{-31,-72},{-46,-72}}, color={0,0,127}));
+        connect(pressureDifference_sec.port_b, ideal_house.port_hot)
+          annotation (Line(points={{34,153},{24.8,153},{24.8,172}},
+              color={0,127,255}));
+        connect(heat_exchanger.port_b2, T_sens_sec_hot.port_a)
+          annotation (Line(points={{30,8},{4,8},{4,120}}, color={0,127,255}));
+        connect(T_sens_sec_hot.port_b, ideal_house.port_hot) annotation (Line(
+              points={{4,140},{4,166},{24.8,166},{24.8,172}}, color={0,127,255}));
+        connect(m_dot_sens_sec.port_b, T_sens_sec_cold.port_a) annotation (Line(
+              points={{81,134},{81,138},{80,138},{80,144}}, color={0,127,255}));
+        connect(T_sens_sec_cold.port_b, ideal_house.port_cold) annotation (Line(
+              points={{80,156},{80,166},{51.2,166},{51.2,172}}, color={0,127,
+                255}));
+        connect(pressureDifference_sec.port_a, ideal_house.port_cold)
+          annotation (Line(points={{44,153},{51.2,153},{51.2,172}}, color={0,
+                127,255}));
+        connect(heatFlowRate.Thot, T_sens_sec_hot.T) annotation (Line(points={{
+                148.6,182.4},{66,182.4},{66,146},{-12,146},{-12,130},{-7,130}},
+              color={0,0,127}));
+        connect(T_sens_sec_cold.T, heatFlowRate.Tcold) annotation (Line(points=
+                {{86.6,150},{106,150},{106,177},{148.4,177}}, color={0,0,127}));
+        connect(heatFlowRate.mdot, m_dot_sens_sec.m_flow) annotation (Line(
+              points={{148.4,172.2},{114,172.2},{114,134},{94,134},{94,128},{
+                88.7,128}}, color={0,0,127}));
         annotation (Diagram(coordinateSystem(extent={{-200,-180},{200,180}})), Icon(
           coordinateSystem(extent={{-200,-180},{200,180}}), graphics={
           Line(
@@ -6494,7 +6588,7 @@ PID"),     Rectangle(extent={{-120,180},{120,-160}}, lineColor={0,0,0})}),
       parameter SI.TemperatureDifference DeltaT_sec_des(min=1) =   20
           "desired temperature difference secondary side"
           annotation(Dialog(group="Temperature objectives"));
-      parameter Real V_dot_sec_max(unit="l/min", displayUnit="l/min") = 8.5
+      parameter Real _prim_cons_sec_prod_max = 1
         "maximum secondary side volume flow in [l/min]"
         annotation(Dialog(group="General PID settings"));
       parameter Real k_prim_prod = 1.5
@@ -6640,7 +6734,7 @@ PID"),     Rectangle(extent={{-120,180},{120,-160}}, lineColor={0,0,0})}),
       Modelica.Blocks.Interfaces.RealVectorOutput contr_vars_real[6]
         annotation (Placement(transformation(extent={{100,-20},{140,20}})));
 
-      Real u_set
+      Real u_set_prim_prod
         "Normalized velocity of feed-in pump"
           annotation (Placement(transformation(
             extent={{-20,-20},{20,20}},
@@ -6649,7 +6743,7 @@ PID"),     Rectangle(extent={{-120,180},{120,-160}}, lineColor={0,0,0})}),
             extent={{-20,-20},{20,20}},
             rotation=0,
             origin={100,-60})));
-      Real kappa_set
+      Real u_set_prim_cons
         "Normalized flow coefficient for control valve"
          annotation (Placement(transformation(
             extent={{-20,-20},{20,20}},
@@ -6716,7 +6810,7 @@ PID"),     Rectangle(extent={{-120,180},{120,-160}}, lineColor={0,0,0})}),
             origin={-60,188})));
       Real V_dot_prim(unit="l/min", displayUnit="l/min")
         annotation (Placement(transformation(extent={{-100,-40},{-60,0}})));
-      Real V_dot_sec(unit="l/min", displayUnit="l/min")
+      Real u2
         annotation (Placement(transformation(extent={{-100,-80},{-60,-40}})));
 
       Real Q_dot_is(unit="kW", displayUnit="kW")
@@ -6737,8 +6831,8 @@ PID"),     Rectangle(extent={{-120,180},{120,-160}}, lineColor={0,0,0})}),
         k=k_sec_cons,
         Ti=Ti_sec_cons,
         Td=Td_sec_cons,
-        yMax=V_dot_sec_max,
-        yMin=2,
+        yMax=0.1,
+        yMin=0,
         initType=initType,
         y_start=PID_sec_cons.yMax)
         annotation (Placement(transformation(extent={{-34,28},{-14,48}})));
@@ -6757,18 +6851,18 @@ PID"),     Rectangle(extent={{-120,180},{120,-160}}, lineColor={0,0,0})}),
         k=k_sec_prod,
         Ti=Ti_sec_prod,
         Td=Td_sec_prod,
-        yMax=V_dot_sec_max,
-        yMin=2,
+        yMax=0.1,
+        yMin=0,
         initType=initType,
         y_start=PID_sec_prod.yMax) annotation (Placement(transformation(extent={{10,28},
                 {30,48}})));
-      Real T_sec_set(unit="K", displayUnit="degC")
-         "Temperature on the secondary side" annotation (Placement(transformation(
+      Real u_set_sec_cons
+         "Normalized velocity of the secondary side pump in production" annotation (Placement(transformation(
             extent={{-20,-20},{20,20}},
             rotation=0,
             origin={80,100})));
-      Real V_dot_sec_set(unit="l/min", displayUnit=
-           "l/min") "volume flow rate setpoint on the secondary side" annotation (Placement(transformation(
+      Real u_set_sec_prod
+       "speed set for secondary side pupm in consumption mode" annotation (Placement(transformation(
             extent={{-20,-20},{20,20}},
             rotation=0,
             origin={80,60})));
@@ -6786,7 +6880,7 @@ PID"),     Rectangle(extent={{-120,180},{120,-160}}, lineColor={0,0,0})}),
       T_sec_hot    = states[3];
       T_sec_cold   = states[4];
       V_dot_prim   = states[5];
-      V_dot_sec    = states[6];
+      u2           = states[6];
       Q_dot_is     = states[7];
       Delta_p_prim = states[8];
 
@@ -6904,33 +6998,34 @@ PID"),     Rectangle(extent={{-120,180},{120,-160}}, lineColor={0,0,0})}),
       PID_sec_prod.u_s     = PIDin_sec_prod_des_weighted;
       PID_sec_prod.u_m     = PIDin_sec_prod_is_weighted;
 
-      // connect secondary side temperature setpoint
-      T_sec_set    =  T_sec_in_is;
 
       // assign PID outputs to controller outputs
       if prosumer_mode == -1 then // consumption mode
-        u_set = 0;
-        kappa_set =PID_prim_cons.y;
-        V_dot_sec_set = PID_sec_cons.y;
+        u_set_prim_prod = 0;
+        u_set_prim_cons =PID_prim_cons.y;
+        u_set_sec_cons = PID_sec_cons.y;
+        u_set_sec_prod = 0;
       elseif prosumer_mode == 1 then // production mode
-        u_set =PID_prim_prod.y;
-        kappa_set = 0;
-        V_dot_sec_set = PID_sec_prod.y;
+        u_set_prim_prod =PID_prim_prod.y;
+        u_set_prim_cons = 0;
+        u_set_sec_cons = 0;
+        u_set_sec_prod = PID_sec_prod.y;
       else // idle mode
-        V_dot_sec_set = 0;
-        u_set = 0;
-        kappa_set = 0;
+        u_set_sec_cons = 0;
+        u_set_sec_prod = 0;
+        u_set_prim_prod = 0;
+        u_set_prim_cons = 0;
       end if;
 
       error_Q_abs = Q_dot_set_use - Q_dot_is_use;
 
       // assign control variables vector
-      contr_vars_real[1]   =  T_sec_set;
-      contr_vars_real[2]   =  V_dot_sec_set;
+      contr_vars_real[1]   =  u_set_sec_cons;
+      contr_vars_real[2]   =  u_set_sec_prod;
       contr_vars_real[3]   =  pi_set;
       contr_vars_real[4]   =  mu_set;
-      contr_vars_real[5]   =  u_set;
-      contr_vars_real[6]   =  kappa_set;
+      contr_vars_real[5]   =  u_set_prim_prod;
+      contr_vars_real[6]   =  u_set_prim_cons;
 
         annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-120,-160},{
                 120,180}}),                                           graphics={
@@ -8252,4 +8347,4415 @@ e in modelica syntax";
 
   end Controller_PID_based;
 
+  package Substation_IdealNetwork "Models that are currently under development"
+
+    package New_Substation_idealNet
+
+      model HTS_idealNet
+
+        replaceable package Medium_prim = ProsNet.Media.Water;
+        replaceable package Medium_sec = ProsNet.Media.Water;
+
+        extends ProsNet.Prosumers.BaseClasses.PrimarySideParameters;
+        extends ProsNet.Prosumers.SecondarySides.BaseClasses.PumpsPairDynParam;
+        extends
+          ProsNet.Prosumers.SecondarySides.BaseClasses.ControlVolumeDynParam;
+
+        Modelica.Blocks.Interfaces.RealVectorInput contr_vars_real[6]
+      annotation (Placement(transformation(extent={{-222,-20},{-182,20}})));
+
+        Modelica.Blocks.Interfaces.RealVectorOutput states[8]
+      annotation (Placement(transformation(extent={{180,-20},{220,20}})));
+
+        Real pi
+      annotation (Placement(transformation(extent={{-180,0},{-140,40}})));
+        Real mu
+      annotation (Placement(transformation(extent={{-180,-40},{-140,0}})));
+        Real u_set_prim_prod
+      annotation (Placement(transformation(extent={{-180,-80},{-140,-40}})));
+        Real u_set_prim_cons
+      annotation (Placement(transformation(extent={{-180,-120},{-140,-80}})));
+
+      Real T_prim_hot(unit="K", displayUnit="degC")                                 "K"
+                                                     annotation (Placement(
+          transformation(
+          extent={{-20,-20},{20,20}},
+          rotation=180,
+          origin={160,60})));
+
+       Real T_prim_cold(unit="K", displayUnit="degC") "K"
+                                                      annotation (Placement(
+          transformation(
+          extent={{-20,-20},{20,20}},
+          rotation=180,
+          origin={160,20})));
+
+       Real V_dot_prim(unit="l/min", displayUnit="l/min") "l/min"
+                                                     annotation (Placement(
+          transformation(
+          extent={{-20,-20},{20,20}},
+          rotation=180,
+          origin={160,-20})));
+
+       Real V_dot_sec(unit="l/min", displayUnit="l/min") "l/min"
+                                                    annotation (Placement(
+          transformation(
+          extent={{20,-20},{-20,20}},
+          rotation=0,
+          origin={160,-60})));
+
+        Real Q_dot_is(unit="kW", displayUnit="kW")
+      "kW" annotation (Placement(transformation(
+          extent={{20,-20},{-20,20}},
+          rotation=0,
+          origin={160,-100})));
+
+        Real Delta_p_prim(unit="Pa", displayUnit="bar") annotation (
+        Placement(transformation(
+          extent={{-20,-20},{20,20}},
+          rotation=180,
+          origin={160,-140})));
+
+        Real cp_prim;
+
+        Fluid.HeatExchangers.LiquidToLiquid heat_exchanger(
+      redeclare package Medium2 = Medium_sec,
+      redeclare package Medium1 = Medium_prim,
+      m1_flow_nominal=m_flow_nominal_1,
+      m2_flow_nominal=m_flow_nominal_2,
+      show_T=true,
+      dp1_nominal=dp1_nominal,
+      dp2_nominal=dp2_nominal,
+      Q_flow_nominal=Q_flow_nominal,
+      T_a1_nominal=338.15,
+      T_a2_nominal=313.15)
+      annotation (Placement(transformation(extent={{30,12},{50,-8}})));
+
+        Fluid.FixedResistances.CheckValve cheVa_sec_cons(
+      m_flow_nominal=m_flow_nominal_2,
+      redeclare final package Medium = Medium_sec,
+      final CvData=ProsNet.Fluid.Types.CvTypes.Kv,
+      final Kv=Kv_cheVal,
+      final l=l_cheVal) annotation (Placement(transformation(
+          extent={{-10,10},{10,-10}},
+          rotation=270,
+          origin={60,42})));
+        Fluid.FixedResistances.CheckValve cheVal_sec_prod(
+      m_flow_nominal=m_flow_nominal_2,
+      redeclare final package Medium = Medium_sec,
+      final CvData=ProsNet.Fluid.Types.CvTypes.Kv,
+      final Kv=Kv_cheVal,
+      final l=l_cheVal) annotation (Placement(transformation(
+          extent={{10,-10},{-10,10}},
+          rotation=270,
+          origin={100,70})));
+        Fluid.FixedResistances.CheckValve cheVal_prim_prod(
+      m_flow_nominal=m_flow_nominal_1,
+      redeclare final package Medium = Medium_prim,
+      final CvData=ProsNet.Fluid.Types.CvTypes.Kv,
+      final Kv=Kv_cheVal,
+      final l=l_cheVal) annotation (Placement(transformation(
+          extent={{10,10},{-10,-10}},
+          rotation=-90,
+          origin={100,-40})));
+        Fluid.FixedResistances.CheckValve cheVal_prim_cons(
+      m_flow_nominal=m_flow_nominal_1,
+      redeclare final package Medium = Medium_prim,
+      final CvData=ProsNet.Fluid.Types.CvTypes.Kv,
+      final Kv=Kv_cheVal,
+      final l=l_cheVal) annotation (Placement(transformation(
+          extent={{10,-10},{-10,10}},
+          rotation=90,
+          origin={62,-72})));
+        Modelica.Fluid.Interfaces.FluidPort_b cold_prim(redeclare final package
+            Medium =
+              Medium_prim)
+      annotation (Placement(transformation(extent={{130,-190},{150,-170}})));
+        Modelica.Fluid.Interfaces.FluidPort_a hot_prim(redeclare final package
+            Medium =
+              Medium_prim)
+      annotation (Placement(transformation(extent={{-150,-192},{-130,-172}})));
+        Conversion_idealNet conversion
+          annotation (Placement(transformation(extent={{-100,-4},{-52,66}})));
+        Modelica.Fluid.Sensors.MassFlowRate m_dot_sens_prim(
+      redeclare package Medium = Medium_prim, allowFlowReversal=true)
+                                              annotation (Placement(
+          transformation(
+          extent={{10,-10},{-10,10}},
+          rotation=90,
+          origin={-20,-72})));
+        Modelica.Fluid.Sensors.TemperatureTwoPort T_sens_prim_hot(
+      redeclare package Medium = Medium_prim, allowFlowReversal=true) annotation (
+        Placement(transformation(
+          extent={{-10,-10},{10,10}},
+          rotation=90,
+          origin={-20,-110})));
+        Modelica.Fluid.Sensors.TemperatureTwoPort T_sens_prim_cold(
+      redeclare package Medium = Medium_prim, allowFlowReversal=true)
+                                              annotation (
+        Placement(transformation(
+          extent={{-10,-10},{10,10}},
+          rotation=-90,
+          origin={80,-110})));
+
+        Fluid.Sensors.RelativePressure pressureDifference(redeclare package
+            Medium =
+              Medium_prim)
+      annotation (Placement(transformation(extent={{12,-164},{32,-144}})));
+
+        Fluid.Pumps.SpeedControlled_y pump_sec_prod(
+          redeclare final package Medium = Medium_sec,
+          final energyDynamics=energyDynamics_feedPump,
+          final tau=tau_feedPump,
+          final per=feedinPer,
+          final use_inputFilter=use_inputFilter_feedPump,
+          final riseTime=riseTime_feedPump,
+          final init=init_feedPump,
+          final y_start=y_start_feedPump) annotation (Placement(transformation(
+              extent={{10,10},{-10,-10}},
+              rotation=-90,
+              origin={100,28})));
+        Fluid.Pumps.SpeedControlled_y pump_sec_cons(
+          redeclare final package Medium = Medium_sec,
+          final energyDynamics=energyDynamics_feedPump,
+          final tau=tau_feedPump,
+          final per=feedinPer,
+          final use_inputFilter=use_inputFilter_feedPump,
+          final riseTime=riseTime_feedPump,
+          final init=init_feedPump,
+          final y_start=y_start_feedPump) annotation (Placement(transformation(
+              extent={{10,10},{-10,-10}},
+              rotation=90,
+              origin={60,74})));
+        Real u_set_sec_cons
+      annotation (Placement(transformation(extent={{-180,40},{-140,80}})));
+        Real u_set_sec_prod
+      annotation (Placement(transformation(extent={{-180,80},{-140,120}})));
+        Modelica.Fluid.Sensors.TemperatureTwoPort T_sens_sec_hot(redeclare
+            package Medium =
+                     Medium_prim, allowFlowReversal=true) annotation (Placement(
+              transformation(
+              extent={{-10,-10},{10,10}},
+              rotation=90,
+              origin={-40,152})));
+        Modelica.Fluid.Sensors.TemperatureTwoPort T_sens_sec_cold(redeclare
+            package Medium =
+                     Medium_prim, allowFlowReversal=true) annotation (Placement(
+              transformation(
+              extent={{-10,-10},{10,10}},
+              rotation=-90,
+              origin={52,106})));
+        Modelica.Fluid.Sensors.MassFlowRate massFlowRate_sec_cold(redeclare
+            package Medium = Media.Water) annotation (Placement(transformation(
+              extent={{-10,10},{10,-10}},
+              rotation=270,
+              origin={-12,116})));
+        Modelica.Fluid.Interfaces.FluidPort_a port_a1
+          "Fluid connector a (positive design flow direction is from port_a to port_b)"
+          annotation (Placement(transformation(extent={{124,162},{144,182}}),
+              iconTransformation(extent={{124,162},{144,182}})));
+        Modelica.Fluid.Interfaces.FluidPort_b port_b1
+          "Fluid connector b (positive design flow direction is from port_a to port_b)"
+          annotation (Placement(transformation(extent={{-142,162},{-122,182}}),
+              iconTransformation(extent={{-142,162},{-122,182}})));
+        Modelica.Blocks.Interfaces.RealOutput m_flow_prim1
+          "Mass flow rate from port_a to port_b"
+          annotation (Placement(transformation(extent={{-60,-82},{-40,-62}})));
+        Fluid.Sensors.RelativePressure pressureDifference_sec(redeclare package
+            Medium = Medium_prim) annotation (Placement(transformation(
+              extent={{-10,-10},{10,10}},
+              rotation=180,
+              origin={20,170})));
+        Modelica.Fluid.Sensors.MassFlowRate massFlowRate_sec_hot(redeclare
+            package Medium = Media.Water) annotation (Placement(transformation(
+              extent={{10,10},{-10,-10}},
+              rotation=270,
+              origin={56,134})));
+        Controls.GeneratorControlPackage.ControlGenerator.HeatFlowRate
+          heatFlowRate
+          annotation (Placement(transformation(extent={{162,134},{182,154}})));
+        Fluid.Sources.Boundary_pT bou1(redeclare package Medium = Medium_sec,
+            nPorts=1)
+      annotation (Placement(transformation(extent={{-68,114},{-56,126}})));
+        Fluid.Sources.Boundary_pT bou2(redeclare package Medium = Medium_sec,
+            nPorts=1)
+      annotation (Placement(transformation(extent={{116,114},{106,124}})));
+        Fluid.Sources.Boundary_pT bou3(
+          redeclare package Medium = Medium_sec,
+          T=313.15,
+          nPorts=1)
+      annotation (Placement(transformation(extent={{5,-5},{-5,5}},
+              rotation=180,
+              origin={-47,-125})));
+        Fluid.Pumps.FlowControlled_m_flow pump_prim_prod(
+          redeclare package Medium = Medium_sec,
+          final energyDynamics=energyDynamics_pumpsSec,
+          T_start=313.15,
+          final tau=tau_pumpsSec,
+          final m_flow_nominal=m_flow_nominal_1,
+          final use_inputFilter=use_inputFilter_pumpsSec,
+          final riseTime=riseTime_pumpsSec,
+          final dp_nominal=dp1_nominal,
+          final m_flow_start=m_flow_start_pumpsSec,
+          final y_start=y_start_pumpsSec) annotation (Placement(
+              transformation(
+              extent={{-10,-10},{10,10}},
+              rotation=90,
+              origin={100,-74})));
+        Fluid.Pumps.FlowControlled_m_flow pump_prim_cons(
+          redeclare package Medium = Medium_sec,
+          final energyDynamics=energyDynamics_pumpsSec,
+          T_start=313.15,
+          final tau=tau_pumpsSec,
+          final m_flow_nominal=m_flow_nominal_1,
+          final use_inputFilter=use_inputFilter_pumpsSec,
+          final riseTime=riseTime_pumpsSec,
+          final dp_nominal=dp1_nominal,
+          final m_flow_start=m_flow_start_pumpsSec,
+          final y_start=y_start_pumpsSec) annotation (Placement(
+              transformation(
+              extent={{-10,10},{10,-10}},
+              rotation=270,
+              origin={58,-38})));
+      equation
+
+        connect(
+            contr_vars_real[3], conversion.pi);
+        connect(
+            contr_vars_real[4], conversion.mu);
+        connect(contr_vars_real[5], conversion.u_set_prim_prod);
+        connect(
+            contr_vars_real[6], conversion.u_set_prim_cons);
+
+        u_set_sec_cons = contr_vars_real[1];
+        u_set_sec_prod = contr_vars_real[2];
+        pi = contr_vars_real[3];
+        mu = contr_vars_real[4];
+        u_set_prim_prod = contr_vars_real[5];
+        u_set_prim_cons = contr_vars_real[6];
+
+        cp_prim = 4200;
+        states[7] = m_dot_sens_prim.port_a.m_flow*cp_prim*(T_sens_prim_hot.T -
+          T_sens_prim_cold.T)/1000;
+
+        connect(
+            cheVal_prim_prod.port_b,heat_exchanger. port_b1)
+      annotation (Line(points={{100,-30},{100,-4},{50,-4}},
+                                                          color={0,127,255}));
+        connect(
+            cheVa_sec_cons.port_b,heat_exchanger. port_a2)
+      annotation (Line(points={{60,32},{60,8},{50,8}}, color={0,127,255}));
+
+        connect(
+            m_dot_sens_prim.m_flow, conversion.m_dot_prim_is);
+        connect(
+            cheVal_prim_cons.port_b, T_sens_prim_cold.port_a) annotation (Line(
+          points={{62,-82},{62,-90},{80,-90},{80,-100}}, color={0,127,255}));
+
+        connect(
+            pressureDifference.port_b, cold_prim) annotation (Line(points={{32,-154},
+                {44,-154},{44,-166},{140,-166},{140,-180}},
+                                  color={0,127,255}));
+        connect(
+            heat_exchanger.port_a1, m_dot_sens_prim.port_a)
+      annotation (Line(points={{30,-4},{-20,-4},{-20,-62}},  color={0,127,255}));
+        connect(
+            m_dot_sens_prim.port_b, T_sens_prim_hot.port_b)
+      annotation (Line(points={{-20,-82},{-20,-100}}, color={0,127,255}));
+
+        connect(
+            T_sens_prim_hot.T, states[1]);
+        connect(
+            T_sens_prim_cold.T, states[2]);
+        connect(
+             T_sens_sec_hot.T, states[3]);
+        connect(
+            T_sens_sec_cold.T, states[4]);
+        connect(
+            conversion.V_dot_prim_is, states[5]);
+        connect(
+            conversion.V_dot_sec_is, states[6]);
+        connect(
+            pressureDifference.p_rel, states[8]);
+
+        T_prim_hot = T_sens_prim_hot.T;
+        T_prim_cold = T_sens_prim_cold.T;
+        V_dot_prim = conversion.V_dot_prim_is;
+        V_dot_sec = conversion.V_dot_sec_is;
+        Q_dot_is = states[7];
+        Delta_p_prim = pressureDifference.p_rel;
+
+        connect(pump_sec_prod.port_a, heat_exchanger.port_a2)
+          annotation (Line(points={{100,18},{100,8},{50,8}}, color={0,127,255}));
+        connect(pump_sec_prod.port_b, cheVal_sec_prod.port_a)
+          annotation (Line(points={{100,38},{100,60}}, color={0,127,255}));
+        connect(conversion.u_set_sec_cons, contr_vars_real[1]) annotation (Line(
+              points={{-99.04,57.8333},{-134,57.8333},{-134,-8.33333},{-202,
+                -8.33333}},
+              color={0,0,127}));
+        connect(conversion.u_set_sec_prod, contr_vars_real[2]) annotation (Line(
+              points={{-99.04,50.0556},{-134,50.0556},{-134,-5},{-202,-5}}, color={0,0,
+                127}));
+        connect(conversion.pump_y2cons, pump_sec_cons.y) annotation (Line(points={{-50.08,
+                57.4444},{74,57.4444},{74,74},{72,74}},          color={0,0,127}));
+        connect(conversion.pump_y1pro, pump_sec_prod.y) annotation (Line(points={{-50.56,
+                62.1111},{2,62.1111},{2,56},{80,56},{80,28},{88,28}},
+              color={0,0,127}));
+        connect(pump_sec_cons.port_b, cheVa_sec_cons.port_a)
+          annotation (Line(points={{60,64},{60,52}}, color={0,127,255}));
+        connect(T_sens_sec_cold.port_b, pump_sec_cons.port_a) annotation (Line(
+              points={{52,96},{52,90},{60,90},{60,84}}, color={0,127,255}));
+        connect(T_sens_sec_cold.port_b, cheVal_sec_prod.port_b) annotation (Line(
+              points={{52,96},{52,90},{100,90},{100,80}}, color={0,127,255}));
+        connect(massFlowRate_sec_cold.port_a, T_sens_sec_hot.port_a) annotation (
+            Line(points={{-12,126},{-12,136},{-40,136},{-40,142}}, color={0,127,
+                255}));
+        connect(massFlowRate_sec_cold.port_b, heat_exchanger.port_b2) annotation (
+           Line(points={{-12,106},{-12,8},{30,8}}, color={0,127,255}));
+        connect(massFlowRate_sec_cold.m_flow, conversion.m_dot_sec_is)
+          annotation (Line(points={{-23,116},{-30,116},{-30,50.8333},{-52,
+                50.8333}},
+              color={0,0,127}));
+        connect(T_sens_sec_hot.port_b, port_b1) annotation (Line(points={{-40,162},
+                {-66,162},{-66,172},{-132,172}},color={0,127,255}));
+        connect(m_dot_sens_prim.m_flow, m_flow_prim1)
+          annotation (Line(points={{-31,-72},{-50,-72}}, color={0,0,127}));
+        connect(port_a1, pressureDifference_sec.port_a) annotation (Line(points={{134,172},
+                {134,170},{30,170}},                  color={0,127,255}));
+        connect(pressureDifference_sec.port_b, port_b1) annotation (Line(points={{10,170},
+                {-66,170},{-66,172},{-132,172}},         color={0,127,255}));
+        connect(T_sens_sec_cold.port_a, massFlowRate_sec_hot.port_a) annotation (
+            Line(points={{52,116},{52,118},{56,118},{56,124}}, color={0,127,255}));
+        connect(massFlowRate_sec_hot.port_b, port_a1) annotation (Line(points={{
+                56,144},{56,154},{72,154},{72,172},{134,172}}, color={0,127,255}));
+        connect(heatFlowRate.Thot, T_sens_sec_hot.T) annotation (Line(points={{
+                158.6,148.4},{72,148.4},{72,152},{38,152},{38,138},{-42,138},{-42,
+                136},{-56,136},{-56,152},{-51,152}}, color={0,0,127}));
+        connect(heatFlowRate.Tcold, T_sens_sec_cold.T) annotation (Line(points={{
+                158.4,143},{72,143},{72,106},{63,106}}, color={0,0,127}));
+        connect(heatFlowRate.mdot, massFlowRate_sec_hot.m_flow) annotation (Line(
+              points={{158.4,138.2},{130,138.2},{130,146},{40,146},{40,134},{45,
+                134}}, color={0,0,127}));
+        connect(bou1.ports[1], massFlowRate_sec_cold.port_a) annotation (Line(
+              points={{-56,120},{-32,120},{-32,136},{-12,136},{-12,126}}, color={
+                0,127,255}));
+        connect(bou2.ports[1], massFlowRate_sec_hot.port_b) annotation (Line(
+              points={{106,119},{70,119},{70,150},{56,150},{56,144}}, color={0,
+                127,255}));
+        connect(bou3.ports[1], T_sens_prim_hot.port_a) annotation (Line(
+              points={{-42,-125},{-42,-126},{-20,-126},{-20,-120}}, color={0,
+                127,255}));
+        connect(T_sens_prim_hot.port_a, hot_prim) annotation (Line(points={{
+                -20,-120},{-20,-168},{-140,-168},{-140,-182}}, color={0,127,
+                255}));
+        connect(pressureDifference.port_a, hot_prim) annotation (Line(points=
+                {{12,-154},{-4,-154},{-4,-168},{-140,-168},{-140,-182}},
+              color={0,127,255}));
+        connect(cold_prim, T_sens_prim_cold.port_b) annotation (Line(points={
+                {140,-180},{140,-166},{80,-166},{80,-120}}, color={0,127,255}));
+        connect(pump_prim_prod.port_a, T_sens_prim_cold.port_a) annotation (
+            Line(points={{100,-84},{100,-94},{80,-94},{80,-100}}, color={0,
+                127,255}));
+        connect(pump_prim_prod.port_b, cheVal_prim_prod.port_a)
+          annotation (Line(points={{100,-64},{100,-50}}, color={0,127,255}));
+        connect(conversion.pump_contr, pump_prim_prod.m_flow_in) annotation (
+            Line(points={{-52,19.3333},{84,19.3333},{84,-74},{88,-74}}, color
+              ={0,0,127}));
+        connect(pump_prim_cons.port_a, heat_exchanger.port_b1) annotation (
+            Line(points={{58,-28},{58,-4},{50,-4}}, color={0,127,255}));
+        connect(pump_prim_cons.m_flow_in, conversion.valve_contr) annotation (
+           Line(points={{46,-38},{-42,-38},{-42,11.5556},{-52,11.5556}},
+              color={0,0,127}));
+        connect(pump_prim_cons.port_b, cheVal_prim_cons.port_a) annotation (
+            Line(points={{58,-48},{58,-62},{62,-62}}, color={0,127,255}));
+        annotation (Diagram(coordinateSystem(extent={{-200,-180},{200,180}})), Icon(
+          coordinateSystem(extent={{-200,-180},{200,180}}), graphics={
+          Line(
+            points={{-140,-98},{-140,-170}},
+            color={238,46,47},
+            thickness=0.5),
+          Line(
+            points={{138,-100},{138,-168}},
+            color={28,108,200},
+            thickness=0.5),
+          Rectangle(
+            extent={{-38,30},{48,-48}},
+            lineColor={0,0,0},
+            lineThickness=1),
+          Bitmap(extent={{-102,-48},{112,40}}, fileName=
+                "modelica://ProsNet/../../../../Downloads/noun-home-121812.svg"),
+          Line(
+            points={{32,86},{32,28}},
+            color={28,108,200},
+            thickness=0.5),
+          Line(
+            points={{-22,86},{-22,28}},
+            color={238,46,47},
+            thickness=0.5),
+          Line(
+            points={{138,-100},{38,-100}},
+            color={28,108,200},
+            thickness=0.5),
+          Line(
+            points={{-142,-100},{-24,-100}},
+            color={238,46,47},
+            thickness=0.5),
+          Line(
+            points={{-24,-52},{-24,-102}},
+            color={238,46,47},
+            thickness=0.5),
+          Line(
+            points={{36,-50},{36,-102}},
+            color={28,108,200},
+            thickness=0.5),
+          Rectangle(extent={{-200,180},{200,-180}}, lineColor={0,0,0}),
+          Line(
+            points={{-142,86},{-24,86}},
+            color={238,46,47},
+            thickness=0.5),
+          Line(
+            points={{134,86},{34,86}},
+            color={28,108,200},
+            thickness=0.5),
+          Line(
+            points={{-136,164},{-136,92}},
+            color={238,46,47},
+            thickness=0.5),
+          Line(
+            points={{134,162},{134,94}},
+            color={28,108,200},
+            thickness=0.5)}));
+      end HTS_idealNet;
+
+      model Conversion_idealNet
+
+      package Medium = Modelica.Media.Water.ConstantPropertyLiquidWater;
+
+        Modelica.Blocks.Sources.Constant factor1(k=(1/60000)*Medium.d_const)
+          annotation (Placement(transformation(extent={{-52,40},{-32,60}})));
+        Modelica.Blocks.Math.Product volume2mass_flow
+          annotation (Placement(transformation(extent={{-10,22},{10,42}})));
+        Controls.SecondaryFlowControl secFlowCon
+          annotation (Placement(transformation(extent={{30,4},{50,24}})));
+        Controls.PrimaryFlowControl priFlowCon
+          annotation (Placement(transformation(extent={{-8,-26},{12,-46}})));
+        Controls.Linearizer         lin(redeclare final
+            Controls.Data.Linearizer.EqualPercentage cha)
+         annotation (Placement(transformation(
+              extent={{-10,-10},{10,10}},
+              rotation=0,
+              origin={-30,-70})));
+        Modelica.Blocks.Interfaces.RealInput pi "{0;1}"
+          annotation (Placement(transformation(extent={{-120,-20},{-80,20}})));
+        Modelica.Blocks.Interfaces.RealInput mu "{-1;0;1}"
+          annotation (Placement(transformation(extent={{-120,-62},{-80,-22}})));
+        Modelica.Blocks.Interfaces.RealInput u_set_prim_cons "[0;1]"
+          annotation (Placement(transformation(extent={{-120,-140},{-80,-100}})));
+        Modelica.Blocks.Interfaces.RealInput u_set_prim_prod "[0;1]"
+          annotation (Placement(transformation(extent={{-120,-100},{-80,-60}})));
+        Modelica.Blocks.Interfaces.RealOutput pump_contr "[0;1]"
+          annotation (Placement(transformation(extent={{90,-50},{110,-30}})));
+        Modelica.Blocks.Interfaces.RealOutput valve_contr "[0;1]"
+          annotation (Placement(transformation(extent={{90,-90},{110,-70}})));
+        Modelica.Blocks.Interfaces.RealInput m_dot_prim_is "kg/s"
+          annotation (Placement(transformation(extent={{120,-140},{80,-100}})));
+        Modelica.Blocks.Interfaces.RealOutput V_dot_prim_is annotation (Placement(
+              transformation(
+              extent={{-10,-10},{10,10}},
+              rotation=-90,
+              origin={0,-160})));
+        Modelica.Blocks.Math.Product mass2volume_flow1
+          annotation (Placement(transformation(extent={{48,-132},{28,-112}})));
+        Modelica.Blocks.Sources.Constant factor3(k=(60000)*(1/Medium.d_const))
+          annotation (Placement(transformation(extent={{82,-108},{62,-88}})));
+        Modelica.Blocks.Math.RealToInteger realToInteger
+          annotation (Placement(transformation(extent={{-72,-10},{-52,10}})));
+        Modelica.Blocks.Math.RealToInteger realToInteger1
+          annotation (Placement(transformation(extent={{-72,-52},{-52,-32}})));
+        Controls.PrimaryFlowControl priFlowCon1
+          annotation (Placement(transformation(extent={{-32,246},{-12,226}})));
+        Modelica.Blocks.Interfaces.RealInput u_set_sec_cons "[0;1]" annotation (
+            Placement(transformation(extent={{-116,138},{-76,178}}),
+              iconTransformation(extent={{-116,138},{-76,178}})));
+        Modelica.Blocks.Interfaces.RealInput u_set_sec_prod "[0;1]" annotation (
+            Placement(transformation(extent={{-116,98},{-76,138}}),
+              iconTransformation(extent={{-116,98},{-76,138}})));
+        Modelica.Blocks.Interfaces.RealOutput pump_y1pro
+          "0-1 voltage for production pump" annotation (Placement(transformation(
+                extent={{96,170},{116,190}}), iconTransformation(extent={{96,170},
+                  {116,190}})));
+        Modelica.Blocks.Interfaces.RealOutput pump_y2cons
+          "0-1 voltage for consumption pump" annotation (Placement(transformation(
+                extent={{98,146},{118,166}}), iconTransformation(extent={{98,146},
+                  {118,166}})));
+        Modelica.Blocks.Math.Product mass2volume_flow
+          annotation (Placement(transformation(extent={{26,76},{6,96}})));
+        Modelica.Blocks.Sources.Constant factor2(k=(60000)*(1/Medium.d_const))
+          annotation (Placement(transformation(extent={{60,64},{40,84}})));
+        Modelica.Blocks.Interfaces.RealInput m_dot_sec_is "kg/s"
+          annotation (Placement(transformation(extent={{120,102},{80,142}})));
+        Modelica.Blocks.Interfaces.RealOutput V_dot_sec_is annotation (Placement(
+              transformation(
+              extent={{-10,-10},{10,10}},
+              rotation=90,
+              origin={44,270}), iconTransformation(
+              extent={{-10,-10},{10,10}},
+              rotation=90,
+              origin={2,190})));
+      equation
+        connect(factor1.y, volume2mass_flow.u1) annotation (Line(points={{-31,50},{-18,
+                50},{-18,38},{-12,38}}, color={0,0,127}));
+        connect(volume2mass_flow.y, secFlowCon.m_flow_set)
+          annotation (Line(points={{11,32},{40,32},{40,26}}, color={0,0,127}));
+        connect(priFlowCon.pump_y, pump_contr) annotation (Line(points={{13,-30.9},{84,
+                -30.9},{84,-40},{100,-40}}, color={0,0,127}));
+        connect(priFlowCon.valve_op, valve_contr) annotation (Line(points={{13,-41.1},
+                {82,-41.1},{82,-80},{100,-80}}, color={0,0,127}));
+        connect(lin.op, priFlowCon.valve_op_set)
+          annotation (Line(points={{-19,-70},{6,-70},{6,-48}}, color={0,0,127}));
+        connect(u_set_prim_cons, lin.kappa) annotation (Line(points={{-100,-120},{-52,-120},
+                {-52,-70},{-42,-70}}, color={0,0,127}));
+        connect(u_set_prim_prod, priFlowCon.pump_y_set) annotation (Line(points={{-100,
+                -80},{-54,-80},{-54,-54},{-10,-54},{-10,-56},{-2,-56},{-2,-48}},
+              color={0,0,127}));
+        connect(factor3.y, mass2volume_flow1.u1) annotation (Line(points={{61,-98},
+                {60,-98},{60,-116},{50,-116}},
+                                           color={0,0,127}));
+        connect(m_dot_prim_is, mass2volume_flow1.u2) annotation (Line(points={{100,
+                -120},{58,-120},{58,-128},{50,-128}},
+                                                color={0,0,127}));
+        connect(mass2volume_flow1.y, V_dot_prim_is)
+          annotation (Line(points={{27,-122},{0,-122},{0,-160}}, color={0,0,127}));
+        connect(realToInteger.y, secFlowCon.pi)
+          annotation (Line(points={{-51,0},{20,0},{20,8},{28,8}}, color={255,127,0}));
+        connect(realToInteger.y, priFlowCon.pi)
+          annotation (Line(points={{-51,0},{-28,0},{-28,-30},{-10,-30}}, color={255,127,0}));
+        connect(realToInteger.u, pi)
+          annotation (Line(points={{-74,0},{-100,0}}, color={0,0,127}));
+        connect(mu, realToInteger1.u)
+          annotation (Line(points={{-100,-42},{-74,-42}}, color={0,0,127}));
+        connect(realToInteger1.y, priFlowCon.mu)
+          annotation (Line(points={{-51,-42},{-10,-42}}, color={255,127,0}));
+        connect(realToInteger1.y, secFlowCon.mu) annotation (Line(points={{-51,-42},{-32,-42},
+                {-32,14},{2,14},{2,20},{28,20}}, color={255,127,0}));
+        connect(realToInteger.y, priFlowCon1.pi) annotation (Line(points={{-51,0},
+                {-26,0},{-26,150},{-44,150},{-44,242},{-34,242}}, color={255,127,
+                0}));
+        connect(priFlowCon.mu, priFlowCon1.mu) annotation (Line(points={{-10,-42},
+                {-36,-42},{-36,0},{-24,0},{-24,216},{-40,216},{-40,222},{-42,222},
+                {-42,230},{-34,230}}, color={255,127,0}));
+        connect(u_set_sec_cons, priFlowCon1.pump_y_set) annotation (Line(points={
+                {-96,158},{-42,158},{-42,214},{-26,214},{-26,224}}, color={0,0,
+                127}));
+        connect(u_set_sec_prod, priFlowCon1.valve_op_set) annotation (Line(points
+              ={{-96,118},{-18,118},{-18,224}}, color={0,0,127}));
+        connect(u_set_sec_prod, volume2mass_flow.u2) annotation (Line(points={{-96,
+                118},{-22,118},{-22,26},{-12,26}}, color={0,0,127}));
+        connect(factor2.y,mass2volume_flow. u2) annotation (Line(points={{39,74},
+                {28,74},{28,80}}, color={0,0,127}));
+        connect(m_dot_sec_is,mass2volume_flow. u1) annotation (Line(points={{100,122},
+                {38,122},{38,92},{28,92}}, color={0,0,127}));
+        connect(mass2volume_flow.y, V_dot_sec_is) annotation (Line(points={{5,86},{
+                0,86},{0,250},{44,250},{44,270}},  color={0,0,127}));
+        connect(pump_y1pro, u_set_sec_prod) annotation (Line(points={{106,180},{
+                -18,180},{-18,118},{-96,118}}, color={0,0,127}));
+        connect(pump_y2cons, u_set_sec_cons) annotation (Line(points={{108,156},{
+                -42,156},{-42,158},{-96,158}}, color={0,0,127}));
+        annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,
+                  -160},{100,200}}),
+                               graphics={Rectangle(
+                extent={{-100,180},{100,-160}},
+                lineColor={28,108,200},
+                fillColor={171,171,171},
+                fillPattern=FillPattern.Solid), Text(
+                extent={{-137,35},{137,-35}},
+                textColor={0,0,0},
+                origin={-1,1},
+                rotation=90,
+                textString="Conversion",
+                textStyle={TextStyle.Bold})}),
+                                Diagram(coordinateSystem(preserveAspectRatio=false,
+                extent={{-100,-160},{100,200}})));
+      end Conversion_idealNet;
+
+      model NETWORK_ideal
+
+        extends
+          ProsNet.Prosumers.SecondarySides.BaseClasses.ControlVolumeDynParam;
+
+        ProsNet.Fluid.HeatExchangers.ControlVolume_T control_volume(
+          redeclare final package Medium = ProsNet.Media.Water,
+          allowFlowReversal=true,
+          m_flow_nominal=0.5,
+          tau=tau_cv,
+          T_start=T_start_cv,
+          energyDynamics=energyDynamics_cv)
+          annotation (Placement(transformation(extent={{-28,-26},{28,28}})));
+        Modelica.Blocks.Interfaces.RealInput T_set(unit="K", displayUnit="degC")
+          "Temperature set point" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=-90,
+              origin={0,100})));
+        Modelica.Fluid.Interfaces.FluidPort_a port_hot(redeclare package Medium =
+              ProsNet.Media.Water)
+          annotation (Placement(transformation(extent={{-70,-110},{-50,-90}})));
+        Modelica.Fluid.Interfaces.FluidPort_b port_cold(redeclare package
+            Medium =
+              ProsNet.Media.Water)
+          annotation (Placement(transformation(extent={{50,-110},{70,-90}})));
+        Modelica.Blocks.Interfaces.RealOutput m_dot_sec_is "kg/s" annotation (
+            Placement(transformation(
+              extent={{-10,-10},{10,10}},
+              rotation=-90,
+              origin={0,-98})));
+        Modelica.Blocks.Interfaces.RealOutput T_prim_hot annotation (
+            Placement(transformation(
+              extent={{-10,-10},{10,10}},
+              rotation=-90,
+              origin={-80,-100})));
+        Modelica.Blocks.Interfaces.RealOutput T_prim_cold annotation (
+            Placement(transformation(
+              extent={{-10,-10},{10,10}},
+              rotation=-90,
+              origin={80,-100})));
+        Modelica.Fluid.Sensors.TemperatureTwoPort T_sens_hot(redeclare package
+            Medium =
+              ProsNet.Media.Water)
+                           annotation (Placement(transformation(
+              extent={{-10,-10},{10,10}},
+              rotation=90,
+              origin={-60,-50})));
+        Modelica.Fluid.Sensors.TemperatureTwoPort T_sens_cold(redeclare package
+            Medium = ProsNet.Media.Water)
+                                  annotation (Placement(transformation(
+              extent={{-10,-10},{10,10}},
+              rotation=-90,
+              origin={60,-50})));
+        Modelica.Fluid.Sensors.MassFlowRate massFlowRate(redeclare package
+            Medium = ProsNet.Media.Water)
+                                  annotation (Placement(
+              transformation(
+              extent={{-10,10},{10,-10}},
+              rotation=90,
+              origin={-60,-16})));
+        Modelica.Blocks.Math.MultiSum multiSum(nu=2) annotation (Placement(
+              transformation(extent={{-96,56},{-84,68}})));
+        Modelica.Blocks.Sources.RealExpression realExpression(y=-5)
+          annotation (Placement(transformation(extent={{-122,26},{-102,46}})));
+      equation
+        connect(T_sens_hot.port_a, port_hot)
+          annotation (Line(points={{-60,-60},{-60,-100}}, color={0,127,255}));
+        connect(T_sens_hot.T, T_prim_hot) annotation (Line(points={{-71,-50},
+                {-80,-50},{-80,-100}}, color={0,0,127}));
+        connect(control_volume.port_b, T_sens_cold.port_a)
+          annotation (Line(points={{28,1},{60,1},{60,-40}}, color={0,127,255}));
+        connect(T_sens_cold.port_b, port_cold)
+          annotation (Line(points={{60,-60},{60,-100}}, color={0,127,255}));
+        connect(T_sens_cold.T, T_prim_cold) annotation (Line(points={{71,-50},
+                {80,-50},{80,-100}}, color={0,0,127}));
+        connect(massFlowRate.port_b, control_volume.port_a)
+          annotation (Line(points={{-60,-6},{-60,1},{-28,1}}, color={0,127,255}));
+        connect(massFlowRate.port_a, T_sens_hot.port_b)
+          annotation (Line(points={{-60,-26},{-60,-40}}, color={0,127,255}));
+        connect(massFlowRate.m_flow, m_dot_sec_is) annotation (Line(points={{-49,-16},
+                {-34,-16},{-34,-84},{0,-84},{0,-98}}, color={0,0,127}));
+        connect(multiSum.u[1], T_set) annotation (Line(points={{-96,60.95},
+                {-100,60.95},{-100,74},{0,74},{0,100}}, color={0,0,127}));
+        connect(realExpression.y, multiSum.u[2]) annotation (Line(points={{
+                -101,36},{-98,36},{-98,52},{-100,52},{-100,63.05},{-96,
+                63.05}}, color={0,0,127}));
+        connect(multiSum.y, control_volume.TSet) annotation (Line(points={{
+                -82.98,62},{-44,62},{-44,22.6},{-33.6,22.6}}, color={0,0,
+                127}));
+        annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
+              Rectangle(
+                extent={{-100,40},{100,-100}},
+                lineColor={0,0,0},
+                lineThickness=1),
+              Polygon(
+                points={{100,40},{100,100},{-100,100},{-100,40},{100,40}},
+                lineColor={0,0,0},
+                lineThickness=1),
+              Text(
+                extent={{-116,86},{112,-34}},
+                textColor={28,108,200},
+                textString="Ideal 
+
+NETWORK")}),Diagram(coordinateSystem(preserveAspectRatio=false)));
+      end NETWORK_ideal;
+
+      package Validation
+
+        model Test_heat_transfer_station_production
+          ProsNet.BidirectionalSubstation.Substation_IdealNetwork.New_Substation_idealNet.HTS_idealNet
+            B1(
+            n=0.5,
+            redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
+              feedinPer,
+            R_ins_transferpipe=100000) annotation (Placement(transformation(
+                extent={{20,-18},{-20,18}},
+                rotation=0,
+                origin={-18,-54})));
+          Modelica.Blocks.Math.Add add annotation (Placement(transformation(
+                extent={{-5,-5},{5,5}},
+                rotation=-90,
+                origin={-1,41})));
+          Modelica.Blocks.Sources.RealExpression realExpression(y=273.15) annotation (
+              Placement(transformation(
+                extent={{-5,-6},{5,6}},
+                rotation=270,
+                origin={22,55})));
+          ProsNet.BidirectionalSubstation.Substation_IdealNetwork.Controller_PID_based.auxiliary.TimeTable_noInterp
+            power_set1(table=[0,4; 3600,-4; 7200,10; 10800,-10; 14400,-6; 18000,
+                6; 21600,10; 25200,10]) annotation (Placement(transformation(
+                extent={{-10,-10},{10,10}},
+                rotation=-90,
+                origin={-36,76})));
+          ProsNet.BidirectionalSubstation.Substation_IdealNetwork.Controller_PID_based.auxiliary.TimeTable_noInterp
+            temp_sec_in1(table=[0,55; 3600,30; 7200,55; 10800,30; 14400,30;
+                18000,55; 21600,55; 25200,55]) annotation (Placement(
+                transformation(
+                extent={{-10,-10},{10,10}},
+                rotation=-90,
+                origin={6,76})));
+          Modelica.Blocks.Sources.Ramp ramp(
+            height=1,
+            duration=600,
+            offset=0,
+            startTime=200)
+            annotation (Placement(transformation(extent={{-70,-144},{-50,-124}})));
+          Modelica.Fluid.Vessels.ClosedVolume volume(
+            T_start=318.15,
+            use_portsData=false,
+            V=1,
+            nPorts=2,
+            redeclare final package Medium = ProsNet.Media.Water)
+            annotation (Placement(transformation(extent={{24,-136},{44,-156}})));
+          ProsNet.Fluid.Valves.TwoWayEqualPercentage
+                                             valve_for_test(
+            m_flow_nominal=30.074213*0.001/60,
+            redeclare final package Medium = ProsNet.Media.Water,
+            final CvData=ProsNet.Fluid.Types.CvTypes.Kv,
+            final Kv=2.5,
+            final use_inputFilter=true,
+            final riseTime=5,
+            final init=Modelica.Blocks.Types.Init.InitialOutput,
+            final y_start=0,
+            final l=2e-3) annotation (Placement(transformation(
+                extent={{10,10},{-10,-10}},
+                rotation=-90,
+                origin={58,-116})));
+          ProsNet.Fluid.Sources.Boundary_pT
+                                    bou(nPorts=1, redeclare final package
+              Medium =
+                ProsNet.Media.Water)
+            annotation (Placement(transformation(extent={{128,-110},{108,-90}})));
+          Controller_PID_based.PID_Q_T_weighted_crossover_new_idealNet
+            pID_Q_T_weighted_crossover_new annotation (Placement(
+                transformation(extent={{-30,-18},{-6,16}})));
+          Prosumers.SF1_HouseNew sF1_HouseNew
+            annotation (Placement(transformation(extent={{-102,-46},{-84,-32}})));
+        equation
+          connect(add.u1,realExpression. y) annotation (Line(points={{2,47},{2,49.5},
+                  {22,49.5}},                color={0,0,127}));
+          connect(temp_sec_in1.y,add. u2) annotation (Line(points={{6,65},{6,47},{
+                  -4,47}},         color={0,0,127}));
+          connect(valve_for_test.port_a,volume. ports[1])
+            annotation (Line(points={{58,-126},{58,-128},{33,-128},{33,-136}},
+                                                                  color={0,127,255}));
+          connect(ramp.y,valve_for_test. y) annotation (Line(points={{-49,-134},{
+                  20,-134},{20,-116},{46,-116}},
+                                  color={0,0,127}));
+          connect(bou.ports[1],valve_for_test. port_b)
+            annotation (Line(points={{108,-100},{58,-100},{58,-106}},
+                                                              color={0,127,255}));
+          connect(B1.hot_prim, valve_for_test.port_b) annotation (Line(points={{-4,
+                  -72.2},{-4,-100},{58,-100},{58,-106}}, color={0,127,255}));
+          connect(B1.cold_prim, volume.ports[2]) annotation (Line(points={{-32,-72},
+                  {-32,-130},{35,-130},{35,-136}}, color={0,127,255}));
+          connect(power_set1.y, pID_Q_T_weighted_crossover_new.Q_dot_set)
+            annotation (Line(points={{-36,65},{-36,26},{-24,26},{-24,16.8}},
+                color={0,0,127}));
+          connect(add.y, pID_Q_T_weighted_crossover_new.T_sec_in_is)
+            annotation (Line(points={{-1,35.5},{-2,35.5},{-2,26},{-12,26},{
+                  -12,17}}, color={0,0,127}));
+          connect(B1.contr_vars_real, pID_Q_T_weighted_crossover_new.contr_vars_real)
+            annotation (Line(points={{2.2,-54},{10,-54},{10,-2},{-6,-2}},
+                color={0,0,127}));
+          connect(B1.states, pID_Q_T_weighted_crossover_new.states)
+            annotation (Line(points={{-38,-54},{-46,-54},{-46,-2},{-30,-2}},
+                color={0,0,127}));
+          connect(B1.port_a1, sF1_HouseNew.port_a1) annotation (Line(points={{-27.2,
+                  -37},{-27.2,-26},{-98,-26},{-98,-31.4806},{-97.1357,-31.4806}},
+                              color={0,127,255}));
+          connect(B1.port_b1, sF1_HouseNew.port_b1) annotation (Line(points={{-9,-37},
+                  {-10,-37},{-10,-28},{-88.8643,-28},{-88.8643,-31.5484}},
+                color={0,127,255}));
+          annotation (Diagram(graphics={                               Rectangle(extent={{-62,92},
+                      {28,-82}},      lineColor={28,108,200})}));
+        end Test_heat_transfer_station_production;
+
+        model Test_heat_transfer_station_Consumption
+          ProsNet.BidirectionalSubstation.Substation_IdealNetwork.New_Substation_idealNet.HTS_idealNet
+            B2(
+            n=0.5,
+            redeclare ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180
+              feedinPer,
+            R_ins_transferpipe=100000) annotation (Placement(transformation(
+                extent={{20,-18},{-20,18}},
+                rotation=0,
+                origin={-8,-54})));
+          Modelica.Blocks.Sources.RealExpression realExpression1(y=273.15) annotation (
+              Placement(transformation(
+                extent={{-5,-6},{5,6}},
+                rotation=270,
+                origin={24,53})));
+          Modelica.Blocks.Math.Add add1 annotation (Placement(transformation(
+                extent={{-5,-5},{5,5}},
+                rotation=-90,
+                origin={1,39})));
+          ProsNet.BidirectionalSubstation.Substation_IdealNetwork.Controller_PID_based.auxiliary.TimeTable_noInterp
+            power_set2(table=[0,-10; 3600,10; 7200,-4; 10800,4; 14400,10; 18000,
+                -10; 21600,-4; 25200,-4]) annotation (Placement(transformation(
+                extent={{-10,-10},{10,10}},
+                rotation=-90,
+                origin={-26,76})));
+          ProsNet.BidirectionalSubstation.Substation_IdealNetwork.Controller_PID_based.auxiliary.TimeTable_noInterp
+            temp_sec_in2(table=[0,30; 3600,55; 7200,30; 10800,55; 14400,55;
+                18000,30; 21600,30; 25200,30]) annotation (Placement(
+                transformation(
+                extent={{-10,-10},{10,10}},
+                rotation=-90,
+                origin={16,76})));
+          Modelica.Blocks.Sources.Ramp ramp(
+            height=1,
+            duration=600,
+            offset=0,
+            startTime=200)
+            annotation (Placement(transformation(extent={{-90,-178},{-70,-158}})));
+          Modelica.Fluid.Vessels.ClosedVolume volume(
+            T_start=338.15,
+            use_portsData=false,
+            V=1,
+            nPorts=2,
+            redeclare final package Medium = ProsNet.Media.Water)
+            annotation (Placement(transformation(extent={{4,-176},{24,-196}})));
+          ProsNet.Fluid.Sources.Boundary_pT
+                                    bou(redeclare final package Medium =
+                ProsNet.Media.Water, nPorts=1)
+            annotation (Placement(transformation(extent={{108,-142},{88,-122}})));
+          ProsNet.Fluid.Pumps.SpeedControlled_y
+                                        pump_prim_prod(
+            redeclare final package Medium = ProsNet.Media.Water,
+            final energyDynamics=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial,
+            final tau=1,
+            redeclare final ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40
+              per,
+            final use_inputFilter=true,
+            final riseTime=5,
+            final init=Modelica.Blocks.Types.Init.InitialOutput,
+            final y_start=0)                annotation (Placement(transformation(
+                extent={{10,10},{-10,-10}},
+                rotation=-90,
+                origin={42,-144})));
+          Controller_PID_based.PID_Q_T_weighted_crossover_new_idealNet
+            pID_Q_T_weighted_crossover_new(alpha_sec_cons=1) annotation (
+              Placement(transformation(extent={{-10,-16},{14,18}})));
+          Prosumers.SF1_HouseNew sF1_HouseNew
+            annotation (Placement(transformation(extent={{-150,-88},{-66,-26}})));
+        equation
+          connect(realExpression1.y,add1. u1) annotation (Line(points={{24,47.5},{
+                  24,45},{4,45}},             color={0,0,127}));
+          connect(temp_sec_in2.y,add1. u2)
+            annotation (Line(points={{16,65},{16,64},{-2,64},{-2,45}},
+                                                                  color={0,0,127}));
+          connect(volume.ports[1],pump_prim_prod. port_a) annotation (Line(points={{13,-176},
+                  {13,-160},{42,-160},{42,-154}},      color={0,127,255}));
+          connect(ramp.y,pump_prim_prod. y) annotation (Line(points={{-69,-168},{20,
+                  -168},{20,-144},{30,-144}},
+                                  color={0,0,127}));
+          connect(B2.cold_prim, volume.ports[2]) annotation (Line(points={{-22,-72},
+                  {-22,-166},{15,-166},{15,-176}}, color={0,127,255}));
+          connect(pump_prim_prod.port_b, B2.hot_prim) annotation (Line(points={{42,
+                  -134},{42,-78},{6,-78},{6,-72.2}}, color={0,127,255}));
+          connect(pump_prim_prod.port_b, bou.ports[1]) annotation (Line(points={{42,
+                  -134},{42,-132},{88,-132}}, color={0,127,255}));
+          connect(pID_Q_T_weighted_crossover_new.Q_dot_set, power_set2.y)
+            annotation (Line(points={{-4,18.8},{-4,30},{-26,30},{-26,65}},
+                color={0,0,127}));
+          connect(pID_Q_T_weighted_crossover_new.T_sec_in_is, add1.y)
+            annotation (Line(points={{8,19},{1,19},{1,33.5}}, color={0,0,127}));
+          connect(pID_Q_T_weighted_crossover_new.states, B2.states)
+            annotation (Line(points={{-10,0},{-38,0},{-38,-54},{-28,-54}},
+                color={0,0,127}));
+          connect(pID_Q_T_weighted_crossover_new.contr_vars_real, B2.contr_vars_real)
+            annotation (Line(points={{14,0},{22,0},{22,-54},{12.2,-54}},
+                color={0,0,127}));
+          connect(B2.port_a1, sF1_HouseNew.port_a1) annotation (Line(points={{
+                  -17.2,-37},{-17.2,-30},{-60,-30},{-60,-10},{-127.3,-10},{-127.3,
+                  -23.7}}, color={0,127,255}));
+          connect(B2.port_b1, sF1_HouseNew.port_b1) annotation (Line(points={{1,
+                  -37},{1,-26},{-62,-26},{-62,-14},{-76,-14},{-76,-12},{-88.7,-12},
+                  {-88.7,-24}}, color={0,127,255}));
+          annotation (Diagram(graphics={                               Rectangle(extent={{-52,92},
+                      {38,-82}},      lineColor={28,108,200})}));
+        end Test_heat_transfer_station_Consumption;
+
+        model Test_Conversion
+          Conversion_idealNet conversion
+            annotation (Placement(transformation(extent={{-6,-2},{14,32}})));
+          Modelica.Blocks.Sources.RealExpression T_sec_in(y=65)
+            annotation (Placement(transformation(extent={{-86,38},{-66,58}})));
+          Modelica.Blocks.Sources.IntegerExpression pi(y=0)
+            annotation (Placement(transformation(extent={{-86,-2},{-66,18}})));
+          Modelica.Blocks.Sources.RealExpression V_dot_sec_set(y=5)
+            annotation (Placement(transformation(extent={{-86,18},{-66,38}})));
+          Modelica.Blocks.Sources.IntegerExpression mu(y=-1)
+            annotation (Placement(transformation(extent={{-86,-24},{-66,-4}})));
+          Modelica.Blocks.Sources.RealExpression u_set(y=0.5)
+            annotation (Placement(transformation(extent={{-86,-48},{-66,-28}})));
+          Modelica.Blocks.Sources.RealExpression kappa_set(y=0.8)
+            annotation (Placement(transformation(extent={{-86,-66},{-66,-46}})));
+          Modelica.Blocks.Sources.RealExpression m_dot_sec_is(y=0.2)
+            annotation (Placement(transformation(extent={{76,16},{56,36}})));
+          Modelica.Blocks.Sources.RealExpression m_dot_prim_is(y=0.02)
+            annotation (Placement(transformation(extent={{76,-10},{56,10}})));
+        equation
+          connect(kappa_set.y, conversion.kappa_set) annotation (Line(points={{-65,-56},
+                  {-12,-56},{-12,1.77778},{-6,1.77778}},
+                                                  color={0,0,127}));
+          connect(u_set.y, conversion.u_set_prim) annotation (Line(points={{-65,-38},
+                  {-14,-38},{-14,5.55556},{-6,5.55556}},
+                                             color={0,0,127}));
+          connect(mu.y, conversion.mu) annotation (Line(points={{-65,-14},{-16,
+                  -14},{-16,9.14444},{-6,9.14444}},
+                                      color={255,127,0}));
+          connect(pi.y, conversion.pi) annotation (Line(points={{-65,8},{-18,8},{
+                  -18,13.1111},{-6,13.1111}},
+                                color={255,127,0}));
+          connect(V_dot_sec_set.y, conversion.V_dot_sec_set) annotation (Line(points=
+                  {{-65,28},{-14,28},{-14,24},{-6,24}}, color={0,0,127}));
+          connect(T_sec_in.y, conversion.T_sec_in_set) annotation (Line(points={{-65,
+                  48},{-12,48},{-12,28},{-6,28}}, color={0,0,127}));
+          connect(conversion.m_dot_sec_is, m_dot_sec_is.y)
+            annotation (Line(points={{14,25.2},{34,25.2},{34,26},{55,26}},
+                                                       color={0,0,127}));
+          connect(conversion.m_dot_prim_is, m_dot_prim_is.y)
+            annotation (Line(points={{14,1.77778},{50,1.77778},{50,0},{55,0}},
+                                                                   color={0,0,127}));
+          annotation (Icon(coordinateSystem(preserveAspectRatio=false), graphics={
+                Ellipse(lineColor = {75,138,73},
+                        fillColor={255,255,255},
+                        fillPattern = FillPattern.Solid,
+                        extent={{-100,-100},{100,100}}),
+                Polygon(lineColor = {0,0,255},
+                        fillColor = {75,138,73},
+                        pattern = LinePattern.None,
+                        fillPattern = FillPattern.Solid,
+                        points={{-36,60},{64,0},{-36,-60},{-36,60}})}),  Diagram(
+                coordinateSystem(preserveAspectRatio=false)));
+        end Test_Conversion;
+
+        package Test_Validation
+
+          package components "Testing the new models and especially controllers"
+
+            model Test_heat_exchanger
+
+              replaceable package Medium1 = ProsNet.Media.Water;
+              replaceable package Medium2 = ProsNet.Media.Water;
+
+              extends ProsNet.Prosumers.BaseClasses.PrimarySideParameters;
+              extends
+                ProsNet.Prosumers.SecondarySides.BaseClasses.PumpsPairDynParam;
+              extends
+                ProsNet.Prosumers.SecondarySides.BaseClasses.ControlVolumeDynParam;
+
+              inner Modelica.Fluid.System system
+                annotation (Placement(transformation(extent={{-30,54},{-10,74}})));
+              Modelica.Fluid.Sources.MassFlowSource_T boundary(
+                redeclare package Medium = Media.Water,
+                m_flow=0.1,
+                T=333.15,
+                nPorts=1) annotation (Placement(transformation(extent={{-84,14},{-64,34}})));
+              Modelica.Fluid.Sources.FixedBoundary boundary1(redeclare package
+                  Medium =
+                    Media.Water, nPorts=1)
+                annotation (Placement(transformation(extent={{-88,-90},{-68,-70}})));
+              Modelica.Fluid.Sources.MassFlowSource_T boundary2(
+                redeclare package Medium = Media.Water,
+                use_m_flow_in=true,
+                m_flow=1,
+                T=313.15,
+                nPorts=1) annotation (Placement(transformation(extent={{70,-34},{50,-14}})));
+              Modelica.Fluid.Sources.FixedBoundary boundary3(redeclare package
+                  Medium =
+                    Media.Water, nPorts=1)
+                annotation (Placement(transformation(extent={{52,44},{32,64}})));
+              Modelica.Blocks.Sources.Ramp ramp(
+                height=0.1,
+                duration=900,
+                offset=0.1,
+                startTime=900)
+                annotation (Placement(transformation(extent={{50,-70},{70,-50}})));
+
+              Fluid.HeatExchangers.LiquidToLiquid liquidToLiquid(
+                redeclare package Medium1 = Medium1,
+                redeclare package Medium2 = Medium2,
+                m1_flow_nominal=1,
+                m2_flow_nominal=1,
+                dp1_nominal(displayUnit="bar") = 100000,
+                dp2_nominal(displayUnit="bar") = 100000,
+                use_Q_flow_nominal=true,
+                Q_flow_nominal(displayUnit="kW") = 30000,
+                T_a1_nominal=313.15,
+                T_a2_nominal=333.15,
+                eps_nominal=1)
+                annotation (Placement(transformation(extent={{-24,-18},{-4,2}})));
+              Fluid.Sensors.Temperature senTem2(redeclare package Medium = Medium1)
+                annotation (Placement(transformation(extent={{46,12},{66,32}})));
+              Fluid.Sensors.Temperature senTem1(redeclare package Medium = Medium2)
+                annotation (Placement(transformation(extent={{-46,-70},{-26,-50}})));
+
+              Real DeltaT1;
+              Real DeltaT2;
+            equation
+              connect(ramp.y, boundary2.m_flow_in) annotation (Line(points={{71,-60},{76,-60},{76,
+                      -16},{70,-16}},   color={0,0,127}));
+
+              DeltaT2 =senTem2.T - liquidToLiquid.T_in2;
+              DeltaT1 = senTem1.T - liquidToLiquid.T_in1;
+
+              connect(boundary.ports[1], liquidToLiquid.port_a1)
+                annotation (Line(points={{-64,24},{-62,24},{-62,-2},{-24,-2}}, color={0,127,255}));
+              connect(boundary1.ports[1], liquidToLiquid.port_b2) annotation (Line(points={{-68,-80},
+                      {-50,-80},{-50,-54},{-48,-54},{-48,-14},{-24,-14}}, color={0,127,255}));
+              connect(liquidToLiquid.port_a2, boundary2.ports[1]) annotation (Line(points={{-4,-14},
+                      {2,-14},{2,-18},{0,-18},{0,-24},{50,-24}}, color={0,127,255}));
+              connect(liquidToLiquid.port_b1, boundary3.ports[1])
+                annotation (Line(points={{-4,-2},{26,-2},{26,54},{32,54}}, color={0,127,255}));
+              connect(senTem1.port, liquidToLiquid.port_b2) annotation (Line(points={{-36,-70},{-36,
+                      -74},{-50,-74},{-50,-54},{-48,-54},{-48,-14},{-24,-14}}, color={0,127,255}));
+              connect(senTem2.port, liquidToLiquid.port_b1)
+                annotation (Line(points={{56,12},{56,-2},{-4,-2}}, color={0,127,255}));
+              annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
+                    coordinateSystem(preserveAspectRatio=false), graphics={Line(
+                      points={{10,-34},{10,12}},
+                      color={0,255,0},
+                      thickness=1), Line(
+                      points={{10,10},{14,4}},
+                      color={0,255,0},
+                      thickness=1)}),
+                experiment(
+                  StopTime=2100,
+                  Interval=1,
+                  __Dymola_Algorithm="Dassl"));
+            end Test_heat_exchanger;
+
+            model Test_pipe_model
+              Modelica.Fluid.Sensors.VolumeFlowRate volumeFlowRate(redeclare
+                  package Medium =
+                    ProsNet.Media.Water)
+                annotation (Placement(transformation(extent={{-20,32},{0,52}})));
+              Modelica.Fluid.Sensors.RelativePressure relativePressure(redeclare
+                  package Medium =
+                           ProsNet.Media.Water)
+                annotation (Placement(transformation(extent={{20,64},{40,84}})));
+              Modelica.Fluid.Sensors.RelativeTemperature relativeTemperature(redeclare
+                  package Medium = ProsNet.Media.Water)
+                annotation (Placement(transformation(extent={{20,4},{40,-16}})));
+              Modelica.Fluid.Sources.MassFlowSource_T mass_source(
+                redeclare package Medium = ProsNet.Media.Water,
+                use_m_flow_in=true,
+                use_T_in=true,
+                m_flow=1,
+                T(displayUnit="K"),
+                nPorts=1) annotation (Placement(transformation(extent={{-94,32},{-74,52}})));
+              inner Modelica.Fluid.System system(
+                T_ambient=285.15,
+                allowFlowReversal=true,
+                energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyStateInitial)
+                annotation (Placement(transformation(extent={{132,76},{152,96}})));
+              Modelica.Fluid.Sources.Boundary_pT bou(redeclare package Medium =
+                    ProsNet.Media.Water, nPorts=1)
+                annotation (Placement(transformation(extent={{104,32},{84,52}})));
+              ProsNet.BidirectionalSubstation.Substation_IdealNetwork.Controller_PID_based.auxiliary.TimeTable_noInterp
+                volume_flow(table=[0,1; 10,5; 20,10; 30,11.4; 40,15; 50,20; 60,
+                    1; 70,5; 80,10; 90,11.4; 100,15; 110,20; 120,1; 130,5; 140,
+                    10; 150,11.4; 160,15; 170,20; 7470,20; 7480,0; 10980,20;
+                    17580,20], timeScale=1) annotation (Placement(
+                    transformation(extent={{-182,50},{-162,70}})));
+              ProsNet.BidirectionalSubstation.Substation_IdealNetwork.Controller_PID_based.auxiliary.TimeTable_noInterp
+                temperatures(
+                table=[0,30; 10,30; 20,30; 30,30; 40,30; 50,30; 60,60; 70,60;
+                    80,60; 90,60; 100,60; 110,60; 120,90; 130,90; 140,90; 150,
+                    90; 160,90; 170,90; 180,90; 7480,90; 10980,90; 17580,90],
+                timeScale=1,
+                y(unit="K")) annotation (Placement(transformation(extent={{-182,
+                        16},{-162,36}})));
+
+              Modelica.Blocks.Math.Gain gain(k=1/60.266)
+                annotation (Placement(transformation(extent={{-138,50},{-118,70}})));
+              Modelica.Blocks.Math.UnitConversions.From_degC from_degC
+                annotation (Placement(transformation(extent={{-138,16},{-118,36}})));
+              ProsNet.Fluid.Sensors.TemperatureTwoPort Tem_in(
+                redeclare package Medium = ProsNet.Media.Water,
+                m_flow_nominal=1/6,
+                tau=0) annotation (Placement(transformation(extent={{-54,32},{-34,52}})));
+              ProsNet.Fluid.Sensors.TemperatureTwoPort Tem_out(
+                redeclare package Medium = ProsNet.Media.Water,
+                m_flow_nominal=1/6,
+                tau=0) annotation (Placement(transformation(extent={{54,32},{74,52}})));
+
+              Real DeltaT;
+              Modelica.Fluid.Sensors.VolumeFlowRate volumeFlowRate1(redeclare
+                  package Medium =
+                           ProsNet.Media.Water)
+                annotation (Placement(transformation(extent={{-18,-80},{2,-60}})));
+              Modelica.Fluid.Sensors.RelativePressure relativePressure1(redeclare
+                  package Medium =
+                           ProsNet.Media.Water)
+                annotation (Placement(transformation(extent={{22,-48},{42,-28}})));
+              Modelica.Fluid.Sensors.RelativeTemperature relativeTemperature1(redeclare
+                  package Medium = ProsNet.Media.Water)
+                annotation (Placement(transformation(extent={{22,-108},{42,-128}})));
+              Modelica.Fluid.Sources.Boundary_pT bou1(redeclare package Medium =
+                    ProsNet.Media.Water, nPorts=1)
+                annotation (Placement(transformation(extent={{106,-80},{86,-60}})));
+              ProsNet.Fluid.Sensors.TemperatureTwoPort Tem_in1(
+                redeclare package Medium = ProsNet.Media.Water,
+                m_flow_nominal=1/6,
+                tau=0) annotation (Placement(transformation(extent={{-52,-80},{-32,-60}})));
+              ProsNet.Fluid.Sensors.TemperatureTwoPort Tem_out1(
+                redeclare package Medium = ProsNet.Media.Water,
+                m_flow_nominal=1/6,
+                tau=0) annotation (Placement(transformation(extent={{56,-80},{76,-60}})));
+              ProsNet.Fluid.Pipes.InsulatedPipe_plug pipe_new(
+                allowFlowReversal=true,
+                length=1000,
+                energyDynamics=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial)
+                annotation (Placement(transformation(extent={{18,-80},{38,-60}})));
+              Modelica.Fluid.Sources.MassFlowSource_T mass_source1(
+                redeclare package Medium = ProsNet.Media.Water,
+                use_m_flow_in=true,
+                use_T_in=true,
+                m_flow=1,
+                T(displayUnit="K"),
+                nPorts=1) annotation (Placement(transformation(extent={{-88,-80},{-68,-60}})));
+              ProsNet.Fluid.Pipes.InsulatedPipe pipe(
+                allowFlowReversal=true,
+                length=1000,
+                energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyStateInitial)
+                annotation (Placement(transformation(extent={{18,30},{38,50}})));
+            equation
+              connect(volume_flow.y, gain.u) annotation (Line(
+                  points={{-161,60},{-161,60},{-142,60},{-140,60}},
+                  color={0,0,127},
+                  smooth=Smooth.Bezier));
+              connect(temperatures.y, from_degC.u) annotation (Line(
+                  points={{-161,26},{-161,26},{-144,26},{-140,26}},
+                  color={0,0,127},
+                  smooth=Smooth.Bezier));
+              connect(mass_source.ports[1], Tem_in.port_a) annotation (Line(
+                  points={{-74,42},{-54,42}},
+                  color={0,127,255},
+                  smooth=Smooth.Bezier));
+              connect(Tem_in.port_b, volumeFlowRate.port_a) annotation (Line(
+                  points={{-34,42},{-20,42}},
+                  color={0,127,255},
+                  smooth=Smooth.Bezier));
+              connect(Tem_out.port_b, bou.ports[1]) annotation (Line(
+                  points={{74,42},{84,42}},
+                  color={0,127,255},
+                  smooth=Smooth.Bezier));
+
+              DeltaT = Tem_out.T - Tem_in.T;
+              connect(volumeFlowRate.port_b, relativePressure.port_a) annotation (Line(
+                    points={{0,42},{8,42},{8,74},{20,74}}, color={0,127,255}));
+              connect(relativePressure.port_b, Tem_out.port_a) annotation (Line(points={{40,
+                      74},{48,74},{48,42},{54,42}}, color={0,127,255}));
+              connect(relativeTemperature.port_b, Tem_out.port_a) annotation (Line(points={
+                      {40,-6},{46,-6},{46,42},{54,42}}, color={0,127,255}));
+              connect(relativeTemperature.port_a, volumeFlowRate.port_b) annotation (Line(
+                    points={{20,-6},{10,-6},{10,42},{0,42}}, color={0,127,255}));
+              connect(Tem_in1.port_b, volumeFlowRate1.port_a) annotation (Line(
+                  points={{-32,-70},{-18,-70}},
+                  color={0,127,255},
+                  smooth=Smooth.Bezier));
+              connect(Tem_out1.port_b, bou1.ports[1]) annotation (Line(
+                  points={{76,-70},{86,-70}},
+                  color={0,127,255},
+                  smooth=Smooth.Bezier));
+              connect(volumeFlowRate1.port_b, relativePressure1.port_a) annotation (Line(
+                    points={{2,-70},{10,-70},{10,-38},{22,-38}}, color={0,127,255}));
+              connect(relativePressure1.port_b, Tem_out1.port_a) annotation (Line(points={{
+                      42,-38},{50,-38},{50,-70},{56,-70}}, color={0,127,255}));
+              connect(relativeTemperature1.port_b, Tem_out1.port_a) annotation (Line(points=
+                     {{42,-118},{50,-118},{50,-70},{56,-70}}, color={0,127,255}));
+              connect(relativeTemperature1.port_a, volumeFlowRate1.port_b) annotation (Line(
+                    points={{22,-118},{10,-118},{10,-70},{2,-70}}, color={0,127,255}));
+              connect(volumeFlowRate1.port_b, pipe_new.port_a)
+                annotation (Line(points={{2,-70},{18,-70}}, color={0,127,255}));
+              connect(pipe_new.port_b, Tem_out1.port_a)
+                annotation (Line(points={{38,-70},{56,-70}}, color={0,127,255}));
+              connect(mass_source1.ports[1], Tem_in1.port_a)
+                annotation (Line(points={{-68,-70},{-52,-70}}, color={0,127,255}));
+              connect(gain.y, mass_source.m_flow_in)
+                annotation (Line(points={{-117,60},{-94,60},{-94,50}}, color={0,0,127}));
+              connect(gain.y, mass_source1.m_flow_in) annotation (Line(points={{-117,60},{
+                      -104,60},{-104,-56},{-88,-56},{-88,-62}}, color={0,0,127}));
+              connect(from_degC.y, mass_source.T_in) annotation (Line(points={{-117,26},{
+                      -102,26},{-102,46},{-96,46}}, color={0,0,127}));
+              connect(from_degC.y, mass_source1.T_in) annotation (Line(points={{-117,26},{
+                      -106,26},{-106,-66},{-90,-66}}, color={0,0,127}));
+              connect(pipe.port_a, relativePressure.port_a) annotation (Line(points={{18,40},
+                      {12,40},{12,42},{8,42},{8,74},{20,74}}, color={0,127,255}));
+              connect(pipe.port_b, Tem_out.port_a) annotation (Line(points={{38,40},{42,40},
+                      {42,42},{54,42}}, color={0,127,255}));
+              annotation (                                                       experiment(
+                  StopTime=17500,
+                  Interval=0.1,
+                  __Dymola_Algorithm="Dassl"));
+            end Test_pipe_model;
+
+            model Test_pump_curve
+
+              ProsNet.Fluid.Pumps.SpeedControlled_y
+                                            pump_prim_prod(
+                redeclare final package Medium = ProsNet.Media.Water,
+                final energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyStateInitial,
+                inputType=ProsNet.Fluid.Types.InputType.Continuous,
+                final tau=1,
+                redeclare final ProsNet.Fluid.Pumps.Data.Pumps.IMP.NMTPlus152025to40 per,
+                final use_inputFilter=true,
+                final riseTime=1,
+                final init=Modelica.Blocks.Types.Init.SteadyState,
+                final y_start=0)                annotation (Placement(transformation(
+                    extent={{10,10},{-10,-10}},
+                    rotation=-90,
+                    origin={-44,-8})));
+              ProsNet.Fluid.Sources.Boundary_pT
+                                        bou(redeclare package Medium =
+                    ProsNet.Media.Water,
+                  nPorts=1)
+                annotation (Placement(transformation(extent={{68,36},{48,56}})));
+              Modelica.Blocks.Sources.RealExpression realExpression(y=1)
+                annotation (Placement(transformation(extent={{-168,2},{-148,22}})));
+              Modelica.Blocks.Sources.Ramp ramp(
+                height=-1,
+                duration=1200,
+                offset=1,
+                startTime=5)
+                annotation (Placement(transformation(extent={{140,-42},{120,-22}})));
+              Modelica.Fluid.Valves.ValveLinear valveLinear(
+                redeclare package Medium = ProsNet.Media.Water,
+                dp_start=0,
+                dp_nominal=70000,
+                m_flow_nominal=0.55)
+                annotation (Placement(transformation(extent={{42,-20},{62,0}})));
+            equation
+              connect(realExpression.y, pump_prim_prod.y) annotation (Line(points={{-147,12},
+                      {-64,12},{-64,-8},{-56,-8}}, color={0,0,127}));
+              connect(pump_prim_prod.port_b, bou.ports[1]) annotation (Line(points={{-44,2},
+                      {-44,20},{42,20},{42,46},{48,46}}, color={0,127,255}));
+              connect(pump_prim_prod.port_b, valveLinear.port_a) annotation (Line(points={{-44,2},
+                      {-44,20},{42,20},{42,2},{32,2},{32,-10},{42,-10}},        color={0,
+                      127,255}));
+              connect(valveLinear.port_b, pump_prim_prod.port_a) annotation (Line(points={{62,-10},
+                      {64,-10},{64,-26},{-44,-26},{-44,-18}},         color={0,127,255}));
+              connect(ramp.y, valveLinear.opening) annotation (Line(points={{119,-32},{66,
+                      -32},{66,2},{52,2},{52,-2}}, color={0,0,127}));
+              annotation ();
+            end Test_pump_curve;
+
+            model Test_check_valve_model
+              Modelica.Fluid.Sensors.VolumeFlowRate volumeFlowRate(redeclare
+                  package Medium =
+                    ProsNet.Media.Water)
+                annotation (Placement(transformation(extent={{-20,32},{0,52}})));
+              Modelica.Fluid.Sensors.RelativePressure relativePressure(redeclare
+                  package Medium =
+                           ProsNet.Media.Water)
+                annotation (Placement(transformation(extent={{20,64},{40,84}})));
+              Modelica.Fluid.Sources.MassFlowSource_T mass_source(
+                redeclare package Medium = ProsNet.Media.Water,
+                use_m_flow_in=true,
+                use_T_in=true,
+                m_flow=1,
+                T(displayUnit="K"),
+                nPorts=1) annotation (Placement(transformation(extent={{-94,32},{-74,52}})));
+              inner Modelica.Fluid.System system(
+                T_ambient=285.15,
+                allowFlowReversal=true,
+                energyDynamics=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial)
+                annotation (Placement(transformation(extent={{64,-52},{84,-32}})));
+              Modelica.Fluid.Sources.Boundary_pT bou(redeclare package Medium =
+                    ProsNet.Media.Water,
+                T=309.9,                 nPorts=1)
+                annotation (Placement(transformation(extent={{104,32},{84,52}})));
+              ProsNet.BidirectionalSubstation.Substation_IdealNetwork.Controller_PID_based.auxiliary.TimeTable_noInterp
+                mass_flow_kg_s(table=[0,0; 900,0.1; 1800,0.2; 2700,0.3; 3600,
+                    0.4; 4500,0.5; 5400,0.6; 6300,0.7; 7200,0.8; 8100,0.9; 9000,
+                    1; 9900,1.1; 10800,1.2; 11700,1.3; 12600,1.4; 13500,1.5;
+                    14400,1.6; 15300,1.7; 16200,1.8; 17100,1.9; 18000,2],
+                  timeScale=1) annotation (Placement(transformation(extent={{-182,
+                        50},{-162,70}})));
+              ProsNet.BidirectionalSubstation.Substation_IdealNetwork.Controller_PID_based.auxiliary.TimeTable_noInterp
+                temperatures(
+                table=[0,36.75; 900,36.75; 1800,36.75; 2700,36.75; 3600,36.75;
+                    4500,36.75; 5400,36.75; 6300,36.75; 7200,36.75; 8100,36.75;
+                    9000,36.75; 9900,36.75; 10800,36.75; 11700,36.75; 12600,
+                    36.75; 13500,36.75; 14400,36.75; 15300,36.75; 16200,36.75;
+                    17100,36.75; 18000,36.75],
+                timeScale=1,
+                y(unit="K")) annotation (Placement(transformation(extent={{-182,
+                        16},{-162,36}})));
+              Modelica.Blocks.Math.UnitConversions.From_degC from_degC
+                annotation (Placement(transformation(extent={{-138,16},{-118,36}})));
+              ProsNet.Fluid.Sensors.TemperatureTwoPort Tem_in(
+                redeclare package Medium = ProsNet.Media.Water,
+                m_flow_nominal=1/6,
+                tau=1) annotation (Placement(transformation(extent={{-54,32},{-34,52}})));
+              ProsNet.Fluid.Sensors.TemperatureTwoPort Tem_out(
+                redeclare package Medium = ProsNet.Media.Water,
+                m_flow_nominal=1/6,
+                tau=1) annotation (Placement(transformation(extent={{54,32},{74,52}})));
+
+              Real DeltaT;
+              Modelica.Blocks.Sources.Constant const(k=1)
+                annotation (Placement(transformation(extent={{-20,66},{0,86}})));
+              ProsNet.Fluid.FixedResistances.CheckValve cheVal_prim_cons(
+                m_flow_nominal=1.25,
+                redeclare final package Medium = ProsNet.Media.Water,
+                final CvData=ProsNet.Fluid.Types.CvTypes.Kv,
+                final Kv=6.29,
+                final l=0.002) annotation (Placement(transformation(
+                    extent={{10,-10},{-10,10}},
+                    rotation=180,
+                    origin={32,42})));
+            equation
+              connect(temperatures.y, from_degC.u) annotation (Line(
+                  points={{-161,26},{-161,26},{-144,26},{-140,26}},
+                  color={0,0,127},
+                  smooth=Smooth.Bezier));
+              connect(from_degC.y, mass_source.T_in) annotation (Line(
+                  points={{-117,26},{-102,26},{-102,46},{-96,46}},
+                  color={0,0,127},
+                  smooth=Smooth.Bezier));
+              connect(mass_source.ports[1], Tem_in.port_a) annotation (Line(
+                  points={{-74,42},{-54,42}},
+                  color={0,127,255},
+                  smooth=Smooth.Bezier));
+              connect(Tem_in.port_b, volumeFlowRate.port_a) annotation (Line(
+                  points={{-34,42},{-20,42}},
+                  color={0,127,255},
+                  smooth=Smooth.Bezier));
+              connect(Tem_out.port_b, bou.ports[1]) annotation (Line(
+                  points={{74,42},{84,42}},
+                  color={0,127,255},
+                  smooth=Smooth.Bezier));
+
+              DeltaT = Tem_out.T - Tem_in.T;
+              connect(mass_flow_kg_s.y, mass_source.m_flow_in) annotation (Line(points=
+                      {{-161,60},{-128,60},{-128,50},{-94,50}}, color={0,0,127}));
+              connect(cheVal_prim_cons.port_b, Tem_out.port_a)
+                annotation (Line(points={{42,42},{54,42}}, color={0,127,255}));
+              connect(volumeFlowRate.port_b, cheVal_prim_cons.port_a)
+                annotation (Line(points={{0,42},{22,42}}, color={0,127,255}));
+              connect(relativePressure.port_a, cheVal_prim_cons.port_a)
+                annotation (Line(points={{20,74},{22,74},{22,42}}, color={0,127,255}));
+              connect(relativePressure.port_b, cheVal_prim_cons.port_b) annotation (
+                  Line(points={{40,74},{42,74},{42,42},{42,42}}, color={0,127,255}));
+              annotation (                                                       experiment(
+                  StopTime=18000,
+                  Interval=10,
+                  __Dymola_Algorithm="Dassl"));
+            end Test_check_valve_model;
+
+            model Test_control_valve_model
+              Modelica.Fluid.Sensors.VolumeFlowRate volumeFlowRate(redeclare
+                  package Medium =
+                    ProsNet.Media.Water)
+                annotation (Placement(transformation(extent={{-20,32},{0,52}})));
+              Modelica.Fluid.Sensors.RelativePressure relativePressure(redeclare
+                  package Medium =
+                           ProsNet.Media.Water)
+                annotation (Placement(transformation(extent={{20,64},{40,84}})));
+              Modelica.Fluid.Sources.MassFlowSource_T mass_source(
+                redeclare package Medium = ProsNet.Media.Water,
+                use_m_flow_in=true,
+                use_T_in=true,
+                m_flow=1,
+                T(displayUnit="K"),
+                nPorts=1) annotation (Placement(transformation(extent={{-94,32},{-74,52}})));
+              inner Modelica.Fluid.System system(
+                T_ambient=285.15,
+                allowFlowReversal=true,
+                energyDynamics=Modelica.Fluid.Types.Dynamics.DynamicFreeInitial)
+                annotation (Placement(transformation(extent={{64,-52},{84,-32}})));
+              Modelica.Fluid.Sources.Boundary_pT bou(redeclare package Medium =
+                    ProsNet.Media.Water,
+                T=309.9,                 nPorts=1)
+                annotation (Placement(transformation(extent={{104,32},{84,52}})));
+              ProsNet.BidirectionalSubstation.Substation_IdealNetwork.Controller_PID_based.auxiliary.TimeTable_noInterp
+                mass_flow_kg_s(table=[0,0; 900,0.1; 1800,0.2; 2700,0.3; 3600,
+                    0.4; 4500,0.5; 5400,0.6; 6300,0.7; 7200,0.8; 8100,0.9; 9000,
+                    1; 9900,1.1; 10800,1.2; 11700,1.3; 12600,1.4; 13500,1.5;
+                    14400,1.6; 15300,1.7; 16200,1.8; 17100,1.9; 18000,2],
+                  timeScale=1) annotation (Placement(transformation(extent={{-182,
+                        50},{-162,70}})));
+              ProsNet.BidirectionalSubstation.Substation_IdealNetwork.Controller_PID_based.auxiliary.TimeTable_noInterp
+                temperatures(
+                table=[0,36.75; 900,36.75; 1800,36.75; 2700,36.75; 3600,36.75;
+                    4500,36.75; 5400,36.75; 6300,36.75; 7200,36.75; 8100,36.75;
+                    9000,36.75; 9900,36.75; 10800,36.75; 11700,36.75; 12600,
+                    36.75; 13500,36.75; 14400,36.75; 15300,36.75; 16200,36.75;
+                    17100,36.75; 18000,36.75],
+                timeScale=1,
+                y(unit="K")) annotation (Placement(transformation(extent={{-182,
+                        16},{-162,36}})));
+              Modelica.Blocks.Math.UnitConversions.From_degC from_degC
+                annotation (Placement(transformation(extent={{-138,16},{-118,36}})));
+              ProsNet.Fluid.Sensors.TemperatureTwoPort Tem_in(
+                redeclare package Medium = ProsNet.Media.Water,
+                m_flow_nominal=1/6,
+                tau=1) annotation (Placement(transformation(extent={{-54,32},{-34,52}})));
+              ProsNet.Fluid.Sensors.TemperatureTwoPort Tem_out(
+                redeclare package Medium = ProsNet.Media.Water,
+                m_flow_nominal=1/6,
+                tau=1) annotation (Placement(transformation(extent={{54,32},{74,52}})));
+
+              Real DeltaT;
+              ProsNet.Fluid.Valves.TwoWayEqualPercentage valve_prim_cons(
+                m_flow_nominal=1.25,
+                kFixed=0,
+                redeclare final package Medium = ProsNet.Media.Water,
+                final CvData=ProsNet.Fluid.Types.CvTypes.Kv,
+                final Kv=6.29,
+                final use_inputFilter=true,
+                final riseTime=35,
+                final init=Modelica.Blocks.Types.Init.InitialState,
+                final y_start=0,
+                final l=0.002) annotation (Placement(transformation(
+                    extent={{-10,10},{10,-10}},
+                    rotation=180,
+                    origin={26,34})));
+              Modelica.Blocks.Sources.Constant const(k=1)
+                annotation (Placement(transformation(extent={{-20,66},{0,86}})));
+            equation
+              connect(temperatures.y, from_degC.u) annotation (Line(
+                  points={{-161,26},{-161,26},{-144,26},{-140,26}},
+                  color={0,0,127},
+                  smooth=Smooth.Bezier));
+              connect(from_degC.y, mass_source.T_in) annotation (Line(
+                  points={{-117,26},{-102,26},{-102,46},{-96,46}},
+                  color={0,0,127},
+                  smooth=Smooth.Bezier));
+              connect(mass_source.ports[1], Tem_in.port_a) annotation (Line(
+                  points={{-74,42},{-54,42}},
+                  color={0,127,255},
+                  smooth=Smooth.Bezier));
+              connect(Tem_in.port_b, volumeFlowRate.port_a) annotation (Line(
+                  points={{-34,42},{-20,42}},
+                  color={0,127,255},
+                  smooth=Smooth.Bezier));
+              connect(Tem_out.port_b, bou.ports[1]) annotation (Line(
+                  points={{74,42},{84,42}},
+                  color={0,127,255},
+                  smooth=Smooth.Bezier));
+
+              DeltaT = Tem_out.T - Tem_in.T;
+              connect(mass_flow_kg_s.y, mass_source.m_flow_in) annotation (Line(points=
+                      {{-161,60},{-128,60},{-128,50},{-94,50}}, color={0,0,127}));
+              connect(const.y, valve_prim_cons.y) annotation (Line(points={{1,76},{14,
+                      76},{14,46},{26,46}}, color={0,0,127}));
+              connect(volumeFlowRate.port_b, valve_prim_cons.port_b) annotation (Line(
+                    points={{0,42},{10,42},{10,34},{16,34}}, color={0,127,255}));
+              connect(valve_prim_cons.port_a, Tem_out.port_a) annotation (Line(points={
+                      {36,34},{46,34},{46,42},{54,42}}, color={0,127,255}));
+              connect(relativePressure.port_b, valve_prim_cons.port_a)
+                annotation (Line(points={{40,74},{40,34},{36,34}}, color={0,127,255}));
+              connect(valve_prim_cons.port_b, relativePressure.port_a) annotation (Line(
+                    points={{16,34},{6,34},{6,74},{20,74}}, color={0,127,255}));
+              annotation (                                                       experiment(
+                  StopTime=18000,
+                  Interval=10,
+                  __Dymola_Algorithm="Dassl"));
+            end Test_control_valve_model;
+
+            model Test_TwoProsumers
+              HTS_idealNet B1(n=0.5, redeclare
+                  Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180 feedinPer)
+                annotation (Placement(transformation(
+                    extent={{20,-18},{-20,18}},
+                    rotation=0,
+                    origin={-48,8})));
+              Controller_PID_based.PID_Q_T_weighted_sameside Ctrl1(alpha_prim_prod=0.35,
+                  alpha_sec_cons=0.35) annotation (Placement(transformation(
+                    extent={{-12,-17},{12,17}},
+                    rotation=0,
+                    origin={-44,73})));
+              Controller_PID_based.auxiliary.TimeTable_noInterp power_set1(table=[0,10; 900,10;
+                    1800,10; 2700,10; 3600,-10; 4500,-4; 5400,4; 6300,4])  annotation (Placement(
+                    transformation(
+                    extent={{-10,-10},{10,10}},
+                    rotation=-90,
+                    origin={-70,134})));
+              Controller_PID_based.auxiliary.TimeTable_noInterp temp_sec_in1(table=[0,55; 900,55;
+                    1800,55; 2700,55; 3600,30; 4500,30; 5400,55; 6300,55])   annotation (
+                  Placement(transformation(
+                    extent={{-10,-10},{10,10}},
+                    rotation=-90,
+                    origin={-28,134})));
+              Fluid.Pipes.InsulatedPipe_plug pipe_hot12
+                annotation (Placement(transformation(extent={{-8,-58},{18,-32}})));
+              HTS_idealNet B2(n=0.5, redeclare
+                  Fluid.Pumps.Data.Pumps.IMP.NMTSmart25_120to180 feedinPer)
+                annotation (Placement(transformation(
+                    extent={{20,-18},{-20,18}},
+                    rotation=0,
+                    origin={50,8})));
+              Controller_PID_based.PID_Q_T_weighted_sameside Ctrl2(alpha_prim_prod=0.35,
+                  alpha_sec_cons=0.35) annotation (Placement(transformation(
+                    extent={{-12,-17},{12,17}},
+                    rotation=0,
+                    origin={52,73})));
+              Controller_PID_based.auxiliary.TimeTable_noInterp power_set2(table=[0,-10; 900,-10;
+                    1800,-10; 2700,-10; 3600,10; 4500,4; 5400,-4; 6300,-4])
+                                                                           annotation (Placement(
+                    transformation(
+                    extent={{-10,-10},{10,10}},
+                    rotation=-90,
+                    origin={28,134})));
+              Controller_PID_based.auxiliary.TimeTable_noInterp temp_sec_in2(table=[0,30; 900,30;
+                    1800,30; 2700,30; 3600,55; 4500,55; 5400,30; 6300,30])   annotation (
+                  Placement(transformation(
+                    extent={{-10,-10},{10,10}},
+                    rotation=-90,
+                    origin={70,134})));
+              Fluid.Pipes.InsulatedPipe_plug pipe_cold12
+                annotation (Placement(transformation(extent={{18,-103},{-8,-77}})));
+              Modelica.Fluid.Sources.Boundary_pT boundary(
+                redeclare package Medium = Media.Water,
+                use_p_in=false,
+                T=325.4,
+                nPorts=1) annotation (Placement(transformation(extent={{-92,-55},{-72,-35}})));
+              inner Modelica.Fluid.System system(T_ambient=285.15)
+                annotation (Placement(transformation(extent={{-92,-114},{-72,-94}})));
+              Modelica.Blocks.Math.Add add annotation (Placement(transformation(
+                    extent={{-5,-5},{5,5}},
+                    rotation=-90,
+                    origin={-31,103})));
+              Modelica.Blocks.Sources.RealExpression realExpression(y=273.15) annotation (Placement(
+                    transformation(
+                    extent={{-5,-6},{5,6}},
+                    rotation=270,
+                    origin={-8,117})));
+              Modelica.Blocks.Sources.RealExpression realExpression1(y=273.15) annotation (
+                  Placement(transformation(
+                    extent={{-5,-6},{5,6}},
+                    rotation=270,
+                    origin={82,115})));
+              Modelica.Blocks.Math.Add add1 annotation (Placement(transformation(
+                    extent={{-5,-5},{5,5}},
+                    rotation=-90,
+                    origin={59,101})));
+            equation
+              connect(B1.contr_vars_real, Ctrl1.contr_vars_real)
+                annotation (Line(points={{-27.8,8},{-20,8},{-20,72},{-32,72}}, color={0,0,127}));
+              connect(Ctrl1.states, B1.states)
+                annotation (Line(points={{-56,72},{-74,72},{-74,8},{-68,8}}, color={0,0,127}));
+              connect(power_set1.y, Ctrl1.Q_dot_set) annotation (Line(points={{-70,123},{-70,118},{
+                      -50,118},{-50,90.8}},  color={0,0,127}));
+              connect(B2.contr_vars_real,Ctrl2. contr_vars_real)
+                annotation (Line(points={{70.2,8},{78,8},{78,72},{64,72}},     color={0,0,127}));
+              connect(Ctrl2.states,B2. states)
+                annotation (Line(points={{40,72},{24,72},{24,8},{30,8}},     color={0,0,127}));
+              connect(power_set2.y,Ctrl2. Q_dot_set) annotation (Line(points={{28,123},{28,118},{
+                      46,118},{46,90.8}},    color={0,0,127}));
+              connect(B1.hot_prim, pipe_hot12.port_a)
+                annotation (Line(points={{-34,-10.2},{-34,-45},{-8,-45}}, color={0,127,255}));
+              connect(pipe_hot12.port_b, B2.hot_prim)
+                annotation (Line(points={{18,-45},{64,-45},{64,-10.2}}, color={0,127,255}));
+              connect(B1.cold_prim, pipe_cold12.port_b)
+                annotation (Line(points={{-62,-10},{-62,-90},{-8,-90}}, color={0,127,255}));
+              connect(pipe_cold12.port_a, B2.cold_prim)
+                annotation (Line(points={{18,-90},{36,-90},{36,-10}}, color={0,127,255}));
+              connect(pipe_hot12.port_a, boundary.ports[1])
+                annotation (Line(points={{-8,-45},{-72,-45}}, color={0,127,255}));
+              connect(add.y, Ctrl1.T_sec_in_is)
+                annotation (Line(points={{-31,97.5},{-31,91},{-38,91}}, color={0,0,127}));
+              connect(temp_sec_in1.y, add.u2) annotation (Line(points={{-28,123},{-28,114},{-34,114},
+                      {-34,109}}, color={0,0,127}));
+              connect(add.u1, realExpression.y) annotation (Line(points={{-28,109},{-12,109},{-12,
+                      106},{-8,106},{-8,111.5}}, color={0,0,127}));
+              connect(temp_sec_in2.y, add1.u2)
+                annotation (Line(points={{70,123},{70,114},{56,114},{56,107}}, color={0,0,127}));
+              connect(add1.y, Ctrl2.T_sec_in_is)
+                annotation (Line(points={{59,95.5},{58,95.5},{58,91}}, color={0,0,127}));
+              connect(realExpression1.y, add1.u1) annotation (Line(points={{82,109.5},{82,104},{68,
+                      104},{68,107},{62,107}}, color={0,0,127}));
+              annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-120},{
+                        200,160}})),                                         Diagram(
+                    coordinateSystem(preserveAspectRatio=false, extent={{-100,-120},{200,160}}),
+                                                                 graphics={Rectangle(extent={{-92,
+                          154},{-2,-20}}, lineColor={28,108,200}),         Rectangle(extent={{6,
+                          154},{96,-20}}, lineColor={28,108,200})}),
+                experiment(
+                  StopTime=6300,
+                  Interval=0.1,
+                  __Dymola_Algorithm="Dassl"));
+            end Test_TwoProsumers;
+          end components;
+        end Test_Validation;
+      end Validation;
+
+      annotation (conversion(noneFromVersion=""));
+    end New_Substation_idealNet;
+
+    package Controller_PID_based
+
+      model PID_Q_T_weighted_crossover_new_idealNet
+
+        import Modelica.Units.SI;
+        import T_AbsZeroDegC = Modelica.Constants.T_zero;
+        import Modelica.Blocks.Types.Init;
+        import Modelica.Blocks.Types.SimpleController;
+
+          // !!!!! parameters !!!!!
+        parameter Real Delta_Qdot_norm = 1
+            "Heat power value for normalizing the error (deviation) of the transferred heat.
+      For alpha=0.5 a deviation of Delta_Qdot_norm in heat transfer is weigthed equal to a deviation of Delta_T_norm in temperature."
+            annotation(Dialog(group="Normalizing values"));
+        parameter SI.TemperatureDifference Delta_T_norm(min=0) = 3
+            "Temperature difference for normalizing the error (deviation) of the temperature.
+      For alpha=0.5 a deviation of Delta_T_norm in temperature is weighted equal to a deviation of Delta_Qdot_norm in heat transfer."
+            annotation(Dialog(group="Normalizing values"));
+
+        parameter SI.Temperature T_prim_hot_des(min=277)= - T_AbsZeroDegC + 53.5
+            "desired temperature supply primary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter SI.Temperature T_sec_hot_des(min=277)= - T_AbsZeroDegC + 50
+            "desired temperature supply secondary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter SI.TemperatureDifference DeltaT_prim_des(min=1) =   20
+            "desired temperature difference primary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter SI.TemperatureDifference DeltaT_sec_des(min=1) =   20
+            "desired temperature difference secondary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter Real _prim_cons_sec_prod_max = 1
+          "maximum secondary side volume flow in [l/min]"
+          annotation(Dialog(group="General PID settings"));
+        parameter Real k_prim_prod = 1.5
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real Ti_prim_prod = 8
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real Td_prim_prod = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real alpha_prim_prod(min=0, max=1) = 0.666
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real k_sec_prod = 1.5
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real Ti_sec_prod = 8
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real Td_sec_prod = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real alpha_sec_prod(min=0, max=1) = 0.333
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real k_prim_cons = 1
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real Ti_prim_cons = 35
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real Td_prim_cons = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real alpha_prim_cons(min=0, max=1) = 0.333
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real k_sec_cons = 1.5
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter Real Ti_sec_cons = 8
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter Real Td_sec_cons = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter Real alpha_sec_cons(min=0, max=1) = 0.666
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter .Modelica.Blocks.Types.SimpleController controllerType=
+               Modelica.Blocks.Types.SimpleController.PID "Type of controller"
+               annotation(Dialog(tab="Advanced", group="PIDs general"));
+        parameter Init initType = Modelica.Blocks.Types.Init.NoInit
+          "Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output)"
+          annotation(Dialog(tab="Advanced", group="PIDs general"));
+        parameter Real tol = 0.1
+          "tolerance [kW] for idle mode concerning heat transfer setpoint dotQ"
+          annotation(Dialog(tab="Advanced", group="Miscellaneous"));
+
+        // !!!!! variables !!!!!
+        Real beta_prim_prod(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Real beta_sec_prod(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Real beta_prim_cons(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Real beta_sec_cons(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Integer  prosumer_mode
+          "prosumer mode {-1;0;1}";
+        Real T_prim_relev_des
+            "desired value of relevant temperature (difference)
+      for control of primary side";
+        Real T_prim_relev_is
+            "current value of relevant temperature (difference)
+      for control of primary side";
+        Real T_sec_relev_des
+            "desired value of relevant temperature (difference)
+      for control of secondary side";
+        Real T_sec_relev_is
+            "current value of relevant temperature (difference)
+      for control of secondary side";
+
+        Real PIDin_prim_cons_is_weighted
+            "weighted input of is-values for PID_prim_cons";
+        Real PIDin_prim_cons_des_weighted
+            "weighted input of desired values for PID_prim_cons";
+        Real PIDin_prim_prod_is_weighted
+            "weighted input of is-values for PID_prim_prod";
+        Real PIDin_prim_prod_des_weighted
+            "weighted input of desired values for PID_prim_prod";
+        Real PIDin_sec_cons_is_weighted
+            "weighted input of is-values for PID_sec_cons";
+        Real PIDin_sec_cons_des_weighted
+            "weighted input of desired values for PID_sec_cons";
+        Real PIDin_sec_prod_is_weighted
+            "weighted input of is-values for PID_sec_prod";
+        Real PIDin_sec_prod_des_weighted
+            "weighted input of desired values for PID_sec_prod";
+
+        Real error_prim_weighted
+            "weighted overall error of primary side controller";
+
+        Real error_sec_weighted
+            "weighted overall error of primary side controller";
+
+        Real error_T_prim_abs
+            "temperature error of primary side controller";
+
+        Real error_T_sec_abs
+            "temperature error of primary side controller";
+
+        Real error_Q_abs
+            "temperature error of primary side controller";
+
+        Real error_T_high_prio_abs
+            "error of higher prioritized temperature objective";
+
+        Real error_T_low_prio_abs
+            "error of lower prioritized temperature objective";
+
+        Real Delta_T_prim
+            "weighted overall error of primary side controller";
+
+        Real Delta_T_sec
+            "weighted overall error of primary side controller";
+
+        Real Q_dot_is_use;
+        Real Q_dot_set_use;
+
+         Real Delta_p_prim(unit="Pa", displayUnit="bar") annotation (
+            Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=180,
+              origin={-80,-140})));
+
+        // !!!!! ports !!!!!
+
+        Modelica.Blocks.Interfaces.RealVectorInput states[8]
+          annotation (Placement(transformation(extent={{-140,-20},{-100,20}})));
+
+        Modelica.Blocks.Interfaces.RealVectorOutput contr_vars_real[6]
+          annotation (Placement(transformation(extent={{100,-20},{140,20}})));
+
+        Real u_set_prim_prod
+          "Normalized velocity of feed-in pump"
+            annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,-60}),  iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,-60})));
+        Real u_set_prim_cons
+          "Normalized flow coefficient for control valve"
+           annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,-100}),iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,-100})));
+        Real pi_set
+          "Participation" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,20}),    iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,20})));
+        Real mu_set
+          "Operating mode" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,-20}),  iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,-20})));
+        Real T_sec_hot(
+          unit="K",
+          displayUnit="degC",
+          min=277) "current temperature hot level secondary side"      annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,60})));
+        Real T_sec_cold(
+          unit="K",
+          displayUnit="degC",
+          min=277)
+                 "current temperature cold  level secondary side"    annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,20})));
+        Real T_prim_hot(
+          unit="K",
+          displayUnit="degC",
+          min=277)
+                 "current temperature hot level primary side"        annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,140})));
+        Real T_prim_cold(
+          unit="K",
+          displayUnit="degC",
+          min=277)
+                  "current temperature cold level primary side"       annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,100})));
+        Modelica.Blocks.Interfaces.RealInput Q_dot_set(unit="kW", displayUnit="kW")
+          "setpoint heat transfer (positive production, negative consumption)"
+          annotation (Placement(transformation(extent={{-20,-20},{20,20}},
+              rotation=-90,
+              origin={-60,188})));
+        Real V_dot_prim(unit="l/min", displayUnit="l/min")
+          annotation (Placement(transformation(extent={{-100,-40},{-60,0}})));
+        Real u2
+          annotation (Placement(transformation(extent={{-100,-80},{-60,-40}})));
+
+        Real Q_dot_is(unit="kW", displayUnit="kW")
+          "currently transferred heat (positive production, negative consumption)"
+          annotation (Placement(transformation(extent={{-100,-120},{-60,-80}})));
+        Modelica.Blocks.Continuous.LimPID PID_prim_cons(
+          controllerType=controllerType,
+          k=k_prim_cons,
+          Ti=Ti_prim_cons,
+          Td=Td_prim_cons,
+          yMax=1,
+          yMin=0.25,
+          initType=initType,
+          y_start=PID_prim_cons.yMax)
+          annotation (Placement(transformation(extent={{-30,-32},{-10,-12}})));
+        Modelica.Blocks.Continuous.LimPID PID_sec_cons(
+          controllerType=controllerType,
+          k=k_sec_cons,
+          Ti=Ti_sec_cons,
+          Td=Td_sec_cons,
+          yMax=1,
+          yMin=0,
+          initType=initType,
+          y_start=PID_sec_cons.yMax)
+          annotation (Placement(transformation(extent={{-34,28},{-14,48}})));
+        Modelica.Blocks.Continuous.LimPID PID_prim_prod(
+          controllerType=controllerType,
+          k=k_prim_prod,
+          Ti=Ti_prim_prod,
+          Td=Td_prim_prod,
+          yMax=1,
+          yMin=0.25,
+          initType=initType,
+          y_start=PID_prim_prod.yMax) annotation (Placement(transformation(extent={{12,-30},
+                  {32,-10}})));
+        Modelica.Blocks.Continuous.LimPID PID_sec_prod(
+          controllerType=controllerType,
+          k=k_sec_prod,
+          Ti=Ti_sec_prod,
+          Td=Td_sec_prod,
+          yMax=1,
+          yMin=0,
+          initType=initType,
+          y_start=PID_sec_prod.yMax) annotation (Placement(transformation(extent={{10,28},
+                  {30,48}})));
+        Real u_set_sec_cons
+           "Normalized velocity of the secondary side pump in production" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,100})));
+        Real u_set_sec_prod
+         "speed set for secondary side pupm in consumption mode" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,60})));
+        Modelica.Blocks.Interfaces.RealInput T_sec_in_is(unit="K", displayUnit="degC")
+          "Temperature on the secondary side" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=270,
+              origin={60,190})));
+
+      equation
+
+        // assign inputs
+        T_prim_hot   = states[1];
+        T_prim_cold  = states[2];
+        T_sec_hot    = states[3];
+        T_sec_cold   = states[4];
+        V_dot_prim   = states[5];
+        u2           = states[6];
+        Q_dot_is     = states[7];
+        Delta_p_prim = states[8];
+
+        Delta_T_prim      = T_prim_hot -T_prim_cold;
+        Delta_T_sec       = T_sec_hot  -T_sec_cold;
+
+        beta_prim_prod = 1 - alpha_prim_prod;
+        beta_sec_prod  = 1 - alpha_sec_prod;
+        beta_prim_cons = 1 - alpha_prim_cons;
+        beta_sec_cons  = 1 - alpha_sec_cons;
+
+        // determine easy static values that just depend on prosumer mode
+        // determine inputs for the four PIDs
+        // four PIDs in order to be able to have different gains for each situation
+
+        if  Q_dot_set <= 0-tol then // consumption mode
+          prosumer_mode = -1;
+        elseif Q_dot_set >= 0+tol then // production mode
+          prosumer_mode = +1;
+        else // idle mode
+          prosumer_mode = 0;
+        end if;
+
+        Q_dot_is_use = abs(Q_dot_is);
+        Q_dot_set_use = abs(Q_dot_set);
+
+        if prosumer_mode == -1 then // consumption mode
+          pi_set = 1;
+          mu_set = -1;
+          T_prim_relev_des = T_sec_hot_des;
+          T_prim_relev_is = T_sec_hot;
+          T_sec_relev_des = DeltaT_prim_des;
+          T_sec_relev_is = T_prim_hot-T_prim_cold;
+
+          PIDin_prim_cons_is_weighted    = alpha_prim_cons*Q_dot_is_use/Delta_Qdot_norm + beta_prim_cons*T_prim_relev_is/Delta_T_norm;
+          PIDin_prim_cons_des_weighted   = alpha_prim_cons*Q_dot_set_use/Delta_Qdot_norm + beta_prim_cons*T_prim_relev_des/Delta_T_norm;
+          PIDin_prim_prod_is_weighted    = 0;
+          PIDin_prim_prod_des_weighted   = 0;
+          PIDin_sec_cons_is_weighted     = alpha_sec_cons*Q_dot_is_use/Delta_Qdot_norm + beta_sec_cons*T_sec_relev_is/Delta_T_norm;
+          PIDin_sec_cons_des_weighted    = alpha_sec_cons*Q_dot_set_use/Delta_Qdot_norm +
+            beta_sec_cons*T_sec_relev_des/Delta_T_norm;
+          PIDin_sec_prod_is_weighted     = 0;
+          PIDin_sec_prod_des_weighted    = 0;
+
+          error_prim_weighted            = PIDin_prim_cons_des_weighted - PIDin_prim_cons_is_weighted;
+          error_sec_weighted             = PIDin_sec_cons_des_weighted - PIDin_sec_cons_is_weighted;
+
+          error_T_prim_abs               = DeltaT_prim_des - Delta_T_prim;
+          error_T_sec_abs                = T_sec_hot_des - T_sec_hot;
+
+          error_T_high_prio_abs          = T_sec_hot_des - T_sec_hot; // T_sec_hot
+          error_T_low_prio_abs           = DeltaT_prim_des - Delta_T_prim; // Delta_T_prim
+
+        elseif prosumer_mode == 1 then // production mode
+          pi_set = 1;
+          mu_set = 1;
+          T_prim_relev_des = DeltaT_sec_des;
+          T_prim_relev_is = T_sec_hot-T_sec_cold;
+          T_sec_relev_des = T_prim_hot_des;
+          T_sec_relev_is = T_prim_hot;
+
+          PIDin_prim_cons_is_weighted    = 0;
+          PIDin_prim_cons_des_weighted   = 0;
+          PIDin_prim_prod_is_weighted    = alpha_prim_prod*Q_dot_is_use/Delta_Qdot_norm + beta_prim_prod*T_prim_relev_is/Delta_T_norm;
+          PIDin_prim_prod_des_weighted   = alpha_prim_prod*Q_dot_set_use/Delta_Qdot_norm + beta_prim_prod*T_prim_relev_des/Delta_T_norm;
+          PIDin_sec_cons_is_weighted     = 0;
+          PIDin_sec_cons_des_weighted    = 0;
+          PIDin_sec_prod_is_weighted     = alpha_sec_prod*Q_dot_is_use/Delta_Qdot_norm + beta_sec_prod*T_sec_relev_is/Delta_T_norm;
+          PIDin_sec_prod_des_weighted    = alpha_sec_prod*Q_dot_set_use/Delta_Qdot_norm + beta_sec_prod*T_sec_relev_des/Delta_T_norm;
+
+          error_prim_weighted            = PIDin_prim_prod_des_weighted - PIDin_prim_prod_is_weighted;
+          error_sec_weighted             = PIDin_sec_prod_des_weighted - PIDin_sec_prod_is_weighted;
+
+          error_T_prim_abs               = T_prim_hot_des - T_prim_hot;
+          error_T_sec_abs                = DeltaT_sec_des - Delta_T_sec;
+
+          error_T_high_prio_abs          = T_prim_hot_des - T_prim_hot; // T_pim_hot
+          error_T_low_prio_abs           = DeltaT_sec_des - Delta_T_sec; // Deltat_T_sec
+
+        else // idle mode
+          pi_set = 0;
+          mu_set = -1;
+          T_prim_relev_des = 0;
+          T_prim_relev_is = 0;
+          T_sec_relev_des = 0;
+          T_sec_relev_is = 0;
+
+          PIDin_prim_cons_is_weighted    = 0;
+          PIDin_prim_cons_des_weighted   = 0;
+          PIDin_prim_prod_is_weighted    = 0;
+          PIDin_prim_prod_des_weighted   = 0;
+          PIDin_sec_cons_is_weighted     = 0;
+          PIDin_sec_cons_des_weighted    = 0;
+          PIDin_sec_prod_is_weighted     = 0;
+          PIDin_sec_prod_des_weighted    = 0;
+
+          error_prim_weighted            = 0;
+          error_sec_weighted             = 0;
+
+          error_T_prim_abs               = 0;
+          error_T_sec_abs                = 0;
+
+          error_T_high_prio_abs          = 0;
+          error_T_low_prio_abs           = 0;
+
+        end if;
+
+        // assign PID controller inputs
+        PID_prim_cons.u_s    = PIDin_prim_cons_des_weighted;
+        PID_prim_cons.u_m    = PIDin_prim_cons_is_weighted;
+        PID_prim_prod.u_s    = PIDin_prim_prod_des_weighted;
+        PID_prim_prod.u_m    = PIDin_prim_prod_is_weighted;
+        PID_sec_cons.u_s     = PIDin_sec_cons_des_weighted;
+        PID_sec_cons.u_m     = PIDin_sec_cons_is_weighted;
+        PID_sec_prod.u_s     = PIDin_sec_prod_des_weighted;
+        PID_sec_prod.u_m     = PIDin_sec_prod_is_weighted;
+
+        // assign PID outputs to controller outputs
+        if prosumer_mode == -1 then // consumption mode
+          u_set_prim_prod = 0;
+          u_set_prim_cons =PID_prim_cons.y;
+          u_set_sec_cons = PID_sec_cons.y;
+          u_set_sec_prod = 0;
+        elseif prosumer_mode == 1 then // production mode
+          u_set_prim_prod =PID_prim_prod.y;
+          u_set_prim_cons = 0;
+          u_set_sec_cons = 0;
+          u_set_sec_prod = PID_sec_prod.y;
+        else // idle mode
+          u_set_sec_cons = 0;
+          u_set_sec_prod = 0;
+          u_set_prim_prod = 0;
+          u_set_prim_cons = 0;
+        end if;
+
+        error_Q_abs = Q_dot_set_use - Q_dot_is_use;
+
+        // assign control variables vector
+        contr_vars_real[1]   =  u_set_sec_cons;
+        contr_vars_real[2]   =  u_set_sec_prod;
+        contr_vars_real[3]   =  pi_set;
+        contr_vars_real[4]   =  mu_set;
+        contr_vars_real[5]   =  u_set_prim_prod;
+        contr_vars_real[6]   =  u_set_prim_cons;
+
+          annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-120,-160},{
+                  120,180}}),                                           graphics={
+                Text(
+                extent={{-70,56},{64,-56}},
+                textColor={28,108,200},
+                textString="weighted
+PID"),       Rectangle(extent={{-120,180},{120,-160}}, lineColor={0,0,0})}),
+                                                                         Diagram(
+              coordinateSystem(preserveAspectRatio=false, extent={{-120,-160},{120,180}})));
+      end PID_Q_T_weighted_crossover_new_idealNet;
+
+      model PID_Q_T_weighted_sameside
+
+        import Modelica.Units.SI;
+        import T_AbsZeroDegC = Modelica.Constants.T_zero;
+        import Modelica.Blocks.Types.Init;
+        import Modelica.Blocks.Types.SimpleController;
+
+          // !!!!! parameters !!!!!
+        parameter Real Delta_Qdot_norm = 1
+            "Heat power value for normalizing the error (deviation) of the transferred heat.
+      For alpha=0.5 a deviation of Delta_Qdot_norm in heat transfer is weigthed equal to a deviation of Delta_T_norm in temperature."
+            annotation(Dialog(group="Normalizing values"));
+        parameter SI.TemperatureDifference Delta_T_norm(min=0) = 3
+            "Temperature difference for normalizing the error (deviation) of the temperature.
+      For alpha=0.5 a deviation of Delta_T_norm in temperature is weighted equal to a deviation of Delta_Qdot_norm in heat transfer."
+            annotation(Dialog(group="Normalizing values"));
+
+        parameter SI.Temperature T_prim_hot_des(min=277)= - T_AbsZeroDegC + 53.5
+            "desired temperature supply primary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter SI.Temperature T_sec_hot_des(min=277)= - T_AbsZeroDegC + 50
+            "desired temperature supply secondary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter SI.TemperatureDifference DeltaT_prim_des(min=1) =   20
+            "desired temperature difference primary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter SI.TemperatureDifference DeltaT_sec_des(min=1) =   20
+            "desired temperature difference secondary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter Real V_dot_sec_max(unit="l/min", displayUnit="l/min") = 8.5
+          "maximum secondary side volume flow in [l/min]"
+          annotation(Dialog(group="General PID settings"));
+        parameter Real k_prim_prod = 1.5
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real Ti_prim_prod = 8
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real Td_prim_prod = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real alpha_prim_prod(min=0, max=1) = 0.333
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real k_sec_prod = 1.5
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real Ti_sec_prod = 8
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real Td_sec_prod = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real alpha_sec_prod(min=0, max=1) = 0.666
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real k_prim_cons = 1.0
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real Ti_prim_cons = 35
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real Td_prim_cons = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real alpha_prim_cons(min=0, max=1) = 0.666
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real k_sec_cons = 1.5
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter Real Ti_sec_cons = 8
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter Real Td_sec_cons = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter Real alpha_sec_cons(min=0, max=1) = 0.333
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter .Modelica.Blocks.Types.SimpleController controllerType=
+               Modelica.Blocks.Types.SimpleController.PID "Type of controller"
+               annotation(Dialog(tab="Advanced", group="PIDs general"));
+        parameter Init initType = Modelica.Blocks.Types.Init.NoInit
+          "Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output)"
+          annotation(Dialog(tab="Advanced", group="PIDs general"));
+        parameter Real tol = 0.1
+          "tolerance [kW] for idle mode concerning heat transfer setpoint dotQ"
+          annotation(Dialog(tab="Advanced", group="Miscellaneous"));
+
+        // !!!!! variables !!!!!
+        Real beta_prim_prod(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Real beta_sec_prod(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Real beta_prim_cons(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Real beta_sec_cons(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Integer  prosumer_mode
+          "prosumer mode {-1;0;1}";
+        Real T_prim_relev_des
+            "desired value of relevant temperature (difference)
+      for control of primary side";
+        Real T_prim_relev_is
+            "current value of relevant temperature (difference)
+      for control of primary side";
+        Real T_sec_relev_des
+            "desired value of relevant temperature (difference)
+      for control of secondary side";
+        Real T_sec_relev_is
+            "current value of relevant temperature (difference)
+      for control of secondary side";
+
+        Real PIDin_prim_cons_is_weighted
+            "weighted input of is-values for PID_prim_cons";
+        Real PIDin_prim_cons_des_weighted
+            "weighted input of desired values for PID_prim_cons";
+        Real PIDin_prim_prod_is_weighted
+            "weighted input of is-values for PID_prim_prod";
+        Real PIDin_prim_prod_des_weighted
+            "weighted input of desired values for PID_prim_prod";
+        Real PIDin_sec_cons_is_weighted
+            "weighted input of is-values for PID_sec_cons";
+        Real PIDin_sec_cons_des_weighted
+            "weighted input of desired values for PID_sec_cons";
+        Real PIDin_sec_prod_is_weighted
+            "weighted input of is-values for PID_sec_prod";
+        Real PIDin_sec_prod_des_weighted
+            "weighted input of desired values for PID_sec_prod";
+
+        Real error_prim_weighted
+            "weighted overall error of primary side controller";
+
+        Real error_sec_weighted
+            "weighted overall error of primary side controller";
+
+        Real error_T_prim_abs
+            "temperature error of primary side controller";
+
+        Real error_T_sec_abs
+            "temperature error of primary side controller";
+
+        Real error_Q_abs
+            "temperature error of primary side controller";
+
+        Real error_T_high_prio_abs
+            "error of higher prioritized temperature objective";
+
+        Real error_T_low_prio_abs
+            "error of lower prioritized temperature objective";
+
+        Real Delta_T_prim
+            "weighted overall error of primary side controller";
+
+        Real Delta_T_sec
+            "weighted overall error of primary side controller";
+
+        Real Q_dot_is_use;
+        Real Q_dot_set_use;
+
+         Real Delta_p_prim(unit="Pa", displayUnit="bar") annotation (
+            Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=180,
+              origin={-80,-140})));
+
+        // !!!!! ports !!!!!
+
+        Modelica.Blocks.Interfaces.RealVectorInput states[8]
+          annotation (Placement(transformation(extent={{-140,-20},{-100,20}})));
+
+        Modelica.Blocks.Interfaces.RealVectorOutput contr_vars_real[6]
+          annotation (Placement(transformation(extent={{100,-20},{140,20}})));
+
+        Real u_set
+          "Normalized velocity of feed-in pump"
+            annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,-60}),  iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,-60})));
+        Real kappa_set
+          "Normalized flow coefficient for control valve"
+           annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,-100}),iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,-100})));
+        Real pi_set
+          "Participation" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,20}),    iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,20})));
+        Real mu_set
+          "Operating mode" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,-20}),  iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,-20})));
+        Real T_sec_hot(
+          unit="K",
+          displayUnit="degC",
+          min=277) "current temperature hot level secondary side"      annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,60})));
+        Real T_sec_cold(
+          unit="K",
+          displayUnit="degC",
+          min=277)
+                 "current temperature cold  level secondary side"    annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,20})));
+        Real T_prim_hot(
+          unit="K",
+          displayUnit="degC",
+          min=277)
+                 "current temperature hot level primary side"        annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,140})));
+        Real T_prim_cold(
+          unit="K",
+          displayUnit="degC",
+          min=277)
+                  "current temperature cold level primary side"       annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,100})));
+        Modelica.Blocks.Interfaces.RealInput Q_dot_set(unit="kW", displayUnit="kW")
+          "setpoint heat transfer (positive production, negative consumption)"
+          annotation (Placement(transformation(extent={{-20,-20},{20,20}},
+              rotation=-90,
+              origin={-60,188})));
+        Real V_dot_prim(unit="l/min", displayUnit="l/min")
+          annotation (Placement(transformation(extent={{-100,-40},{-60,0}})));
+        Real V_dot_sec(unit="l/min", displayUnit="l/min")
+          annotation (Placement(transformation(extent={{-100,-80},{-60,-40}})));
+
+        Real Q_dot_is(unit="kW", displayUnit="kW")
+          "currently transferred heat (positive production, negative consumption)"
+          annotation (Placement(transformation(extent={{-100,-120},{-60,-80}})));
+        Modelica.Blocks.Continuous.LimPID PID_prim_cons(
+          controllerType=controllerType,
+          k=k_prim_cons,
+          Ti=Ti_prim_cons,
+          Td=Td_prim_cons,
+          yMax=1,
+          yMin=0.25,
+          initType=initType,
+          y_start=PID_prim_cons.yMax)
+          annotation (Placement(transformation(extent={{-30,-32},{-10,-12}})));
+        Modelica.Blocks.Continuous.LimPID PID_sec_cons(
+          controllerType=controllerType,
+          k=k_sec_cons,
+          Ti=Ti_sec_cons,
+          Td=Td_sec_cons,
+          yMax=V_dot_sec_max,
+          yMin=2,
+          initType=initType,
+          y_start=PID_sec_cons.yMax)
+          annotation (Placement(transformation(extent={{-34,28},{-14,48}})));
+        Modelica.Blocks.Continuous.LimPID PID_prim_prod(
+          controllerType=controllerType,
+          k=k_prim_prod,
+          Ti=Ti_prim_prod,
+          Td=Td_prim_prod,
+          yMax=1,
+          yMin=0.25,
+          initType=initType,
+          y_start=PID_prim_prod.yMax) annotation (Placement(transformation(extent={{12,-30},
+                  {32,-10}})));
+        Modelica.Blocks.Continuous.LimPID PID_sec_prod(
+          controllerType=controllerType,
+          k=k_sec_prod,
+          Ti=Ti_sec_prod,
+          Td=Td_sec_prod,
+          yMax=V_dot_sec_max,
+          yMin=2,
+          initType=initType,
+          y_start=PID_sec_prod.yMax) annotation (Placement(transformation(extent={{10,28},
+                  {30,48}})));
+        Real T_sec_set(unit="K", displayUnit="degC")
+           "Temperature on the secondary side" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,100})));
+        Real V_dot_sec_set(unit="l/min", displayUnit=
+             "l/min") "volume flow rate setpoint on the secondary side" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,60})));
+        Modelica.Blocks.Interfaces.RealInput T_sec_in_is(unit="K", displayUnit="degC")
+          "Temperature on the secondary side" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=270,
+              origin={60,190})));
+
+      equation
+
+        // assign inputs
+        T_prim_hot   = states[1];
+        T_prim_cold  = states[2];
+        T_sec_hot    = states[3];
+        T_sec_cold   = states[4];
+        V_dot_prim   = states[5];
+        V_dot_sec    = states[6];
+        Q_dot_is     = states[7];
+        Delta_p_prim = states[8];
+
+        Delta_T_prim      = T_prim_hot -T_prim_cold;
+        Delta_T_sec       = T_sec_hot  -T_sec_cold;
+
+        beta_prim_prod = 1 - alpha_prim_prod;
+        beta_sec_prod  = 1 - alpha_sec_prod;
+        beta_prim_cons = 1 - alpha_prim_cons;
+        beta_sec_cons  = 1 - alpha_sec_cons;
+
+        // determine easy static values that just depend on prosumer mode
+        // determine inputs for the four PIDs
+        // four PIDs in order to be able to have different gains for each situation
+
+        if  Q_dot_set <= 0-tol then // consumption mode
+          prosumer_mode = -1;
+        elseif Q_dot_set >= 0+tol then // production mode
+          prosumer_mode = +1;
+        else // idle mode
+          prosumer_mode = 0;
+        end if;
+
+        Q_dot_is_use = abs(Q_dot_is);
+        Q_dot_set_use = abs(Q_dot_set);
+
+        if prosumer_mode == -1 then // consumption mode
+          pi_set = 1;
+          mu_set = -1;
+          T_prim_relev_des = DeltaT_prim_des;
+          T_prim_relev_is = T_prim_hot-T_prim_cold;
+          T_sec_relev_des = T_sec_hot_des;
+          T_sec_relev_is = T_sec_hot;
+
+          PIDin_prim_cons_is_weighted    = alpha_prim_cons*Q_dot_is_use/Delta_Qdot_norm + beta_prim_cons*(-1)*T_prim_relev_is/Delta_T_norm;
+          PIDin_prim_cons_des_weighted   = alpha_prim_cons*Q_dot_set_use/Delta_Qdot_norm + beta_prim_cons*(-1)*T_prim_relev_des/Delta_T_norm;
+          PIDin_prim_prod_is_weighted    = 0;
+          PIDin_prim_prod_des_weighted   = 0;
+          PIDin_sec_cons_is_weighted     = alpha_sec_cons*Q_dot_is_use/Delta_Qdot_norm + beta_sec_cons*(-1)*T_sec_relev_is/Delta_T_norm;
+          PIDin_sec_cons_des_weighted    = alpha_sec_cons*Q_dot_set_use/Delta_Qdot_norm + beta_sec_cons*(-1)*T_sec_relev_des/Delta_T_norm;
+          PIDin_sec_prod_is_weighted     = 0;
+          PIDin_sec_prod_des_weighted    = 0;
+
+          error_prim_weighted            = PIDin_prim_cons_des_weighted - PIDin_prim_cons_is_weighted;
+          error_sec_weighted             = PIDin_sec_cons_des_weighted - PIDin_sec_cons_is_weighted;
+
+          error_T_prim_abs               = DeltaT_prim_des - Delta_T_prim;
+          error_T_sec_abs                = T_sec_hot_des - T_sec_hot;
+
+          error_T_high_prio_abs          = T_sec_hot_des - T_sec_hot;
+          error_T_low_prio_abs           = DeltaT_prim_des - Delta_T_prim;
+
+        elseif prosumer_mode == 1 then // production mode
+          pi_set = 1;
+          mu_set = 1;
+          T_prim_relev_des = T_prim_hot_des;
+          T_prim_relev_is = T_prim_hot;
+          T_sec_relev_des = DeltaT_sec_des;
+          T_sec_relev_is = T_sec_hot-T_sec_cold;
+
+          PIDin_prim_cons_is_weighted    = 0;
+          PIDin_prim_cons_des_weighted   = 0;
+          PIDin_prim_prod_is_weighted    = alpha_prim_prod*Q_dot_is_use/Delta_Qdot_norm + beta_prim_prod*(-1)*T_prim_relev_is/Delta_T_norm;
+          PIDin_prim_prod_des_weighted   = alpha_prim_prod*Q_dot_set_use/Delta_Qdot_norm + beta_prim_prod*(-1)*T_prim_relev_des/Delta_T_norm;
+          PIDin_sec_cons_is_weighted     = 0;
+          PIDin_sec_cons_des_weighted    = 0;
+          PIDin_sec_prod_is_weighted     = alpha_sec_prod*Q_dot_is_use/Delta_Qdot_norm + beta_sec_prod*(-1)*T_sec_relev_is/Delta_T_norm;
+          PIDin_sec_prod_des_weighted    = alpha_sec_prod*Q_dot_set_use/Delta_Qdot_norm + beta_sec_prod*(-1)*T_sec_relev_des/Delta_T_norm;
+
+          error_prim_weighted            = PIDin_prim_prod_des_weighted - PIDin_prim_prod_is_weighted;
+          error_sec_weighted             = PIDin_sec_prod_des_weighted - PIDin_sec_prod_is_weighted;
+
+          error_T_prim_abs               = T_prim_hot_des - T_prim_hot;
+          error_T_sec_abs                = DeltaT_sec_des - Delta_T_sec;
+
+          error_T_high_prio_abs          = T_prim_hot_des - T_prim_hot;
+          error_T_low_prio_abs           = DeltaT_sec_des - Delta_T_sec;
+
+        else // idle mode
+          pi_set = 0;
+          mu_set = -1;
+          T_prim_relev_des = 0;
+          T_prim_relev_is = 0;
+          T_sec_relev_des = 0;
+          T_sec_relev_is = 0;
+
+          PIDin_prim_cons_is_weighted    = 0;
+          PIDin_prim_cons_des_weighted   = 0;
+          PIDin_prim_prod_is_weighted    = 0;
+          PIDin_prim_prod_des_weighted   = 0;
+          PIDin_sec_cons_is_weighted     = 0;
+          PIDin_sec_cons_des_weighted    = 0;
+          PIDin_sec_prod_is_weighted     = 0;
+          PIDin_sec_prod_des_weighted    = 0;
+
+          error_prim_weighted            = 0;
+          error_sec_weighted             = 0;
+
+          error_T_prim_abs               = 0;
+          error_T_sec_abs                = 0;
+
+          error_T_high_prio_abs          = 0;
+          error_T_low_prio_abs           = 0;
+
+        end if;
+
+        // assign PID controller inputs
+        PID_prim_cons.u_s    = PIDin_prim_cons_des_weighted;
+        PID_prim_cons.u_m    = PIDin_prim_cons_is_weighted;
+        PID_prim_prod.u_s    = PIDin_prim_prod_des_weighted;
+        PID_prim_prod.u_m    = PIDin_prim_prod_is_weighted;
+        PID_sec_cons.u_s     = PIDin_sec_cons_des_weighted;
+        PID_sec_cons.u_m     = PIDin_sec_cons_is_weighted;
+        PID_sec_prod.u_s     = PIDin_sec_prod_des_weighted;
+        PID_sec_prod.u_m     = PIDin_sec_prod_is_weighted;
+
+        // connect secondary side temperature setpoint
+        T_sec_set    =  T_sec_in_is;
+
+        // assign PID outputs to controller outputs
+        if prosumer_mode == -1 then // consumption mode
+          u_set = 0;
+          kappa_set =PID_prim_cons.y;
+          V_dot_sec_set = PID_sec_cons.y;
+        elseif prosumer_mode == 1 then // production mode
+          u_set =PID_prim_prod.y;
+          kappa_set = 0;
+          V_dot_sec_set = PID_sec_prod.y;
+        else // idle mode
+          V_dot_sec_set = 0;
+          u_set = 0;
+          kappa_set = 0;
+        end if;
+
+        error_Q_abs = Q_dot_set_use - Q_dot_is_use;
+
+        // assign control variables vector
+        contr_vars_real[1]   =  T_sec_set;
+        contr_vars_real[2]   =  V_dot_sec_set;
+        contr_vars_real[3]   =  pi_set;
+        contr_vars_real[4]   =  mu_set;
+        contr_vars_real[5]   =  u_set;
+        contr_vars_real[6]   =  kappa_set;
+
+          annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-120,-160},{
+                  120,180}}),                                           graphics={
+                Text(
+                extent={{-70,56},{64,-56}},
+                textColor={28,108,200},
+                textString="weighted
+PID"),       Rectangle(extent={{-120,180},{120,-160}}, lineColor={0,0,0})}),
+                                                                         Diagram(
+              coordinateSystem(preserveAspectRatio=false, extent={{-120,-160},{120,180}})));
+      end PID_Q_T_weighted_sameside;
+
+      model PID_Q_T_weighted_crossover
+
+        import Modelica.Units.SI;
+        import T_AbsZeroDegC = Modelica.Constants.T_zero;
+        import Modelica.Blocks.Types.Init;
+        import Modelica.Blocks.Types.SimpleController;
+
+          // !!!!! parameters !!!!!
+        parameter Real Delta_Qdot_norm = 1
+            "Heat power value for normalizing the error (deviation) of the transferred heat.
+      For alpha=0.5 a deviation of Delta_Qdot_norm in heat transfer is weigthed equal to a deviation of Delta_T_norm in temperature."
+            annotation(Dialog(group="Normalizing values"));
+        parameter SI.TemperatureDifference Delta_T_norm(min=0) = 3
+            "Temperature difference for normalizing the error (deviation) of the temperature.
+      For alpha=0.5 a deviation of Delta_T_norm in temperature is weighted equal to a deviation of Delta_Qdot_norm in heat transfer."
+            annotation(Dialog(group="Normalizing values"));
+
+        parameter SI.Temperature T_prim_hot_des(min=277)= - T_AbsZeroDegC + 53.5
+            "desired temperature supply primary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter SI.Temperature T_sec_hot_des(min=277)= - T_AbsZeroDegC + 50
+            "desired temperature supply secondary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter SI.TemperatureDifference DeltaT_prim_des(min=1) =   20
+            "desired temperature difference primary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter SI.TemperatureDifference DeltaT_sec_des(min=1) =   20
+            "desired temperature difference secondary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter Real _prim_cons_sec_prod_max = 1
+          "maximum secondary side volume flow in [l/min]"
+          annotation(Dialog(group="General PID settings"));
+        parameter Real k_prim_prod = 1.5
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real Ti_prim_prod = 8
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real Td_prim_prod = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real alpha_prim_prod(min=0, max=1) = 0.666
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real k_sec_prod = 1.5
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real Ti_sec_prod = 8
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real Td_sec_prod = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real alpha_sec_prod(min=0, max=1) = 0.333
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real k_prim_cons = 1
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real Ti_prim_cons = 35
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real Td_prim_cons = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real alpha_prim_cons(min=0, max=1) = 0.333
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real k_sec_cons = 1.5
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter Real Ti_sec_cons = 8
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter Real Td_sec_cons = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter Real alpha_sec_cons(min=0, max=1) = 0.666
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter .Modelica.Blocks.Types.SimpleController controllerType=
+               Modelica.Blocks.Types.SimpleController.PID "Type of controller"
+               annotation(Dialog(tab="Advanced", group="PIDs general"));
+        parameter Init initType = Modelica.Blocks.Types.Init.NoInit
+          "Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output)"
+          annotation(Dialog(tab="Advanced", group="PIDs general"));
+        parameter Real tol = 0.1
+          "tolerance [kW] for idle mode concerning heat transfer setpoint dotQ"
+          annotation(Dialog(tab="Advanced", group="Miscellaneous"));
+
+        // !!!!! variables !!!!!
+        Real beta_prim_prod(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Real beta_sec_prod(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Real beta_prim_cons(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Real beta_sec_cons(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Integer  prosumer_mode
+          "prosumer mode {-1;0;1}";
+        Real T_prim_relev_des
+            "desired value of relevant temperature (difference)
+      for control of primary side";
+        Real T_prim_relev_is
+            "current value of relevant temperature (difference)
+      for control of primary side";
+        Real T_sec_relev_des
+            "desired value of relevant temperature (difference)
+      for control of secondary side";
+        Real T_sec_relev_is
+            "current value of relevant temperature (difference)
+      for control of secondary side";
+
+        Real PIDin_prim_cons_is_weighted
+            "weighted input of is-values for PID_prim_cons";
+        Real PIDin_prim_cons_des_weighted
+            "weighted input of desired values for PID_prim_cons";
+        Real PIDin_prim_prod_is_weighted
+            "weighted input of is-values for PID_prim_prod";
+        Real PIDin_prim_prod_des_weighted
+            "weighted input of desired values for PID_prim_prod";
+        Real PIDin_sec_cons_is_weighted
+            "weighted input of is-values for PID_sec_cons";
+        Real PIDin_sec_cons_des_weighted
+            "weighted input of desired values for PID_sec_cons";
+        Real PIDin_sec_prod_is_weighted
+            "weighted input of is-values for PID_sec_prod";
+        Real PIDin_sec_prod_des_weighted
+            "weighted input of desired values for PID_sec_prod";
+
+        Real error_prim_weighted
+            "weighted overall error of primary side controller";
+
+        Real error_sec_weighted
+            "weighted overall error of primary side controller";
+
+        Real error_T_prim_abs
+            "temperature error of primary side controller";
+
+        Real error_T_sec_abs
+            "temperature error of primary side controller";
+
+        Real error_Q_abs
+            "temperature error of primary side controller";
+
+        Real error_T_high_prio_abs
+            "error of higher prioritized temperature objective";
+
+        Real error_T_low_prio_abs
+            "error of lower prioritized temperature objective";
+
+        Real Delta_T_prim
+            "weighted overall error of primary side controller";
+
+        Real Delta_T_sec
+            "weighted overall error of primary side controller";
+
+        Real Q_dot_is_use;
+        Real Q_dot_set_use;
+
+         Real Delta_p_prim(unit="Pa", displayUnit="bar") annotation (
+            Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=180,
+              origin={-80,-140})));
+
+        // !!!!! ports !!!!!
+
+        Modelica.Blocks.Interfaces.RealVectorInput states[8]
+          annotation (Placement(transformation(extent={{-140,-20},{-100,20}})));
+
+        Modelica.Blocks.Interfaces.RealVectorOutput contr_vars_real[6]
+          annotation (Placement(transformation(extent={{100,-20},{140,20}})));
+
+        Real u_set_prim_prod
+          "Normalized velocity of feed-in pump"
+            annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,-60}),  iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,-60})));
+        Real u_set_prim_cons
+          "Normalized flow coefficient for control valve"
+           annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,-100}),iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,-100})));
+        Real pi_set
+          "Participation" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,20}),    iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,20})));
+        Real mu_set
+          "Operating mode" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,-20}),  iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,-20})));
+        Real T_sec_hot(
+          unit="K",
+          displayUnit="degC",
+          min=277) "current temperature hot level secondary side"      annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,60})));
+        Real T_sec_cold(
+          unit="K",
+          displayUnit="degC",
+          min=277)
+                 "current temperature cold  level secondary side"    annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,20})));
+        Real T_prim_hot(
+          unit="K",
+          displayUnit="degC",
+          min=277)
+                 "current temperature hot level primary side"        annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,140})));
+        Real T_prim_cold(
+          unit="K",
+          displayUnit="degC",
+          min=277)
+                  "current temperature cold level primary side"       annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,100})));
+        Modelica.Blocks.Interfaces.RealInput Q_dot_set(unit="kW", displayUnit="kW")
+          "setpoint heat transfer (positive production, negative consumption)"
+          annotation (Placement(transformation(extent={{-20,-20},{20,20}},
+              rotation=-90,
+              origin={-60,188})));
+        Real V_dot_prim(unit="l/min", displayUnit="l/min")
+          annotation (Placement(transformation(extent={{-100,-40},{-60,0}})));
+        Real u2
+          annotation (Placement(transformation(extent={{-100,-80},{-60,-40}})));
+
+        Real Q_dot_is(unit="kW", displayUnit="kW")
+          "currently transferred heat (positive production, negative consumption)"
+          annotation (Placement(transformation(extent={{-100,-120},{-60,-80}})));
+        Modelica.Blocks.Continuous.LimPID PID_prim_cons(
+          controllerType=controllerType,
+          k=k_prim_cons,
+          Ti=Ti_prim_cons,
+          Td=Td_prim_cons,
+          yMax=1,
+          yMin=0.25,
+          initType=initType,
+          y_start=PID_prim_cons.yMax)
+          annotation (Placement(transformation(extent={{-30,-32},{-10,-12}})));
+        Modelica.Blocks.Continuous.LimPID PID_sec_cons(
+          controllerType=controllerType,
+          k=k_sec_cons,
+          Ti=Ti_sec_cons,
+          Td=Td_sec_cons,
+          yMax=0.1,
+          yMin=0,
+          initType=initType,
+          y_start=PID_sec_cons.yMax)
+          annotation (Placement(transformation(extent={{-34,28},{-14,48}})));
+        Modelica.Blocks.Continuous.LimPID PID_prim_prod(
+          controllerType=controllerType,
+          k=k_prim_prod,
+          Ti=Ti_prim_prod,
+          Td=Td_prim_prod,
+          yMax=1,
+          yMin=0.25,
+          initType=initType,
+          y_start=PID_prim_prod.yMax) annotation (Placement(transformation(extent={{12,-30},
+                  {32,-10}})));
+        Modelica.Blocks.Continuous.LimPID PID_sec_prod(
+          controllerType=controllerType,
+          k=k_sec_prod,
+          Ti=Ti_sec_prod,
+          Td=Td_sec_prod,
+          yMax=0.1,
+          yMin=0,
+          initType=initType,
+          y_start=PID_sec_prod.yMax) annotation (Placement(transformation(extent={{10,28},
+                  {30,48}})));
+        Real u_set_sec_cons
+           "Normalized velocity of the secondary side pump in production" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,100})));
+        Real u_set_sec_prod
+         "speed set for secondary side pupm in consumption mode" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,60})));
+        Modelica.Blocks.Interfaces.RealInput T_sec_in_is(unit="K", displayUnit="degC")
+          "Temperature on the secondary side" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=270,
+              origin={60,190})));
+
+      equation
+
+        // assign inputs
+        T_prim_hot   = states[1];
+        T_prim_cold  = states[2];
+        T_sec_hot    = states[3];
+        T_sec_cold   = states[4];
+        V_dot_prim   = states[5];
+        u2           = states[6];
+        Q_dot_is     = states[7];
+        Delta_p_prim = states[8];
+
+        Delta_T_prim      = T_prim_hot -T_prim_cold;
+        Delta_T_sec       = T_sec_hot  -T_sec_cold;
+
+        beta_prim_prod = 1 - alpha_prim_prod;
+        beta_sec_prod  = 1 - alpha_sec_prod;
+        beta_prim_cons = 1 - alpha_prim_cons;
+        beta_sec_cons  = 1 - alpha_sec_cons;
+
+        // determine easy static values that just depend on prosumer mode
+        // determine inputs for the four PIDs
+        // four PIDs in order to be able to have different gains for each situation
+
+        if  Q_dot_set <= 0-tol then // consumption mode
+          prosumer_mode = -1;
+        elseif Q_dot_set >= 0+tol then // production mode
+          prosumer_mode = +1;
+        else // idle mode
+          prosumer_mode = 0;
+        end if;
+
+        Q_dot_is_use = abs(Q_dot_is);
+        Q_dot_set_use = abs(Q_dot_set);
+
+        if prosumer_mode == -1 then // consumption mode
+          pi_set = 1;
+          mu_set = -1;
+          T_prim_relev_des = T_sec_hot_des;
+          T_prim_relev_is = T_sec_hot;
+          T_sec_relev_des = DeltaT_prim_des;
+          T_sec_relev_is = T_prim_hot-T_prim_cold;
+
+          PIDin_prim_cons_is_weighted    = alpha_prim_cons*Q_dot_is_use/Delta_Qdot_norm + beta_prim_cons*T_prim_relev_is/Delta_T_norm;
+          PIDin_prim_cons_des_weighted   = alpha_prim_cons*Q_dot_set_use/Delta_Qdot_norm + beta_prim_cons*T_prim_relev_des/Delta_T_norm;
+          PIDin_prim_prod_is_weighted    = 0;
+          PIDin_prim_prod_des_weighted   = 0;
+          PIDin_sec_cons_is_weighted     = alpha_sec_cons*Q_dot_is_use/Delta_Qdot_norm + beta_sec_cons*T_sec_relev_is/Delta_T_norm;
+          PIDin_sec_cons_des_weighted    = alpha_sec_cons*Q_dot_set_use/Delta_Qdot_norm +
+            beta_sec_cons*T_sec_relev_des/Delta_T_norm;
+          PIDin_sec_prod_is_weighted     = 0;
+          PIDin_sec_prod_des_weighted    = 0;
+
+          error_prim_weighted            = PIDin_prim_cons_des_weighted - PIDin_prim_cons_is_weighted;
+          error_sec_weighted             = PIDin_sec_cons_des_weighted - PIDin_sec_cons_is_weighted;
+
+          error_T_prim_abs               = DeltaT_prim_des - Delta_T_prim;
+          error_T_sec_abs                = T_sec_hot_des - T_sec_hot;
+
+          error_T_high_prio_abs          = T_sec_hot_des - T_sec_hot; // T_sec_hot
+          error_T_low_prio_abs           = DeltaT_prim_des - Delta_T_prim; // Delta_T_prim
+
+        elseif prosumer_mode == 1 then // production mode
+          pi_set = 1;
+          mu_set = 1;
+          T_prim_relev_des = DeltaT_sec_des;
+          T_prim_relev_is = T_sec_hot-T_sec_cold;
+          T_sec_relev_des = T_prim_hot_des;
+          T_sec_relev_is = T_prim_hot;
+
+          PIDin_prim_cons_is_weighted    = 0;
+          PIDin_prim_cons_des_weighted   = 0;
+          PIDin_prim_prod_is_weighted    = alpha_prim_prod*Q_dot_is_use/Delta_Qdot_norm + beta_prim_prod*T_prim_relev_is/Delta_T_norm;
+          PIDin_prim_prod_des_weighted   = alpha_prim_prod*Q_dot_set_use/Delta_Qdot_norm + beta_prim_prod*T_prim_relev_des/Delta_T_norm;
+          PIDin_sec_cons_is_weighted     = 0;
+          PIDin_sec_cons_des_weighted    = 0;
+          PIDin_sec_prod_is_weighted     = alpha_sec_prod*Q_dot_is_use/Delta_Qdot_norm + beta_sec_prod*T_sec_relev_is/Delta_T_norm;
+          PIDin_sec_prod_des_weighted    = alpha_sec_prod*Q_dot_set_use/Delta_Qdot_norm + beta_sec_prod*T_sec_relev_des/Delta_T_norm;
+
+          error_prim_weighted            = PIDin_prim_prod_des_weighted - PIDin_prim_prod_is_weighted;
+          error_sec_weighted             = PIDin_sec_prod_des_weighted - PIDin_sec_prod_is_weighted;
+
+          error_T_prim_abs               = T_prim_hot_des - T_prim_hot;
+          error_T_sec_abs                = DeltaT_sec_des - Delta_T_sec;
+
+          error_T_high_prio_abs          = T_prim_hot_des - T_prim_hot; // T_pim_hot
+          error_T_low_prio_abs           = DeltaT_sec_des - Delta_T_sec; // Deltat_T_sec
+
+        else // idle mode
+          pi_set = 0;
+          mu_set = -1;
+          T_prim_relev_des = 0;
+          T_prim_relev_is = 0;
+          T_sec_relev_des = 0;
+          T_sec_relev_is = 0;
+
+          PIDin_prim_cons_is_weighted    = 0;
+          PIDin_prim_cons_des_weighted   = 0;
+          PIDin_prim_prod_is_weighted    = 0;
+          PIDin_prim_prod_des_weighted   = 0;
+          PIDin_sec_cons_is_weighted     = 0;
+          PIDin_sec_cons_des_weighted    = 0;
+          PIDin_sec_prod_is_weighted     = 0;
+          PIDin_sec_prod_des_weighted    = 0;
+
+          error_prim_weighted            = 0;
+          error_sec_weighted             = 0;
+
+          error_T_prim_abs               = 0;
+          error_T_sec_abs                = 0;
+
+          error_T_high_prio_abs          = 0;
+          error_T_low_prio_abs           = 0;
+
+        end if;
+
+        // assign PID controller inputs
+        PID_prim_cons.u_s    = PIDin_prim_cons_des_weighted;
+        PID_prim_cons.u_m    = PIDin_prim_cons_is_weighted;
+        PID_prim_prod.u_s    = PIDin_prim_prod_des_weighted;
+        PID_prim_prod.u_m    = PIDin_prim_prod_is_weighted;
+        PID_sec_cons.u_s     = PIDin_sec_cons_des_weighted;
+        PID_sec_cons.u_m     = PIDin_sec_cons_is_weighted;
+        PID_sec_prod.u_s     = PIDin_sec_prod_des_weighted;
+        PID_sec_prod.u_m     = PIDin_sec_prod_is_weighted;
+
+        // assign PID outputs to controller outputs
+        if prosumer_mode == -1 then // consumption mode
+          u_set_prim_prod = 0;
+          u_set_prim_cons =PID_prim_cons.y;
+          u_set_sec_cons = PID_sec_cons.y;
+          u_set_sec_prod = 0;
+        elseif prosumer_mode == 1 then // production mode
+          u_set_prim_prod =PID_prim_prod.y;
+          u_set_prim_cons = 0;
+          u_set_sec_cons = 0;
+          u_set_sec_prod = PID_sec_prod.y;
+        else // idle mode
+          u_set_sec_cons = 0;
+          u_set_sec_prod = 0;
+          u_set_prim_prod = 0;
+          u_set_prim_cons = 0;
+        end if;
+
+        error_Q_abs = Q_dot_set_use - Q_dot_is_use;
+
+        // assign control variables vector
+        contr_vars_real[1]   =  u_set_sec_cons;
+        contr_vars_real[2]   =  u_set_sec_prod;
+        contr_vars_real[3]   =  pi_set;
+        contr_vars_real[4]   =  mu_set;
+        contr_vars_real[5]   =  u_set_prim_prod;
+        contr_vars_real[6]   =  u_set_prim_cons;
+
+          annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-120,-160},{
+                  120,180}}),                                           graphics={
+                Text(
+                extent={{-70,56},{64,-56}},
+                textColor={28,108,200},
+                textString="weighted
+PID"),       Rectangle(extent={{-120,180},{120,-160}}, lineColor={0,0,0})}),
+                                                                         Diagram(
+              coordinateSystem(preserveAspectRatio=false, extent={{-120,-160},{120,180}})));
+      end PID_Q_T_weighted_crossover;
+
+      model PID_Q_T_weighted_mix1
+
+        import Modelica.Units.SI;
+        import T_AbsZeroDegC = Modelica.Constants.T_zero;
+        import Modelica.Blocks.Types.Init;
+        import Modelica.Blocks.Types.SimpleController;
+
+          // !!!!! parameters !!!!!
+        parameter Real Delta_Qdot_norm = 1
+            "Heat power value for normalizing the error (deviation) of the transferred heat.
+      For alpha=0.5 a deviation of Delta_Qdot_norm in heat transfer is weigthed equal to a deviation of Delta_T_norm in temperature."
+            annotation(Dialog(group="Normalizing values"));
+        parameter SI.TemperatureDifference Delta_T_norm(min=0) = 3
+            "Temperature difference for normalizing the error (deviation) of the temperature.
+      For alpha=0.5 a deviation of Delta_T_norm in temperature is weighted equal to a deviation of Delta_Qdot_norm in heat transfer."
+            annotation(Dialog(group="Normalizing values"));
+
+        parameter SI.Temperature T_prim_hot_des(min=277)= - T_AbsZeroDegC + 53.5
+            "desired temperature supply primary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter SI.Temperature T_sec_hot_des(min=277)= - T_AbsZeroDegC + 50
+            "desired temperature supply secondary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter SI.TemperatureDifference DeltaT_prim_des(min=1) =   20
+            "desired temperature difference primary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter SI.TemperatureDifference DeltaT_sec_des(min=1) =   20
+            "desired temperature difference secondary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter Real V_dot_sec_max(unit="l/min", displayUnit="l/min") = 8.5
+          "maximum secondary side volume flow in [l/min]"
+          annotation(Dialog(group="General PID settings"));
+        parameter Real k_prim_prod = 1.5
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real Ti_prim_prod = 8
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real Td_prim_prod = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real alpha_prim_prod(min=0, max=1) = 0.333
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real k_sec_prod = 1.5
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real Ti_sec_prod = 8
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real Td_sec_prod = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real alpha_sec_prod(min=0, max=1) = 0.666
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real k_prim_cons = 1.0
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real Ti_prim_cons = 35
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real Td_prim_cons = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real alpha_prim_cons(min=0, max=1) = 0.333
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real k_sec_cons = 1.5
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter Real Ti_sec_cons = 8
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter Real Td_sec_cons = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter Real alpha_sec_cons(min=0, max=1) = 0.666
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter .Modelica.Blocks.Types.SimpleController controllerType=
+               Modelica.Blocks.Types.SimpleController.PID "Type of controller"
+               annotation(Dialog(tab="Advanced", group="PIDs general"));
+        parameter Init initType = Modelica.Blocks.Types.Init.NoInit
+          "Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output)"
+          annotation(Dialog(tab="Advanced", group="PIDs general"));
+        parameter Real tol = 0.1
+          "tolerance [kW] for idle mode concerning heat transfer setpoint dotQ"
+          annotation(Dialog(tab="Advanced", group="Miscellaneous"));
+
+        // !!!!! variables !!!!!
+        Real beta_prim_prod(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Real beta_sec_prod(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Real beta_prim_cons(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Real beta_sec_cons(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Integer  prosumer_mode
+          "prosumer mode {-1;0;1}";
+        Real T_prim_relev_des
+            "desired value of relevant temperature (difference)
+      for control of primary side";
+        Real T_prim_relev_is
+            "current value of relevant temperature (difference)
+      for control of primary side";
+        Real T_sec_relev_des
+            "desired value of relevant temperature (difference)
+      for control of secondary side";
+        Real T_sec_relev_is
+            "current value of relevant temperature (difference)
+      for control of secondary side";
+
+        Real PIDin_prim_cons_is_weighted
+            "weighted input of is-values for PID_prim_cons";
+        Real PIDin_prim_cons_des_weighted
+            "weighted input of desired values for PID_prim_cons";
+        Real PIDin_prim_prod_is_weighted
+            "weighted input of is-values for PID_prim_prod";
+        Real PIDin_prim_prod_des_weighted
+            "weighted input of desired values for PID_prim_prod";
+        Real PIDin_sec_cons_is_weighted
+            "weighted input of is-values for PID_sec_cons";
+        Real PIDin_sec_cons_des_weighted
+            "weighted input of desired values for PID_sec_cons";
+        Real PIDin_sec_prod_is_weighted
+            "weighted input of is-values for PID_sec_prod";
+        Real PIDin_sec_prod_des_weighted
+            "weighted input of desired values for PID_sec_prod";
+
+        Real error_prim_weighted
+            "weighted overall error of primary side controller";
+
+        Real error_sec_weighted
+            "weighted overall error of primary side controller";
+
+        Real error_T_prim_abs
+            "temperature error of primary side controller";
+
+        Real error_T_sec_abs
+            "temperature error of primary side controller";
+
+        Real error_Q_abs
+            "temperature error of primary side controller";
+
+        Real error_T_high_prio_abs
+            "error of higher prioritized temperature objective";
+
+        Real error_T_low_prio_abs
+            "error of lower prioritized temperature objective";
+
+        Real Delta_T_prim
+            "weighted overall error of primary side controller";
+
+        Real Delta_T_sec
+            "weighted overall error of primary side controller";
+
+        Real Q_dot_is_use;
+        Real Q_dot_set_use;
+
+         Real Delta_p_prim(unit="Pa", displayUnit="bar") annotation (
+            Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=180,
+              origin={-80,-140})));
+
+        // !!!!! ports !!!!!
+
+        Modelica.Blocks.Interfaces.RealVectorInput states[8]
+          annotation (Placement(transformation(extent={{-140,-20},{-100,20}})));
+
+        Modelica.Blocks.Interfaces.RealVectorOutput contr_vars_real[6]
+          annotation (Placement(transformation(extent={{100,-20},{140,20}})));
+
+        Real u_set
+          "Normalized velocity of feed-in pump"
+            annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,-60}),  iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,-60})));
+        Real kappa_set
+          "Normalized flow coefficient for control valve"
+           annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,-100}),iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,-100})));
+        Real pi_set
+          "Participation" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,20}),    iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,20})));
+        Real mu_set
+          "Operating mode" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,-20}),  iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,-20})));
+        Real T_sec_hot(
+          unit="K",
+          displayUnit="degC",
+          min=277) "current temperature hot level secondary side"      annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,60})));
+        Real T_sec_cold(
+          unit="K",
+          displayUnit="degC",
+          min=277)
+                 "current temperature cold  level secondary side"    annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,20})));
+        Real T_prim_hot(
+          unit="K",
+          displayUnit="degC",
+          min=277)
+                 "current temperature hot level primary side"        annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,140})));
+        Real T_prim_cold(
+          unit="K",
+          displayUnit="degC",
+          min=277)
+                  "current temperature cold level primary side"       annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,100})));
+        Modelica.Blocks.Interfaces.RealInput Q_dot_set(unit="kW", displayUnit="kW")
+          "setpoint heat transfer (positive production, negative consumption)"
+          annotation (Placement(transformation(extent={{-20,-20},{20,20}},
+              rotation=-90,
+              origin={-60,188})));
+        Real V_dot_prim(unit="l/min", displayUnit="l/min")
+          annotation (Placement(transformation(extent={{-100,-40},{-60,0}})));
+        Real V_dot_sec(unit="l/min", displayUnit="l/min")
+          annotation (Placement(transformation(extent={{-100,-80},{-60,-40}})));
+
+        Real Q_dot_is(unit="kW", displayUnit="kW")
+          "currently transferred heat (positive production, negative consumption)"
+          annotation (Placement(transformation(extent={{-100,-120},{-60,-80}})));
+        Modelica.Blocks.Continuous.LimPID PID_prim_cons(
+          controllerType=controllerType,
+          k=k_prim_cons,
+          Ti=Ti_prim_cons,
+          Td=Td_prim_cons,
+          yMax=1,
+          yMin=0.25,
+          initType=initType,
+          y_start=PID_prim_cons.yMax)
+          annotation (Placement(transformation(extent={{-30,-32},{-10,-12}})));
+        Modelica.Blocks.Continuous.LimPID PID_sec_cons(
+          controllerType=controllerType,
+          k=k_sec_cons,
+          Ti=Ti_sec_cons,
+          Td=Td_sec_cons,
+          yMax=V_dot_sec_max,
+          yMin=2,
+          initType=initType,
+          y_start=PID_sec_cons.yMax)
+          annotation (Placement(transformation(extent={{-34,28},{-14,48}})));
+        Modelica.Blocks.Continuous.LimPID PID_prim_prod(
+          controllerType=controllerType,
+          k=k_prim_prod,
+          Ti=Ti_prim_prod,
+          Td=Td_prim_prod,
+          yMax=1,
+          yMin=0.25,
+          initType=initType,
+          y_start=PID_prim_prod.yMax) annotation (Placement(transformation(extent={{12,-30},
+                  {32,-10}})));
+        Modelica.Blocks.Continuous.LimPID PID_sec_prod(
+          controllerType=controllerType,
+          k=k_sec_prod,
+          Ti=Ti_sec_prod,
+          Td=Td_sec_prod,
+          yMax=V_dot_sec_max,
+          yMin=2,
+          initType=initType,
+          y_start=PID_sec_prod.yMax) annotation (Placement(transformation(extent={{10,28},
+                  {30,48}})));
+        Real T_sec_set(unit="K", displayUnit="degC")
+           "Temperature on the secondary side" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,100})));
+        Real V_dot_sec_set(unit="l/min", displayUnit=
+             "l/min") "volume flow rate setpoint on the secondary side" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,60})));
+        Modelica.Blocks.Interfaces.RealInput T_sec_in_is(unit="K", displayUnit="degC")
+          "Temperature on the secondary side" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=270,
+              origin={60,190})));
+
+      equation
+
+        // assign inputs
+        T_prim_hot   = states[1];
+        T_prim_cold  = states[2];
+        T_sec_hot    = states[3];
+        T_sec_cold   = states[4];
+        V_dot_prim   = states[5];
+        V_dot_sec    = states[6];
+        Q_dot_is     = states[7];
+        Delta_p_prim = states[8];
+
+        Delta_T_prim      = T_prim_hot -T_prim_cold;
+        Delta_T_sec       = T_sec_hot  -T_sec_cold;
+
+        beta_prim_prod = 1 - alpha_prim_prod;
+        beta_sec_prod  = 1 - alpha_sec_prod;
+        beta_prim_cons = 1 - alpha_prim_cons;
+        beta_sec_cons  = 1 - alpha_sec_cons;
+
+        // determine easy static values that just depend on prosumer mode
+        // determine inputs for the four PIDs
+        // four PIDs in order to be able to have different gains for each situation
+
+        if  Q_dot_set <= 0-tol then // consumption mode
+          prosumer_mode = -1;
+        elseif Q_dot_set >= 0+tol then // production mode
+          prosumer_mode = +1;
+        else // idle mode
+          prosumer_mode = 0;
+        end if;
+
+        Q_dot_is_use = abs(Q_dot_is);
+        Q_dot_set_use = abs(Q_dot_set);
+
+        if prosumer_mode == -1 then // consumption mode
+          pi_set = 1;
+          mu_set = -1;
+          T_prim_relev_des = T_sec_hot_des;
+          T_prim_relev_is = T_sec_hot;
+          T_sec_relev_des = DeltaT_prim_des;
+          T_sec_relev_is = T_prim_hot-T_prim_cold;
+
+          PIDin_prim_cons_is_weighted    = alpha_prim_cons*Q_dot_is_use/Delta_Qdot_norm + beta_prim_cons*T_prim_relev_is/Delta_T_norm;
+          PIDin_prim_cons_des_weighted   = alpha_prim_cons*Q_dot_set_use/Delta_Qdot_norm + beta_prim_cons*T_prim_relev_des/Delta_T_norm;
+          PIDin_prim_prod_is_weighted    = 0;
+          PIDin_prim_prod_des_weighted   = 0;
+          PIDin_sec_cons_is_weighted     = alpha_sec_cons*Q_dot_is_use/Delta_Qdot_norm + beta_sec_cons*T_sec_relev_is/Delta_T_norm;
+          PIDin_sec_cons_des_weighted    = alpha_sec_cons*Q_dot_set_use/Delta_Qdot_norm + beta_sec_cons*T_sec_relev_des/Delta_T_norm;
+          PIDin_sec_prod_is_weighted     = 0;
+          PIDin_sec_prod_des_weighted    = 0;
+
+          error_prim_weighted            = PIDin_prim_cons_des_weighted - PIDin_prim_cons_is_weighted;
+          error_sec_weighted             = PIDin_sec_cons_des_weighted - PIDin_sec_cons_is_weighted;
+
+          error_T_prim_abs               = DeltaT_prim_des - Delta_T_prim;
+          error_T_sec_abs                = T_sec_hot_des - T_sec_hot;
+
+          error_T_high_prio_abs          = T_sec_hot_des - T_sec_hot; // T_sec_hot
+          error_T_low_prio_abs           = DeltaT_prim_des - Delta_T_prim; // Delta_T_prim
+
+        elseif prosumer_mode == 1 then // production mode
+          pi_set = 1;
+          mu_set = 1;
+          T_prim_relev_des = T_prim_hot_des;
+          T_prim_relev_is = T_prim_hot;
+          T_sec_relev_des = DeltaT_sec_des;
+          T_sec_relev_is = T_sec_hot-T_sec_cold;
+
+          PIDin_prim_cons_is_weighted    = 0;
+          PIDin_prim_cons_des_weighted   = 0;
+          PIDin_prim_prod_is_weighted    = alpha_prim_prod*Q_dot_is_use/Delta_Qdot_norm + beta_prim_prod*(-1)*T_prim_relev_is/Delta_T_norm;
+          PIDin_prim_prod_des_weighted   = alpha_prim_prod*Q_dot_set_use/Delta_Qdot_norm + beta_prim_prod*(-1)*T_prim_relev_des/Delta_T_norm;
+          PIDin_sec_cons_is_weighted     = 0;
+          PIDin_sec_cons_des_weighted    = 0;
+          PIDin_sec_prod_is_weighted     = alpha_sec_prod*Q_dot_is_use/Delta_Qdot_norm + beta_sec_prod*(-1)*T_sec_relev_is/Delta_T_norm;
+          PIDin_sec_prod_des_weighted    = alpha_sec_prod*Q_dot_set_use/Delta_Qdot_norm + beta_sec_prod*(-1)*T_sec_relev_des/Delta_T_norm;
+
+          error_prim_weighted            = PIDin_prim_prod_des_weighted - PIDin_prim_prod_is_weighted;
+          error_sec_weighted             = PIDin_sec_prod_des_weighted - PIDin_sec_prod_is_weighted;
+
+          error_T_prim_abs               = T_prim_hot_des - T_prim_hot;
+          error_T_sec_abs                = DeltaT_sec_des - Delta_T_sec;
+
+          error_T_high_prio_abs          = T_prim_hot_des - T_prim_hot;
+          error_T_low_prio_abs           = DeltaT_sec_des - Delta_T_sec;
+
+        else // idle mode
+          pi_set = 0;
+          mu_set = -1;
+          T_prim_relev_des = 0;
+          T_prim_relev_is = 0;
+          T_sec_relev_des = 0;
+          T_sec_relev_is = 0;
+
+          PIDin_prim_cons_is_weighted    = 0;
+          PIDin_prim_cons_des_weighted   = 0;
+          PIDin_prim_prod_is_weighted    = 0;
+          PIDin_prim_prod_des_weighted   = 0;
+          PIDin_sec_cons_is_weighted     = 0;
+          PIDin_sec_cons_des_weighted    = 0;
+          PIDin_sec_prod_is_weighted     = 0;
+          PIDin_sec_prod_des_weighted    = 0;
+
+          error_prim_weighted            = 0;
+          error_sec_weighted             = 0;
+
+          error_T_prim_abs               = 0;
+          error_T_sec_abs                = 0;
+
+          error_T_high_prio_abs          = 0;
+          error_T_low_prio_abs           = 0;
+
+        end if;
+
+        // assign PID controller inputs
+        PID_prim_cons.u_s    = PIDin_prim_cons_des_weighted;
+        PID_prim_cons.u_m    = PIDin_prim_cons_is_weighted;
+        PID_prim_prod.u_s    = PIDin_prim_prod_des_weighted;
+        PID_prim_prod.u_m    = PIDin_prim_prod_is_weighted;
+        PID_sec_cons.u_s     = PIDin_sec_cons_des_weighted;
+        PID_sec_cons.u_m     = PIDin_sec_cons_is_weighted;
+        PID_sec_prod.u_s     = PIDin_sec_prod_des_weighted;
+        PID_sec_prod.u_m     = PIDin_sec_prod_is_weighted;
+
+        // connect secondary side temperature setpoint
+        T_sec_set    =  T_sec_in_is;
+
+        // assign PID outputs to controller outputs
+        if prosumer_mode == -1 then // consumption mode
+          u_set = 0;
+          kappa_set =PID_prim_cons.y;
+          V_dot_sec_set = PID_sec_cons.y;
+        elseif prosumer_mode == 1 then // production mode
+          u_set =PID_prim_prod.y;
+          kappa_set = 0;
+          V_dot_sec_set = PID_sec_prod.y;
+        else // idle mode
+          V_dot_sec_set = 0;
+          u_set = 0;
+          kappa_set = 0;
+        end if;
+
+        error_Q_abs = Q_dot_set_use - Q_dot_is_use;
+
+        // assign control variables vector
+        contr_vars_real[1]   =  T_sec_set;
+        contr_vars_real[2]   =  V_dot_sec_set;
+        contr_vars_real[3]   =  pi_set;
+        contr_vars_real[4]   =  mu_set;
+        contr_vars_real[5]   =  u_set;
+        contr_vars_real[6]   =  kappa_set;
+
+          annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-120,-160},{
+                  120,180}}),                                           graphics={
+                Text(
+                extent={{-70,56},{64,-56}},
+                textColor={28,108,200},
+                textString="weighted
+PID"),       Rectangle(extent={{-120,180},{120,-160}}, lineColor={0,0,0})}),
+                                                                         Diagram(
+              coordinateSystem(preserveAspectRatio=false, extent={{-120,-160},{120,180}})));
+      end PID_Q_T_weighted_mix1;
+
+      model PID_Q_T_weighted_mix2
+
+        import Modelica.Units.SI;
+        import T_AbsZeroDegC = Modelica.Constants.T_zero;
+        import Modelica.Blocks.Types.Init;
+        import Modelica.Blocks.Types.SimpleController;
+
+          // !!!!! parameters !!!!!
+        parameter Real Delta_Qdot_norm = 1
+            "Heat power value for normalizing the error (deviation) of the transferred heat.
+      For alpha=0.5 a deviation of Delta_Qdot_norm in heat transfer is weigthed equal to a deviation of Delta_T_norm in temperature."
+            annotation(Dialog(group="Normalizing values"));
+        parameter SI.TemperatureDifference Delta_T_norm(min=0) = 3
+            "Temperature difference for normalizing the error (deviation) of the temperature.
+      For alpha=0.5 a deviation of Delta_T_norm in temperature is weighted equal to a deviation of Delta_Qdot_norm in heat transfer."
+            annotation(Dialog(group="Normalizing values"));
+
+        parameter SI.Temperature T_prim_hot_des(min=277)= - T_AbsZeroDegC + 53.5
+            "desired temperature supply primary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter SI.Temperature T_sec_hot_des(min=277)= - T_AbsZeroDegC + 50
+            "desired temperature supply secondary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter SI.TemperatureDifference DeltaT_prim_des(min=1) =   20
+            "desired temperature difference primary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter SI.TemperatureDifference DeltaT_sec_des(min=1) =   20
+            "desired temperature difference secondary side"
+            annotation(Dialog(group="Temperature objectives"));
+        parameter Real V_dot_sec_max(unit="l/min", displayUnit="l/min") = 8.5
+          "maximum secondary side volume flow in [l/min]"
+          annotation(Dialog(group="General PID settings"));
+        parameter Real k_prim_prod = 1.5
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real Ti_prim_prod = 8
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real Td_prim_prod = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real alpha_prim_prod(min=0, max=1) = 0.666
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID primary side - producer mode - tuning"));
+        parameter Real k_sec_prod = 1.5
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real Ti_sec_prod = 8
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real Td_sec_prod = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real alpha_sec_prod(min=0, max=1) = 0.333
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID secondary side - producer mode - tuning"));
+        parameter Real k_prim_cons = 1.0
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real Ti_prim_cons = 35
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real Td_prim_cons = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real alpha_prim_cons(min=0, max=1) = 0.666
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID primary side - consumer mode - tuning"));
+        parameter Real k_sec_cons = 1.5
+          "Proportional gain for controller in [-]"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter Real Ti_sec_cons = 8
+          "Integral time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter Real Td_sec_cons = 0
+          "Derivative time constant for controller in [s]"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter Real alpha_sec_cons(min=0, max=1) = 0.333
+          "weight for the relevance of the error of the transferred heat in comparison to the error of temperature objectives (sum is one)"
+          annotation(Dialog(group="PID secondary side - consumer mode - tuning"));
+        parameter .Modelica.Blocks.Types.SimpleController controllerType=
+               Modelica.Blocks.Types.SimpleController.PID "Type of controller"
+               annotation(Dialog(tab="Advanced", group="PIDs general"));
+        parameter Init initType = Modelica.Blocks.Types.Init.NoInit
+          "Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output)"
+          annotation(Dialog(tab="Advanced", group="PIDs general"));
+        parameter Real tol = 0.1
+          "tolerance [kW] for idle mode concerning heat transfer setpoint dotQ"
+          annotation(Dialog(tab="Advanced", group="Miscellaneous"));
+
+        // !!!!! variables !!!!!
+        Real beta_prim_prod(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Real beta_sec_prod(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Real beta_prim_cons(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Real beta_sec_cons(min=0, max=1)
+          "weight for the relevance of the error of the temperature(difference)";
+        Integer  prosumer_mode
+          "prosumer mode {-1;0;1}";
+        Real T_prim_relev_des
+            "desired value of relevant temperature (difference)
+      for control of primary side";
+        Real T_prim_relev_is
+            "current value of relevant temperature (difference)
+      for control of primary side";
+        Real T_sec_relev_des
+            "desired value of relevant temperature (difference)
+      for control of secondary side";
+        Real T_sec_relev_is
+            "current value of relevant temperature (difference)
+      for control of secondary side";
+
+        Real PIDin_prim_cons_is_weighted
+            "weighted input of is-values for PID_prim_cons";
+        Real PIDin_prim_cons_des_weighted
+            "weighted input of desired values for PID_prim_cons";
+        Real PIDin_prim_prod_is_weighted
+            "weighted input of is-values for PID_prim_prod";
+        Real PIDin_prim_prod_des_weighted
+            "weighted input of desired values for PID_prim_prod";
+        Real PIDin_sec_cons_is_weighted
+            "weighted input of is-values for PID_sec_cons";
+        Real PIDin_sec_cons_des_weighted
+            "weighted input of desired values for PID_sec_cons";
+        Real PIDin_sec_prod_is_weighted
+            "weighted input of is-values for PID_sec_prod";
+        Real PIDin_sec_prod_des_weighted
+            "weighted input of desired values for PID_sec_prod";
+
+        Real error_prim_weighted
+            "weighted overall error of primary side controller";
+
+        Real error_sec_weighted
+            "weighted overall error of primary side controller";
+
+        Real error_T_prim_abs
+            "temperature error of primary side controller";
+
+        Real error_T_sec_abs
+            "temperature error of primary side controller";
+
+        Real error_Q_abs
+            "temperature error of primary side controller";
+
+        Real error_T_high_prio_abs
+            "error of higher prioritized temperature objective";
+
+        Real error_T_low_prio_abs
+            "error of lower prioritized temperature objective";
+
+        Real Delta_T_prim
+            "weighted overall error of primary side controller";
+
+        Real Delta_T_sec
+            "weighted overall error of primary side controller";
+
+        Real Q_dot_is_use;
+        Real Q_dot_set_use;
+
+         Real Delta_p_prim(unit="Pa", displayUnit="bar") annotation (
+            Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=180,
+              origin={-80,-140})));
+
+        // !!!!! ports !!!!!
+
+        Modelica.Blocks.Interfaces.RealVectorInput states[8]
+          annotation (Placement(transformation(extent={{-140,-20},{-100,20}})));
+
+        Modelica.Blocks.Interfaces.RealVectorOutput contr_vars_real[6]
+          annotation (Placement(transformation(extent={{100,-20},{140,20}})));
+
+        Real u_set
+          "Normalized velocity of feed-in pump"
+            annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,-60}),  iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,-60})));
+        Real kappa_set
+          "Normalized flow coefficient for control valve"
+           annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,-100}),iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,-100})));
+        Real pi_set
+          "Participation" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,20}),    iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,20})));
+        Real mu_set
+          "Operating mode" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,-20}),  iconTransformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={100,-20})));
+        Real T_sec_hot(
+          unit="K",
+          displayUnit="degC",
+          min=277) "current temperature hot level secondary side"      annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,60})));
+        Real T_sec_cold(
+          unit="K",
+          displayUnit="degC",
+          min=277)
+                 "current temperature cold  level secondary side"    annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,20})));
+        Real T_prim_hot(
+          unit="K",
+          displayUnit="degC",
+          min=277)
+                 "current temperature hot level primary side"        annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,140})));
+        Real T_prim_cold(
+          unit="K",
+          displayUnit="degC",
+          min=277)
+                  "current temperature cold level primary side"       annotation (Placement(
+              transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={-80,100})));
+        Modelica.Blocks.Interfaces.RealInput Q_dot_set(unit="kW", displayUnit="kW")
+          "setpoint heat transfer (positive production, negative consumption)"
+          annotation (Placement(transformation(extent={{-20,-20},{20,20}},
+              rotation=-90,
+              origin={-60,188})));
+        Real V_dot_prim(unit="l/min", displayUnit="l/min")
+          annotation (Placement(transformation(extent={{-100,-40},{-60,0}})));
+        Real V_dot_sec(unit="l/min", displayUnit="l/min")
+          annotation (Placement(transformation(extent={{-100,-80},{-60,-40}})));
+
+        Real Q_dot_is(unit="kW", displayUnit="kW")
+          "currently transferred heat (positive production, negative consumption)"
+          annotation (Placement(transformation(extent={{-100,-120},{-60,-80}})));
+        Modelica.Blocks.Continuous.LimPID PID_prim_cons(
+          controllerType=controllerType,
+          k=k_prim_cons,
+          Ti=Ti_prim_cons,
+          Td=Td_prim_cons,
+          yMax=1,
+          yMin=0.25,
+          initType=initType,
+          y_start=PID_prim_cons.yMax)
+          annotation (Placement(transformation(extent={{-30,-32},{-10,-12}})));
+        Modelica.Blocks.Continuous.LimPID PID_sec_cons(
+          controllerType=controllerType,
+          k=k_sec_cons,
+          Ti=Ti_sec_cons,
+          Td=Td_sec_cons,
+          yMax=V_dot_sec_max,
+          yMin=2,
+          initType=initType,
+          y_start=PID_sec_cons.yMax)
+          annotation (Placement(transformation(extent={{-34,28},{-14,48}})));
+        Modelica.Blocks.Continuous.LimPID PID_prim_prod(
+          controllerType=controllerType,
+          k=k_prim_prod,
+          Ti=Ti_prim_prod,
+          Td=Td_prim_prod,
+          yMax=1,
+          yMin=0.25,
+          initType=initType,
+          y_start=PID_prim_prod.yMax) annotation (Placement(transformation(extent={{12,-30},
+                  {32,-10}})));
+        Modelica.Blocks.Continuous.LimPID PID_sec_prod(
+          controllerType=controllerType,
+          k=k_sec_prod,
+          Ti=Ti_sec_prod,
+          Td=Td_sec_prod,
+          yMax=V_dot_sec_max,
+          yMin=2,
+          initType=initType,
+          y_start=PID_sec_prod.yMax) annotation (Placement(transformation(extent={{10,28},
+                  {30,48}})));
+        Real T_sec_set(unit="K", displayUnit="degC")
+           "Temperature on the secondary side" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,100})));
+        Real V_dot_sec_set(unit="l/min", displayUnit=
+             "l/min") "volume flow rate setpoint on the secondary side" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=0,
+              origin={80,60})));
+        Modelica.Blocks.Interfaces.RealInput T_sec_in_is(unit="K", displayUnit="degC")
+          "Temperature on the secondary side" annotation (Placement(transformation(
+              extent={{-20,-20},{20,20}},
+              rotation=270,
+              origin={60,190})));
+
+      equation
+
+        // assign inputs
+        T_prim_hot   = states[1];
+        T_prim_cold  = states[2];
+        T_sec_hot    = states[3];
+        T_sec_cold   = states[4];
+        V_dot_prim   = states[5];
+        V_dot_sec    = states[6];
+        Q_dot_is     = states[7];
+        Delta_p_prim = states[8];
+
+        Delta_T_prim      = T_prim_hot -T_prim_cold;
+        Delta_T_sec       = T_sec_hot  -T_sec_cold;
+
+        beta_prim_prod = 1 - alpha_prim_prod;
+        beta_sec_prod  = 1 - alpha_sec_prod;
+        beta_prim_cons = 1 - alpha_prim_cons;
+        beta_sec_cons  = 1 - alpha_sec_cons;
+
+        // determine easy static values that just depend on prosumer mode
+        // determine inputs for the four PIDs
+        // four PIDs in order to be able to have different gains for each situation
+
+        if  Q_dot_set <= 0-tol then // consumption mode
+          prosumer_mode = -1;
+        elseif Q_dot_set >= 0+tol then // production mode
+          prosumer_mode = +1;
+        else // idle mode
+          prosumer_mode = 0;
+        end if;
+
+        Q_dot_is_use = abs(Q_dot_is);
+        Q_dot_set_use = abs(Q_dot_set);
+
+        if prosumer_mode == -1 then // consumption mode
+          pi_set = 1;
+          mu_set = -1;
+          T_prim_relev_des = DeltaT_prim_des;
+          T_prim_relev_is = T_prim_hot-T_prim_cold;
+          T_sec_relev_des = T_sec_hot_des;
+          T_sec_relev_is = T_sec_hot;
+
+          PIDin_prim_cons_is_weighted    = alpha_prim_cons*Q_dot_is_use/Delta_Qdot_norm + beta_prim_cons*(-1)*T_prim_relev_is/Delta_T_norm;
+          PIDin_prim_cons_des_weighted   = alpha_prim_cons*Q_dot_set_use/Delta_Qdot_norm + beta_prim_cons*(-1)*T_prim_relev_des/Delta_T_norm;
+          PIDin_prim_prod_is_weighted    = 0;
+          PIDin_prim_prod_des_weighted   = 0;
+          PIDin_sec_cons_is_weighted     = alpha_sec_cons*Q_dot_is_use/Delta_Qdot_norm + beta_sec_cons*(-1)*T_sec_relev_is/Delta_T_norm;
+          PIDin_sec_cons_des_weighted    = alpha_sec_cons*Q_dot_set_use/Delta_Qdot_norm + beta_sec_cons*(-1)*T_sec_relev_des/Delta_T_norm;
+          PIDin_sec_prod_is_weighted     = 0;
+          PIDin_sec_prod_des_weighted    = 0;
+
+          error_prim_weighted            = PIDin_prim_cons_des_weighted - PIDin_prim_cons_is_weighted;
+          error_sec_weighted             = PIDin_sec_cons_des_weighted - PIDin_sec_cons_is_weighted;
+
+          error_T_prim_abs               = DeltaT_prim_des - Delta_T_prim;
+          error_T_sec_abs                = T_sec_hot_des - T_sec_hot;
+
+          error_T_high_prio_abs          = T_sec_hot_des - T_sec_hot;
+          error_T_low_prio_abs           = DeltaT_prim_des - Delta_T_prim;
+
+        elseif prosumer_mode == 1 then // production mode
+          pi_set = 1;
+          mu_set = 1;
+          T_prim_relev_des = DeltaT_sec_des;
+          T_prim_relev_is = T_sec_hot-T_sec_cold;
+          T_sec_relev_des = T_prim_hot_des;
+          T_sec_relev_is = T_prim_hot;
+
+          PIDin_prim_cons_is_weighted    = 0;
+          PIDin_prim_cons_des_weighted   = 0;
+          PIDin_prim_prod_is_weighted    = alpha_prim_prod*Q_dot_is_use/Delta_Qdot_norm + beta_prim_prod*T_prim_relev_is/Delta_T_norm;
+          PIDin_prim_prod_des_weighted   = alpha_prim_prod*Q_dot_set_use/Delta_Qdot_norm + beta_prim_prod*T_prim_relev_des/Delta_T_norm;
+          PIDin_sec_cons_is_weighted     = 0;
+          PIDin_sec_cons_des_weighted    = 0;
+          PIDin_sec_prod_is_weighted     = alpha_sec_prod*Q_dot_is_use/Delta_Qdot_norm + beta_sec_prod*T_sec_relev_is/Delta_T_norm;
+          PIDin_sec_prod_des_weighted    = alpha_sec_prod*Q_dot_set_use/Delta_Qdot_norm + beta_sec_prod*T_sec_relev_des/Delta_T_norm;
+
+          error_prim_weighted            = PIDin_prim_prod_des_weighted - PIDin_prim_prod_is_weighted;
+          error_sec_weighted             = PIDin_sec_prod_des_weighted - PIDin_sec_prod_is_weighted;
+
+          error_T_prim_abs               = T_prim_hot_des - T_prim_hot;
+          error_T_sec_abs                = DeltaT_sec_des - Delta_T_sec;
+
+          error_T_high_prio_abs          = T_prim_hot_des - T_prim_hot; // T_pim_hot
+          error_T_low_prio_abs           = DeltaT_sec_des - Delta_T_sec; // Deltat_T_sec
+
+        else // idle mode
+          pi_set = 0;
+          mu_set = -1;
+          T_prim_relev_des = 0;
+          T_prim_relev_is = 0;
+          T_sec_relev_des = 0;
+          T_sec_relev_is = 0;
+
+          PIDin_prim_cons_is_weighted    = 0;
+          PIDin_prim_cons_des_weighted   = 0;
+          PIDin_prim_prod_is_weighted    = 0;
+          PIDin_prim_prod_des_weighted   = 0;
+          PIDin_sec_cons_is_weighted     = 0;
+          PIDin_sec_cons_des_weighted    = 0;
+          PIDin_sec_prod_is_weighted     = 0;
+          PIDin_sec_prod_des_weighted    = 0;
+
+          error_prim_weighted            = 0;
+          error_sec_weighted             = 0;
+
+          error_T_prim_abs               = 0;
+          error_T_sec_abs                = 0;
+
+          error_T_high_prio_abs          = 0;
+          error_T_low_prio_abs           = 0;
+
+        end if;
+
+        // assign PID controller inputs
+        PID_prim_cons.u_s    = PIDin_prim_cons_des_weighted;
+        PID_prim_cons.u_m    = PIDin_prim_cons_is_weighted;
+        PID_prim_prod.u_s    = PIDin_prim_prod_des_weighted;
+        PID_prim_prod.u_m    = PIDin_prim_prod_is_weighted;
+        PID_sec_cons.u_s     = PIDin_sec_cons_des_weighted;
+        PID_sec_cons.u_m     = PIDin_sec_cons_is_weighted;
+        PID_sec_prod.u_s     = PIDin_sec_prod_des_weighted;
+        PID_sec_prod.u_m     = PIDin_sec_prod_is_weighted;
+
+        // connect secondary side temperature setpoint
+        T_sec_set    =  T_sec_in_is;
+
+        // assign PID outputs to controller outputs
+        if prosumer_mode == -1 then // consumption mode
+          u_set = 0;
+          kappa_set =PID_prim_cons.y;
+          V_dot_sec_set = PID_sec_cons.y;
+        elseif prosumer_mode == 1 then // production mode
+          u_set =PID_prim_prod.y;
+          kappa_set = 0;
+          V_dot_sec_set = PID_sec_prod.y;
+        else // idle mode
+          V_dot_sec_set = 0;
+          u_set = 0;
+          kappa_set = 0;
+        end if;
+
+        error_Q_abs = Q_dot_set_use - Q_dot_is_use;
+
+        // assign control variables vector
+        contr_vars_real[1]   =  T_sec_set;
+        contr_vars_real[2]   =  V_dot_sec_set;
+        contr_vars_real[3]   =  pi_set;
+        contr_vars_real[4]   =  mu_set;
+        contr_vars_real[5]   =  u_set;
+        contr_vars_real[6]   =  kappa_set;
+
+          annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-120,-160},{
+                  120,180}}),                                           graphics={
+                Text(
+                extent={{-70,56},{64,-56}},
+                textColor={28,108,200},
+                textString="weighted
+PID"),       Rectangle(extent={{-120,180},{120,-160}}, lineColor={0,0,0})}),
+                                                                         Diagram(
+              coordinateSystem(preserveAspectRatio=false, extent={{-120,-160},{120,180}})));
+      end PID_Q_T_weighted_mix2;
+
+      package auxiliary
+        block TimeTable_noInterp
+          "Generate a discontinuous and non-interpolated signal from a table by using the forward value."
+
+          parameter Real table[:, 2] = fill(0.0, 0, 2)
+            "Table matrix (time = first column; e.g., table=[0, 0; 1, 1; 2, 4])"
+            annotation(Dialog(groupImage="modelica://Modelica/Resources/Images/Blocks/Sources/TimeTable.png"));
+          parameter Modelica.Units.SI.Time timeScale(min=Modelica.Constants.eps)=1
+            "Time scale of first table column" annotation (Evaluate=true);
+          extends Modelica.Blocks.Interfaces.SignalSource;
+          parameter Modelica.Units.SI.Time shiftTime=startTime
+            "Shift time of first table column";
+        protected
+          discrete Real a "Interpolation coefficient a of actual interval (y=a*x+b)";
+          discrete Real b "Interpolation coefficient b of actual interval (y=a*x+b)";
+          Integer last(start=1) "Last used lower grid index";
+          discrete Modelica.Units.SI.Time nextEvent(start=0, fixed=true)
+            "Next event instant";
+          discrete Real nextEventScaled(start=0, fixed=true)
+            "Next scaled event instant";
+          Real timeScaled "Scaled time";
+
+          function getInterpolationCoefficients
+            "Determine interpolation coefficients and next time event"
+            extends Modelica.Icons.Function;
+            input Real table[:, 2] "Table for interpolation";
+            input Real offset "y-offset";
+            input Real startTimeScaled "Scaled time-offset";
+            input Real timeScaled "Actual scaled time instant";
+            input Integer last "Last used lower grid index";
+            input Real TimeEps "Relative epsilon to check for identical time instants";
+            input Real shiftTimeScaled "Time shift";
+            output Real a "Interpolation coefficient a (y=a*x + b)";
+            output Real b "Interpolation coefficient b (y=a*x + b)";
+            output Real nextEventScaled "Next scaled event instant";
+            output Integer next "New lower grid index";
+          protected
+            Integer columns=2 "Column to be interpolated";
+            Integer ncol=2 "Number of columns to be interpolated";
+            Integer nrow=size(table, 1) "Number of table rows";
+            Integer next0;
+            Real tp;
+            Real dt;
+          algorithm
+            next := last;
+            nextEventScaled := timeScaled - TimeEps*abs(timeScaled);
+            // in case there are no more time events
+            tp := timeScaled + TimeEps*abs(timeScaled);
+
+            if tp < startTimeScaled then
+              // First event not yet reached
+              nextEventScaled := startTimeScaled;
+              a := 0;
+              b := offset;
+            elseif nrow < 2 then
+              // Special action if table has only one row
+              a := 0;
+              b := offset + table[1, columns];
+            else
+              tp := tp - shiftTimeScaled;
+              // Find next time event instant. Note, that two consecutive time instants
+              // in the table may be identical due to a discontinuous point.
+              while next < nrow and tp >= table[next, 1] loop
+                next := next + 1;
+              end while;
+
+              // Define next time event, if last table entry not reached
+              if next < nrow then
+                nextEventScaled := shiftTimeScaled + table[next, 1];
+              end if;
+
+              // Determine interpolation coefficients
+              if next == 1 then
+                next := 2;
+              end if;
+              next0 := next - 1;
+              dt := table[next, 1] - table[next0, 1];
+              if dt <= TimeEps*abs(table[next, 1]) then
+                // Interpolation interval is not big enough, use "next" value
+                a := 0;
+                b := offset + table[next, columns];
+              else
+                a := table[next0, columns]; // (table[next, columns] - table[next0, columns])/dt;
+                b := 0; // offset + table[next0, columns] - a*table[next0, 1];
+              end if;
+            end if;
+            // Take into account shiftTimeScaled "a*(time - shiftTime) + b"
+            b := b - a*shiftTimeScaled;
+          end getInterpolationCoefficients;
+        algorithm
+          if noEvent(size(table, 1) > 1) then
+            assert(not (table[1, 1] > 0.0 or table[1, 1] < 0.0), "The first point in time has to be set to 0, but is table[1,1] = " + String(table[1, 1]));
+          end if;
+          when {time >= pre(nextEvent),initial()} then
+            (a,b,nextEventScaled,last) := getInterpolationCoefficients(
+                table,
+                offset,
+                startTime/timeScale,
+                timeScaled,
+                last,
+                100*Modelica.Constants.eps,
+                shiftTime/timeScale);
+            nextEvent := nextEventScaled*timeScale;
+          end when;
+        equation
+          assert(size(table, 1) > 0, "No table values defined.");
+          timeScaled = time/timeScale;
+          y = a; // a*timeScaled + b;
+          annotation (
+            Icon(coordinateSystem(
+                preserveAspectRatio=true,
+                extent={{-100,-100},{100,100}}), graphics={
+                Line(points={{-80,68},{-80,-80}}, color={192,192,192}),
+                Polygon(
+                  points={{-80,90},{-88,68},{-72,68},{-80,90}},
+                  lineColor={192,192,192},
+                  fillColor={192,192,192},
+                  fillPattern=FillPattern.Solid),
+                Line(points={{-90,-70},{82,-70}}, color={192,192,192}),
+                Polygon(
+                  points={{90,-70},{68,-62},{68,-78},{90,-70}},
+                  lineColor={192,192,192},
+                  fillColor={192,192,192},
+                  fillPattern=FillPattern.Solid),
+                Rectangle(
+                  extent={{-48,70},{2,-50}},
+                  lineColor={255,255,255},
+                  fillColor={192,192,192},
+                  fillPattern=FillPattern.Solid),
+                Line(points={{-48,-50},{-48,70},{52,70},{52,-50},{-48,-50},{-48,-20},
+                      {52,-20},{52,10},{-48,10},{-48,40},{52,40},{52,70},{2,70},{2,-51}}),
+                Text(
+                  extent={{-150,-150},{150,-110}},
+                  textString="offset=%offset")}),
+                Documentation(info="<html>
+<p>
+This block generates an output signal by <strong>linear interpolation</strong> in
+a table. The time points and function values are stored in a matrix
+<strong>table[i,j]</strong>, where the first column table[:,1] contains the
+time points and the second column contains the data to be interpolated.
+The table interpolation has the following properties:
+</p>
+<ul>
+<li>The interpolation interval is found by a linear search where the interval used in the
+    last call is used as start interval.</li>
+<li>The time points need to be <strong>monotonically increasing</strong>.</li>
+<li><strong>Discontinuities</strong> are allowed, by providing the same
+    time point twice in the table.</li>
+<li>Values <strong>outside</strong> of the table range, are computed by
+    <strong>extrapolation</strong> through the last or first two points of the
+    table.</li>
+<li>If the table has only <strong>one row</strong>, no interpolation is performed and
+    the function value is just returned independently of the actual time instant.</li>
+<li>Via parameters <strong>shiftTime</strong> and <strong>offset</strong> the curve defined
+    by the table can be shifted both in time and in the ordinate value.
+    The time instants stored in the table are therefore <strong>relative</strong>
+    to <strong>shiftTime</strong>.</li>
+<li>If time &lt; startTime, no interpolation is performed and the offset
+    is used as ordinate value for the output.</li>
+<li>If the table has more than one row, the first point in time <strong>always</strong> has to be set to <strong>0</strong>, e.g.,
+    <strong>table=[1,1;2,2]</strong> is <strong>illegal</strong>. If you want to
+    shift the time table in time use the <strong>shiftTime</strong> parameter instead.</li>
+<li>The table is implemented in a numerically sound way by
+    generating <strong>time events</strong> at interval boundaries.
+    This generates continuously differentiable values for the integrator.</li>
+<li>Via parameter <strong>timeScale</strong> the first column of the table array can
+    be scaled, e.g., if the table array is given in hours (instead of seconds)
+    <strong>timeScale</strong> shall be set to 3600.</li>
+</ul>
+<p>
+Example:
+</p>
+<blockquote><pre>
+   table = [0, 0;
+            1, 0;
+            1, 1;
+            2, 4;
+            3, 9;
+            4, 16];
+If, e.g., time = 1.0, the output y =  0.0 (before event), 1.0 (after event)
+    e.g., time = 1.5, the output y =  2.5,
+    e.g., time = 2.0, the output y =  4.0,
+    e.g., time = 5.0, the output y = 23.0 (i.e., extrapolation).
+</pre></blockquote>
+
+<p>
+<img src=\"modelica://Modelica/Resources/Images/Blocks/Sources/TimeTable.png\"
+     alt=\"TimeTable.png\">
+</p>
+
+</html>",       revisions="<html>
+<h4>Release Notes</h4>
+<ul>
+<li><em>Oct. 21, 2002</em>
+       by Christian Schweiger:<br>
+       Corrected interface from
+<blockquote><pre>
+parameter Real table[:, :]=[0, 0; 1, 1; 2, 4];
+</pre></blockquote>
+       to
+<blockquote><pre>
+parameter Real table[:, <strong>2</strong>]=[0, 0; 1, 1; 2, 4];
+</pre></blockquote>
+       </li>
+<li><em>Nov. 7, 1999</em>
+       by <a href=\"http://www.robotic.dlr.de/Martin.Otter/\">Martin Otter</a>:<br>
+       Realized.</li>
+</ul>
+</html>"));
+        end TimeTable_noInterp;
+
+        model test_procedure
+
+          parameter Real dotQ_low( min = 0) = 8
+          "heat transfer setpoint for high heat transfer in test procedure";
+
+          parameter Real dotQ_high( min= 0) = 12
+          "heat transfer setpoint for low heat transfer in test procedure";
+
+          parameter Real Tsecin_warm(  min= 0) = 45
+          "warm inlet temperature for secondary side";
+
+          parameter Real Tsecin_cold(  min= 0) = 30
+           "cold inlet temperature for secondary side";
+
+          parameter Real noise_mu( min = 0) = 0
+          "mean value of noise for temperature"
+          annotation(Dialog(group="Noise"));
+
+          parameter Real noise_sigma( min = 0) = 5
+          "standard deviation of noise for temperature"
+          annotation(Dialog(group="Noise"));
+
+          parameter Integer test_procedure[:,3] = [
+                0,0,0;
+                900,1,6;
+                1800,1,6;
+                2700,1,6;
+                3600,0,0;
+                4500,0,0;
+                5400,0,0;
+                6300,1,6;
+                7200,1,9;
+                8100,1,6;
+                9000,0,0;
+                9900,-1,6;
+                10800,-1,9;
+                11700,-1,6;
+                12600,0,0;
+                13500,1,9;
+                14400,0,0;
+                15300,0,0;
+                16200,-1,9;
+                17100,0,0;
+                18000,0,0]
+          "time [s], prosumer mode (producer[1], consumer[-1], idle[0]), heat transfer (high[9], low[6])";
+
+          Modelica.Blocks.Sources.CombiTimeTable combiTimeTable(
+            tableOnFile=false,
+            table=test_procedure,
+            smoothness=Modelica.Blocks.Types.Smoothness.ConstantSegments,
+            extrapolation=Modelica.Blocks.Types.Extrapolation.Periodic)
+            "time [s], prosumer mode (producer[1], consumer[-1], idle[0]), heat transfer (high[9], low[6])"
+            annotation (Placement(transformation(extent={{-16,2},{4,22}})));
+
+          Modelica.Blocks.Noise.NormalNoise normalNoise(
+            samplePeriod=30,
+            mu=noise_mu,
+            sigma=noise_sigma)
+            annotation (Placement(transformation(extent={{-62,-46},{-42,-26}})));
+
+          Modelica.Blocks.Interfaces.RealOutput dotQ
+            annotation (Placement(transformation(extent={{90,30},{110,50}})));
+          Modelica.Blocks.Interfaces.RealOutput T
+            annotation (Placement(transformation(extent={{90,-30},{110,-10}})));
+          inner Modelica.Blocks.Noise.GlobalSeed globalSeed(enableNoise=false,
+              fixedSeed=4345)
+            annotation (Placement(transformation(extent={{-80,64},{-60,84}})));
+        equation
+
+          if combiTimeTable.y[1] == 1 then
+            T = Tsecin_warm + 273.15 + normalNoise.y;
+              if combiTimeTable.y[2] == 6 then
+                dotQ = dotQ_low;
+              elseif combiTimeTable.y[2] == 9 then
+                dotQ = dotQ_high;
+              else
+                dotQ = 0;
+              end if;
+          elseif combiTimeTable.y[1] == -1 then
+            T = Tsecin_cold + 273.15 + normalNoise.y;
+              if combiTimeTable.y[2] == 6 then
+                dotQ = -dotQ_low;
+              elseif combiTimeTable.y[2] == 9 then
+                dotQ = -dotQ_high;
+              else
+                dotQ = 0;
+              end if;
+          else
+            T = Tsecin_cold + 273.15;
+            dotQ = 0;
+          end if;
+
+          annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
+                coordinateSystem(preserveAspectRatio=false)));
+        end test_procedure;
+
+        function simpleMATLAB_fileConverter
+        "Function to import trajectory result files and write them as MatLab compatible .mat f
+iles"
+        input String filename="filename" "File to be converted" annotation (Dialog(__Dymola_loadSelector(filter="Matlab files (*.mat)",
+        caption="Select the results trajectory file")));
+        input String varOrigNames[:]={"Time","J1.w","J2.w"} "Variable names/headers in the fil
+e in modelica syntax";
+        input String varReNames[:]={"Time","Inertia_1_angularVel","Inertia_2_angularVel"}
+        "Variable names which will appear in the MATLAB results file";
+        input String outputFilename="outputFile.mat";
+        protected
+        Integer noRows "Number of rows in the trajectory being converted";
+        Integer noColumn=12 "Number of columns in the trajectory being converted";
+        Real data[:,:] "Data read in from trajectory file";
+        Real dataDump[:,:] "Sacrificial dump variable for writeMatrix command";
+        Integer i=2 "Loop counter";
+        algorithm
+        noRows := DymolaCommands.Trajectories.readTrajectorySize(filename);
+        data := DymolaCommands.Trajectories.readTrajectory(
+        filename,
+        varOrigNames,
+        noRows);
+        data := transpose(data);
+        noColumn := size(data, 2);
+        while i <= noColumn loop
+        dataDump := [data[:, 1],data[:, i]];
+        if i == 2 then
+        DymolaCommands.MatrixIO.writeMatrix(
+        outputFilename,
+        varReNames[i],
+        dataDump);
+        else
+        DymolaCommands.MatrixIO.writeMatrix(
+        outputFilename,
+        varReNames[i],
+        dataDump,
+        true);
+        end if;
+        i := i + 1;
+        end while;
+        annotation (Documentation(info="<html>
+<p></p>
+</html>"),         uses(DymolaCommands(version="1.4")));
+        end simpleMATLAB_fileConverter;
+      end auxiliary;
+
+    end Controller_PID_based;
+
+  end Substation_IdealNetwork;
 end BidirectionalSubstation;

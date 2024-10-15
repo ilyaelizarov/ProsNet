@@ -33337,8 +33337,7 @@ SF1"),      Text(
               coordinateSystem(preserveAspectRatio=false, extent={{-100,-120},{
                   200,200}})),
           experiment(
-            StopTime=1000000,
-            Interval=14400,
+            StopTime=25200,
             Tolerance=0.01,
             __Dymola_Algorithm="Dassl"));
       end C1a_Afshoun_crossover_noheat_noweight_alpha0;
@@ -33573,9 +33572,6 @@ SF1"),      Text(
           Fluid.Sources.Boundary_pT bou1(redeclare package Medium = Medium_sec,
               nPorts=1)
         annotation (Placement(transformation(extent={{-68,114},{-56,126}})));
-          Fluid.Sources.Boundary_pT bou2(redeclare package Medium = Medium_sec,
-              nPorts=1)
-        annotation (Placement(transformation(extent={{116,114},{106,124}})));
           Fluid.Sources.Boundary_pT bou3(
             redeclare package Medium = Medium_sec,
             T=313.15,
@@ -33735,9 +33731,6 @@ SF1"),      Text(
           connect(bou1.ports[1], massFlowRate_sec_cold.port_a) annotation (Line(
                 points={{-56,120},{-32,120},{-32,136},{-12,136},{-12,126}}, color={
                   0,127,255}));
-          connect(bou2.ports[1], massFlowRate_sec_hot.port_b) annotation (Line(
-                points={{106,119},{70,119},{70,150},{56,150},{56,144}}, color={0,
-                  127,255}));
           connect(bou3.ports[1], T_sens_prim_hot.port_a) annotation (Line(
                 points={{-42,-125},{-42,-126},{-20,-126},{-20,-120}}, color={0,
                   127,255}));
